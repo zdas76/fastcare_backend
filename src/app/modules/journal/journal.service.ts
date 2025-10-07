@@ -1,0 +1,910 @@
+import { FixedJournal } from "./../../../../node_modules/.prisma/client/index.d";
+import {
+  OrdStatus,
+  PaymentType,
+  VoucherType,
+  type LedgerHead,
+  type TransactionInfo,
+} from "@prisma/client";
+import prisma from "../../shared/prisma";
+import AppError from "../../errors/AppError";
+import { StatusCodes } from "http-status-codes";
+
+//Create Purchase Received Voucher
+const createPurchestReceivedIntoDB = async (payload: any) => {
+  const createPurchestVoucher = await prisma.$transaction(async (tx: any) => {
+    // Check if supplier exists
+    const supplierExists = await tx.supplier.findUnique({
+      where: { id: payload.supplierId },
+    });
+
+    if (!supplierExists) {
+      throw new Error(
+        `Invalid supplierId: ${payload.supplierId}. No matching Supplier found.`
+      );
+    }
+
+    // step 1. create transaction entries
+    const createTransactionInfo: TransactionInfo =
+      await tx.transactionInfo.create({
+        data: {
+          date: payload?.date,
+          invoiceNo: payload.invoiceNo || null,
+          voucherNo: payload.voucherNo,
+          paymentType: payload.paymentType,
+          voucherType: VoucherType.PURCHASE,
+          suplierId: supplierExists.id,
+        },
+      });
+
+    // 2. create bank transaction
+    const BankTXData: {
+      transectionId: number;
+      bankAccountId: number;
+      creditAmount: number;
+      date: Date;
+    }[] = [];
+
+    payload.paymentItem.map(async (item: any) => {
+      if (item.bankId) {
+        BankTXData.push({
+          transectionId: createTransactionInfo.id,
+          bankAccountId: item.bankId,
+          date: new Date(payload.date),
+          creditAmount: Number(item.amount),
+        });
+      }
+    });
+
+    if (BankTXData.length > 0) {
+      await tx.bankTransaction.createMany({
+        data: BankTXData,
+      });
+    }
+
+    if (
+      !Array.isArray(payload.productItem) ||
+      payload.productItem.length === 0
+    ) {
+      throw new Error("Invalid data: items must be a non-empty array");
+    }
+
+    //Step 3: Insert Inventory Records
+    await Promise.all(
+      payload.productItem.map((item: any) =>
+        tx.Inventory.create({
+          data: {
+            productId: item.productId,
+            transectionId: createTransactionInfo.id,
+            date: new Date(payload.date),
+            unitPrice: item.unitPrice,
+            quantityAdd: item.quantity,
+            debitAmount: item.amount,
+            depoId: payload.depoId,
+          },
+        })
+      )
+    );
+
+    if (
+      !Array.isArray(payload.paymentItem) ||
+      payload.paymentItem.length === 0
+    ) {
+      throw new Error("Invalid data: Payment option must be a non-empty array");
+    }
+
+    // Step 4: Insert Journal Entries
+    await Promise.all(
+      payload.paymentItem.map(async (item: any) => {
+        await tx.journal.createMany({
+          data: {
+            transectionId: createTransactionInfo.id,
+            accountsItemId: item.accountsItemId,
+            date: new Date(payload.date),
+            creditAmount: item.amount || 0,
+            narration: item?.narration || "",
+          },
+        });
+      })
+    );
+    // end  insert journal entries
+
+    return createTransactionInfo;
+  });
+
+  const result = await prisma.transactionInfo.findFirst({
+    where: { id: createPurchestVoucher.id },
+    include: {
+      journal: {
+        include: {
+          ledgerHead: true,
+        },
+      },
+      bankTransaction: {
+        select: {
+          bankAccount: {
+            select: {
+              bankName: true,
+              branceName: true,
+              accountNumber: true,
+            },
+          },
+          creditAmount: true,
+          date: true,
+        },
+      },
+      inventory: {
+        select: {
+          product: {
+            select: {
+              name: true,
+              tp: true,
+            },
+          },
+          date: true,
+          unitPrice: true,
+          quantityAdd: true,
+          debitAmount: true,
+        },
+      },
+    },
+  });
+  return result;
+};
+
+//prodcut transfer godown to main depo
+const addProductTransferIntoDB = async (payload: any) => {
+  const createProductTransfer = await prisma.$transaction(async (tx: any) => {
+    // Check if product exists
+
+    await Promise.all(
+      payload.productItems.map(async (product: { productId: number }) => {
+        const isExisted = await tx.product.findFirst({
+          where: { id: product.productId },
+        });
+
+        if (!isExisted) {
+          throw new Error(
+            `Invalid productId: ${payload.productId}. No matching Product found.`
+          );
+        }
+      })
+    );
+
+    const transactionInfo = await tx.transactionInfo.create({
+      data: {
+        date: new Date(payload?.date),
+        voucherNo: payload.voucherNo,
+        voucherType: VoucherType.ALLOCATION,
+      },
+    });
+
+    await Promise.all(
+      payload.productItems.map((item: any) =>
+        tx.Inventory.create({
+          data: {
+            transectionId: transactionInfo?.id,
+            depoId: payload.providerdepoId,
+            date: new Date(payload?.date),
+            productId: item.productId,
+            unitPrice: item.unitPrice,
+            quantityLess: item.quantity,
+            creditAmount: item.amount,
+          },
+        })
+      )
+    );
+
+    await Promise.all(
+      payload.productItems.map((item: any) =>
+        tx.Inventory.create({
+          data: {
+            transectionId: transactionInfo?.id,
+            depoId: payload.receverdepoId,
+            date: new Date(payload?.date),
+            productId: item.productId,
+            unitPrice: item.unitPrice,
+            quantityAdd: item.quantity,
+            debitAmount: item.amount,
+          },
+        })
+      )
+    );
+
+    const ledgerId = await tx.ledgerHead.findFirst({
+      where: {
+        ledgerName: {
+          contains: "accounts receivable",
+        },
+      },
+    });
+
+    if (!ledgerId) {
+      throw new AppError(
+        StatusCodes.BAD_REQUEST,
+        "Please chreate a accounts receivable ledger item"
+      );
+    }
+
+    await tx.journal.create({
+      data: {
+        transectionId: transactionInfo?.id,
+        ledgerHeadId: ledgerId.id,
+        date: new Date(payload?.date),
+        depoId: payload.receverdepoId,
+        debitAmount: payload.totalAmount,
+        narration: "Product Received",
+      },
+    });
+
+    const PayableledgerId = await tx.ledgerHead.findFirst({
+      where: {
+        ledgerName: {
+          contains: "accounts payable",
+        },
+      },
+    });
+
+    if (!PayableledgerId) {
+      throw new AppError(
+        StatusCodes.BAD_REQUEST,
+        "Please chreate a accounts payable ledger item"
+      );
+    }
+
+    await tx.journal.create({
+      data: {
+        transectionId: transactionInfo?.id,
+        ledgerHeadId: PayableledgerId.id,
+        date: new Date(payload?.date),
+        depoId: payload.providerdepoId,
+        creditAmount: payload.totalAmount,
+        narration: "Product Provided",
+      },
+    });
+
+    return transactionInfo;
+  });
+
+  const result = await prisma.transactionInfo.findFirst({
+    where: {
+      id: createProductTransfer.id,
+    },
+
+    select: {
+      id: true,
+      voucherNo: true,
+      voucherType: true,
+      status: true,
+      date: true,
+      journal: {
+        include: {
+          ledgerHead: true,
+        },
+      },
+
+      inventory: {
+        select: {
+          date: true,
+          debitAmount: true,
+          depoId: true,
+          id: true,
+          productId: true,
+          creditAmount: true,
+          quantityAdd: true,
+          quantityLess: true,
+          transectionId: true,
+          unitPrice: true,
+        },
+      },
+    },
+  });
+  return result;
+};
+
+// create Salse Voucher
+const createSalesVoucher = async (payload: any) => {
+  const createSalseVoucher = await prisma.$transaction(async (tx: any) => {
+    //check party
+    if (payload.chemistId) {
+      const partyExists = await tx.chemist.findFirst({
+        where: { chemistId: payload.chemistId },
+      });
+
+      if (!partyExists) {
+        throw new Error(
+          `Invalid chemistId: ${payload.chemistId}. No matching Party or Customer found.`
+        );
+      }
+    }
+
+    if (payload.partyId) {
+      const partyExists = await tx.padry.findFirst({
+        where: { partyId: payload.partyId },
+      });
+
+      if (!partyExists) {
+        throw new Error(
+          `Invalid chemistId: No matching Party or Customer found.`
+        );
+      }
+    }
+
+    // step 1. create transaction entries
+    const createTransactionInfo: TransactionInfo =
+      await tx.transactionInfo.create({
+        data: {
+          date: payload?.date,
+          invoiceNo: payload.invoiceNo || null,
+          voucherNo: payload.voucherNo,
+          paymentType: payload.paymentType,
+          voucherType: VoucherType.SALES,
+          chemistId: payload.chemistId || null,
+          partyId: payload.partyId || null,
+        },
+      });
+
+    // 2. create bank transaction
+    const BankTXData: {
+      transectionId: number;
+      bankAccountId: number;
+      debitAmount: number;
+      date: Date;
+    }[] = [];
+
+    payload.paymentItems.map(async (item: any) => {
+      if (item.bankAccountId) {
+        BankTXData.push({
+          transectionId: createTransactionInfo.id,
+          bankAccountId: item.bankAccountId,
+          date: payload.date,
+          debitAmount: item?.amount,
+        });
+      }
+    });
+
+    if (BankTXData.length > 0) {
+      await tx.BankTransaction.createMany({
+        data: BankTXData,
+      });
+    }
+
+    if (
+      !Array.isArray(payload.productItems) ||
+      payload.productItems.length === 0
+    ) {
+      throw new Error("Invalid data: salseItem must be a non-empty array");
+    }
+
+    const isExistedDepo = await prisma.depo.findFirst({
+      where: {
+        id: payload.depoId,
+      },
+    });
+
+    //Step 2: Insert Inventory Records
+
+    await Promise.all(
+      payload.productItems.map((item: any) =>
+        tx.inventory.create({
+          data: {
+            date: new Date(payload.date),
+            depoId: isExistedDepo?.id || null,
+            transectionId: createTransactionInfo.id,
+            productId: item.productId,
+            unitPrice: item.unitPrice,
+            quantityLess: item.quantity,
+            creditAmount: item.amount,
+          },
+        })
+      )
+    );
+
+    if (
+      !Array.isArray(payload.paymentItems) ||
+      payload.paymentItems.length === 0
+    ) {
+      throw new Error("Invalid data: items must be a non-empty array");
+    }
+
+    await Promise.all(
+      payload.paymentItems.map((item: any) => {
+        tx.journal.create({
+          transectionId: createTransactionInfo.id,
+          date: payload.date,
+          depoId: isExistedDepo?.id || null,
+          ledgerItemId: item.ledgerItemId,
+          debitAmount: item.amount,
+          narration: item?.narration || "",
+        });
+      })
+    );
+
+    if (payload.discount && payload.discount > 0) {
+      const discountItem: LedgerHead | any = await tx.ledgerHead.findFirst({
+        where: {
+          ledgerName: {
+            contains: "discount",
+          },
+        },
+      });
+
+      if (!discountItem) {
+        throw new AppError(
+          StatusCodes.NOT_FOUND,
+          "Discount Ledger Head Not Found"
+        );
+      }
+
+      await tx.journal.create({
+        data: {
+          transectionId: createTransactionInfo.id,
+          date: payload.date,
+          depoId: payload.depoId,
+          ledgerHeadId: discountItem.id,
+          debitAmount: payload.discount,
+          narration: "Discount",
+        },
+      });
+    }
+
+    if (payload.orderNo) {
+      const isOrderStatus = await tx.orderStatus.findFirst({
+        where: {
+          orderNo: payload?.orderNo,
+        },
+      });
+
+      if (isOrderStatus) {
+        await tx.orderStatus.update({
+          where: {
+            id: isOrderStatus.id,
+          },
+          data: {
+            status: OrdStatus.CONFIRMED,
+          },
+        });
+      }
+    }
+
+    return createTransactionInfo.id;
+  });
+
+  const result = await prisma.transactionInfo.findFirst({
+    where: {
+      id: createSalseVoucher,
+    },
+    select: {
+      date: true,
+      voucherNo: true,
+      voucherType: true,
+      paymentType: true,
+      inventory: true,
+      journal: true,
+    },
+  });
+  return result;
+};
+
+// Create Payment Voucher
+const createPaymentVoucher = async (payload: any) => {
+  const createVoucher = await prisma.$transaction(async (tx: any) => {
+    //check party
+    const partyExists = await tx.party.findFirst({
+      where: { id: payload.partyId },
+    });
+
+    if (!partyExists) {
+      throw new Error(
+        `Invalid partyOrcustomerId: ${payload.partyOrcustomerId}. No matching Party or Customer found.`
+      );
+    }
+    const transactionInfoData = {
+      date: payload?.date,
+      voucherNo: payload.voucherNo,
+      partyType: partyExists.partyType || null,
+      partyId: partyExists.id || null,
+      voucherType: VoucherType.PAYMENT,
+    };
+
+    // step 1. create transaction entries
+    const createTransactionInfo: TransactionInfo =
+      await tx.transactionInfo.create({
+        data: transactionInfoData,
+      });
+
+    // 2. create bank transaction
+    const BankTXData: {
+      transectionId: number;
+      bankAccountId: number;
+      debitAmount: number;
+      date: Date;
+    }[] = [];
+
+    payload.debitItem.map(async (item: any) => {
+      if (item.bankId) {
+        BankTXData.push({
+          transectionId: createTransactionInfo.id,
+          bankAccountId: item.bankId,
+          date: payload.date,
+          debitAmount: item?.amount,
+        });
+      }
+    });
+
+    if (BankTXData) {
+      await tx.bankTransaction.createMany({
+        data: BankTXData,
+      });
+    }
+
+    if (!Array.isArray(payload.creditItem) || payload.creditItem.length === 0) {
+      throw new Error("Invalid data: salseItem must be a non-empty array");
+    }
+
+    const journalCreditItems: {
+      transectionId: number;
+      accountsItemId: number;
+      creditAmount: number;
+      narration: string;
+    }[] = [];
+
+    payload.creditItem.map((item: any) => {
+      if (!item.bankId)
+        journalCreditItems.push({
+          transectionId: createTransactionInfo.id,
+          accountsItemId: item.accountsItemId,
+          creditAmount: item.amount || 0,
+          narration: item?.narration || "",
+        });
+    });
+
+    if (!Array.isArray(payload.debitItem) || payload.debitItem.length === 0) {
+      throw new Error("Invalid data: salseItem must be a non-empty array");
+    }
+
+    // Step 7: Prepare Journal Credit Entries (For Payment Accounts)
+    const journalDebitItems = payload.debitItem.map((item: any) => ({
+      transectionId: createTransactionInfo.id,
+      accountsItemId: item.accountsItemId,
+      debitAmount: item.amount || 0,
+      narration: item?.narration || "",
+    }));
+
+    const journalItems = [...journalDebitItems, ...journalCreditItems];
+
+    const createJournal = await tx.journal.createMany({
+      data: journalItems,
+    });
+    return createJournal;
+  });
+  return createVoucher;
+};
+
+const createReceiptVoucher = async (payload: any) => {
+  const createVoucher = await prisma.$transaction(async (tx: any) => {
+    //check party
+    const partyExists = await tx.party.findFirst({
+      where: { id: payload.partyId },
+    });
+
+    if (!partyExists) {
+      throw new Error(
+        `Invalid partyOrcustomerId: ${payload.partyOrcustomerId}. No matching Party or Customer found.`
+      );
+    }
+    const transactionInfoData = {
+      date: payload?.date,
+      voucherNo: payload.voucherNo,
+      partyType: partyExists.partyType,
+      partyId: partyExists.id,
+      voucherType: VoucherType.RECEIVED,
+    };
+
+    // step 1. create transaction entries
+    const createTransactionInfo: TransactionInfo =
+      await tx.transactionInfo.create({
+        data: transactionInfoData,
+      });
+
+    // 2. create bank transaction
+    const BankTXData: {
+      transectionId: number;
+      bankAccountId: number;
+      debitAmount: number;
+      date: Date;
+    }[] = [];
+
+    payload.debitItem.map(async (item: any) => {
+      if (item.bankId) {
+        BankTXData.push({
+          transectionId: createTransactionInfo.id,
+          bankAccountId: item.bankId,
+          date: payload.date,
+          debitAmount: item?.amount,
+        });
+      }
+    });
+
+    if (BankTXData.length > 0) {
+      await tx.bankTransaction.createMany({
+        data: BankTXData,
+      });
+    }
+
+    if (!Array.isArray(payload.debitItem) || payload.debitItem.length === 0) {
+      throw new Error("Invalid data: salseItem must be a non-empty array");
+    }
+
+    const journalDebitItems: {
+      transectionId: number;
+      accountsItemId: number;
+      debitAmount: number;
+      narration: string;
+    }[] = [];
+
+    payload.debitItem.map((item: any) => {
+      if (!item.bankId)
+        journalDebitItems.push({
+          transectionId: createTransactionInfo.id,
+          accountsItemId: item.accountsItemId,
+          debitAmount: item.amount || 0,
+          narration: item?.narration || "",
+        });
+    });
+
+    if (!Array.isArray(payload.creditItem) || payload.creditItem.length === 0) {
+      throw new Error("Invalid data: salseItem must be a non-empty array");
+    }
+
+    // Step 7: Prepare Journal Credit Entries (For Payment Accounts)
+    const journalCreditItems = payload.creditItem.map((item: any) => ({
+      transectionId: createTransactionInfo.id,
+      accountsItemId: item.accountsItemId,
+      creditAmount: item.amount || 0,
+      narration: item?.narration || "",
+    }));
+
+    const journalItems = [...journalDebitItems, ...journalCreditItems];
+
+    const createJournal = await tx.journal.createMany({
+      data: journalItems,
+    });
+    return createJournal;
+  });
+  return createVoucher;
+};
+
+const createMoneyReceivedVoucher = async (payload: any, user: any) => {
+  console.log(payload);
+
+  const moneyReceived = await prisma.$transaction(async (tx): Promise<any> => {
+    const chemist = await tx.chemist.findFirst({
+      where: {
+        chemistId: payload.chemistId,
+      },
+    });
+    if (!chemist) {
+      throw new AppError(StatusCodes.NOT_FOUND, "Chemist nor found");
+    }
+    const ledgerId = await tx.ledgerHead.findFirst({
+      where: {
+        ledgerName: {
+          contains: "accounts receivable",
+        },
+      },
+    });
+
+    if (!ledgerId) {
+      throw new AppError(
+        StatusCodes.BAD_REQUEST,
+        "Please chreate a accounts receivable ledger item"
+      );
+    }
+
+    // step 1. create transaction entries
+    const createTransactionInfo: TransactionInfo =
+      await tx.transactionInfo.create({
+        data: {
+          date: new Date(payload.date),
+          voucherNo: payload.voucherNo,
+          voucherType: VoucherType.MONEY_RECEIVED,
+          chemistId: chemist?.chemistId,
+          journal: {
+            create: {
+              ledgerHeadId: ledgerId.id,
+              date: new Date(payload.date),
+              depoId: payload.depoId,
+              narration: "Paid",
+              debitAmount: payload.totalAmount,
+            },
+          },
+        },
+      });
+
+    await tx.transactionInfo.create({
+      data: {
+        date: new Date(payload.date),
+        voucherNo: payload.voucherNo,
+        voucherType: VoucherType.MONEY_RECEIVED,
+        chemistId: user?.employeeId,
+        journal: {
+          create: payload.paymentItems.map((item: any) => ({
+            date: new Date(payload.date),
+            depoId: payload.depoId,
+            creditAmount: item.amount,
+            narration: item.narration,
+          })),
+        },
+      },
+    });
+
+    // 2. create bank transaction
+
+    return createTransactionInfo;
+  });
+
+  return moneyReceived;
+};
+
+const createJournalVoucher = async (payload: any) => {
+  const Journal = await prisma.$transaction(async (tx): Promise<any> => {
+    const chemist = await tx.chemist.findFirst({
+      where: {
+        chemistId: payload.chemistId,
+      },
+    });
+    if (!chemist) {
+      throw new AppError(StatusCodes.NOT_FOUND, "Chemist nor found");
+    }
+    // step 1. create transaction entries
+    const createTransactionInfo: TransactionInfo =
+      await tx.transactionInfo.create({
+        data: {
+          date: new Date(payload.date),
+          voucherNo: payload.voucherNo,
+          voucherType: VoucherType.JOURNAL,
+          chemistId: chemist?.chemistId,
+        },
+      });
+
+    await tx.journal.createMany({
+      data: [
+        {
+          transectionId: createTransactionInfo.id,
+          ledgerHeadId: payload.debitItemId,
+          date: payload.date,
+          debitAmount: payload.amount,
+          narration: payload.narration,
+        },
+        {
+          transectionId: createTransactionInfo.id,
+          ledgerHeadId: payload.creditItemId,
+          date: payload.date,
+          creditAmount: payload.amount,
+          narration: payload.narration,
+        },
+      ],
+    });
+
+    return createTransactionInfo.id;
+  });
+  return Journal;
+};
+
+const createFixedVoucher = async (payload: any) => {
+  console.log(payload);
+
+  const createFixedVoucher = await prisma.$transaction(async (tx: any) => {
+    //check party
+    if (payload.chemistId) {
+      const partyExists = await tx.chemist.findFirst({
+        where: { chemistId: payload.chemistId },
+      });
+
+      if (!partyExists) {
+        throw new Error(`Invalid chemistId: ${payload.chemistId} `);
+      }
+    }
+
+    // step 1. create transaction entries
+    const createFixedJournal: TransactionInfo = await tx.fixedJournal.create({
+      data: {
+        date: payload?.date,
+        voucherNo: payload.voucherNo,
+        chemistId: payload.chemistId,
+        depoId: payload.depoId,
+        ledgerHeadId: payload.paymentOption.ledgerHeadId,
+        debitAmount: payload.paymentOption.amount,
+        narration: payload.paymentOption.narration,
+      },
+    });
+
+    if (
+      !Array.isArray(payload.productItems) ||
+      payload.productItems.length === 0
+    ) {
+      throw new Error("Invalid data: salseItem must be a non-empty array");
+    }
+
+    const isExistedDepo = await prisma.depo.findFirst({
+      where: {
+        id: payload.depoId,
+      },
+    });
+
+    //Step 2: Insert Inventory Records
+
+    await Promise.all(
+      payload.productItems.map((item: any) =>
+        tx.inventory.create({
+          data: {
+            date: new Date(payload.date),
+            depoId: isExistedDepo?.id,
+            fixedJournalId: createFixedJournal.id,
+            productId: item.productId,
+            unitPrice: item.unitPrice,
+            quantityLess: item.quantity,
+            creditAmount: item.amount,
+            isFixted: true,
+          },
+        })
+      )
+    );
+
+    if (payload.discount && payload.discount > 0) {
+      const discountItem: LedgerHead | any = await tx.ledgerHead.findFirst({
+        where: {
+          ledgerName: {
+            contains: "discount",
+          },
+        },
+      });
+
+      if (!discountItem) {
+        throw new AppError(
+          StatusCodes.NOT_FOUND,
+          "Discount Ledger Head Not Found"
+        );
+      }
+
+      await tx.fixedJournal.create({
+        data: {
+          date: payload.date,
+          voucherNo: payload.voucherNo,
+          chemistId: payload.chemistId,
+          depoId: payload.depoId,
+          ledgerHeadId: discountItem.id,
+          debitAmount: payload.discount,
+          narration: "Discount",
+        },
+      });
+    }
+
+    return createFixedJournal.id;
+  });
+
+  const result = await prisma.fixedJournal.findFirst({
+    where: {
+      id: createFixedVoucher,
+    },
+    include: {
+      inventory: true,
+    },
+  });
+  return result;
+};
+
+const createQantaVoucher = async () => {};
+
+export const JurnalService = {
+  createPurchestReceivedIntoDB,
+  createSalesVoucher,
+  addProductTransferIntoDB,
+  createPaymentVoucher,
+  createReceiptVoucher,
+  createJournalVoucher,
+  createQantaVoucher,
+  createMoneyReceivedVoucher,
+  createFixedVoucher,
+};
