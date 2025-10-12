@@ -9,6 +9,7 @@ import {
 import prisma from "../../shared/prisma";
 import AppError from "../../errors/AppError";
 import { StatusCodes } from "http-status-codes";
+import { generateVoucherNumber } from "../../helpers/createVoucherNo";
 
 //Create Purchase Received Voucher
 const createPurchestReceivedIntoDB = async (payload: any) => {
@@ -39,7 +40,7 @@ const createPurchestReceivedIntoDB = async (payload: any) => {
 
     // 2. create bank transaction
     const BankTXData: {
-      transectionId: number;
+      transactionId: number;
       bankAccountId: number;
       creditAmount: number;
       date: Date;
@@ -48,7 +49,7 @@ const createPurchestReceivedIntoDB = async (payload: any) => {
     payload.paymentItem.map(async (item: any) => {
       if (item.bankId) {
         BankTXData.push({
-          transectionId: createTransactionInfo.id,
+          transactionId: createTransactionInfo.id,
           bankAccountId: item.bankId,
           date: new Date(payload.date),
           creditAmount: Number(item.amount),
@@ -75,7 +76,7 @@ const createPurchestReceivedIntoDB = async (payload: any) => {
         tx.Inventory.create({
           data: {
             productId: item.productId,
-            transectionId: createTransactionInfo.id,
+            transactionId: createTransactionInfo.id,
             date: new Date(payload.date),
             unitPrice: item.unitPrice,
             quantityAdd: item.quantity,
@@ -96,9 +97,9 @@ const createPurchestReceivedIntoDB = async (payload: any) => {
     // Step 4: Insert Journal Entries
     await Promise.all(
       payload.paymentItem.map(async (item: any) => {
-        await tx.journal.createMany({
+        await tx.journals.createMany({
           data: {
-            transectionId: createTransactionInfo.id,
+            transactionId: createTransactionInfo.id,
             accountsItemId: item.accountsItemId,
             date: new Date(payload.date),
             creditAmount: item.amount || 0,
@@ -183,7 +184,7 @@ const addProductTransferIntoDB = async (payload: any) => {
       payload.productItems.map((item: any) =>
         tx.Inventory.create({
           data: {
-            transectionId: transactionInfo?.id,
+            transactionId: transactionInfo?.id,
             depoId: payload.providerdepoId,
             date: new Date(payload?.date),
             productId: item.productId,
@@ -199,7 +200,7 @@ const addProductTransferIntoDB = async (payload: any) => {
       payload.productItems.map((item: any) =>
         tx.Inventory.create({
           data: {
-            transectionId: transactionInfo?.id,
+            transactionId: transactionInfo?.id,
             depoId: payload.receverdepoId,
             date: new Date(payload?.date),
             productId: item.productId,
@@ -228,7 +229,7 @@ const addProductTransferIntoDB = async (payload: any) => {
 
     await tx.journal.create({
       data: {
-        transectionId: transactionInfo?.id,
+        transactionId: transactionInfo?.id,
         ledgerHeadId: ledgerId.id,
         date: new Date(payload?.date),
         depoId: payload.receverdepoId,
@@ -254,7 +255,7 @@ const addProductTransferIntoDB = async (payload: any) => {
 
     await tx.journal.create({
       data: {
-        transectionId: transactionInfo?.id,
+        transactionId: transactionInfo?.id,
         ledgerHeadId: PayableledgerId.id,
         date: new Date(payload?.date),
         depoId: payload.providerdepoId,
@@ -293,7 +294,7 @@ const addProductTransferIntoDB = async (payload: any) => {
           creditAmount: true,
           quantityAdd: true,
           quantityLess: true,
-          transectionId: true,
+          transactionInfo: true,
           unitPrice: true,
         },
       },
@@ -319,7 +320,7 @@ const createSalesVoucher = async (payload: any) => {
     }
 
     if (payload.partyId) {
-      const partyExists = await tx.padry.findFirst({
+      const partyExists = await tx.party.findFirst({
         where: { partyId: payload.partyId },
       });
 
@@ -346,7 +347,7 @@ const createSalesVoucher = async (payload: any) => {
 
     // 2. create bank transaction
     const BankTXData: {
-      transectionId: number;
+      transactionId: number;
       bankAccountId: number;
       debitAmount: number;
       date: Date;
@@ -355,7 +356,7 @@ const createSalesVoucher = async (payload: any) => {
     payload.paymentItems.map(async (item: any) => {
       if (item.bankAccountId) {
         BankTXData.push({
-          transectionId: createTransactionInfo.id,
+          transactionId: createTransactionInfo.id,
           bankAccountId: item.bankAccountId,
           date: payload.date,
           debitAmount: item?.amount,
@@ -389,8 +390,8 @@ const createSalesVoucher = async (payload: any) => {
         tx.inventory.create({
           data: {
             date: new Date(payload.date),
-            depoId: isExistedDepo?.id || null,
-            transectionId: createTransactionInfo.id,
+            depoId: isExistedDepo?.id,
+            transactionId: createTransactionInfo.id,
             productId: item.productId,
             unitPrice: item.unitPrice,
             quantityLess: item.quantity,
@@ -404,20 +405,22 @@ const createSalesVoucher = async (payload: any) => {
       !Array.isArray(payload.paymentItems) ||
       payload.paymentItems.length === 0
     ) {
-      throw new Error("Invalid data: items must be a non-empty array");
+      throw new Error("Invalid data: paymentItems must be a non-empty array");
     }
 
     await Promise.all(
-      payload.paymentItems.map((item: any) => {
+      payload.paymentItems.map((item: any) =>
         tx.journal.create({
-          transectionId: createTransactionInfo.id,
-          date: payload.date,
-          depoId: isExistedDepo?.id || null,
-          ledgerItemId: item.ledgerItemId,
-          debitAmount: item.amount,
-          narration: item?.narration || "",
-        });
-      })
+          data: {
+            transactionId: createTransactionInfo.id,
+            date: payload.date,
+            depoId: isExistedDepo?.id,
+            ledgerHeadId: item.ledgerItemId,
+            debitAmount: item.amount,
+            narration: item?.narration || "",
+          },
+        })
+      )
     );
 
     if (payload.discount && payload.discount > 0) {
@@ -438,7 +441,7 @@ const createSalesVoucher = async (payload: any) => {
 
       await tx.journal.create({
         data: {
-          transectionId: createTransactionInfo.id,
+          transactionId: createTransactionInfo.id,
           date: payload.date,
           depoId: payload.depoId,
           ledgerHeadId: discountItem.id,
@@ -488,95 +491,94 @@ const createSalesVoucher = async (payload: any) => {
 
 // Create Payment Voucher
 const createPaymentVoucher = async (payload: any) => {
-  const createVoucher = await prisma.$transaction(async (tx: any) => {
-    //check party
-    const partyExists = await tx.party.findFirst({
-      where: { id: payload.partyId },
+  // Step 1: Resolve related entities
+  let employeeId: string | null = null;
+  let partyId: number | null = null;
+  let chemistId: string | null = null;
+  let stakeholderId: string | null = null; // 👈 matches your schema
+
+  if (payload.userType === "EMPLOYEE") {
+    const isEmployee = await prisma.user.findFirst({
+      where: { id: payload.paymentTo },
     });
+    if (!isEmployee)
+      throw new AppError(StatusCodes.NOT_FOUND, "Employee not found");
+    employeeId = isEmployee.employeeId;
+  }
 
-    if (!partyExists) {
-      throw new Error(
-        `Invalid partyOrcustomerId: ${payload.partyOrcustomerId}. No matching Party or Customer found.`
-      );
-    }
-    const transactionInfoData = {
-      date: payload?.date,
-      voucherNo: payload.voucherNo,
-      partyType: partyExists.partyType || null,
-      partyId: partyExists.id || null,
-      voucherType: VoucherType.PAYMENT,
-    };
+  if (["SUPPLIER", "VENDOR"].includes(payload.userType)) {
+    const isParty = await prisma.party.findFirst({
+      where: { id: payload.paymentTo },
+    });
+    if (!isParty) throw new AppError(StatusCodes.NOT_FOUND, "Party not found");
+    partyId = isParty.id;
+  }
 
+  if (payload.userType === "CHEMIST") {
+    const isChemist = await prisma.chemist.findFirst({
+      where: { id: payload.paymentTo },
+    });
+    if (!isChemist)
+      throw new AppError(StatusCodes.NOT_FOUND, "Chemist not found");
+    chemistId = isChemist.chemistId;
+  }
+
+  if (payload.userType === "STAKEHOLDER") {
+    const isStakeholder = await prisma.stakeholder.findFirst({
+      where: { id: payload.paymentTo },
+    });
+    if (!isStakeholder)
+      throw new AppError(StatusCodes.NOT_FOUND, "Stakeholder not found");
+    stakeholderId = isStakeholder.stakeId; // 👈 note spelling matches model
+  }
+
+  const createVoucher = await prisma.$transaction(async (tx: any) => {
     // step 1. create transaction entries
     const createTransactionInfo: TransactionInfo =
       await tx.transactionInfo.create({
-        data: transactionInfoData,
+        data: {
+          date: new Date(payload?.date),
+          voucherNo: payload.voucherNo,
+          voucherType: VoucherType.PAYMENT,
+          ...(partyId && { party: { connect: { id: partyId } } }),
+          ...(chemistId && { chemist: { connect: { chemistId } } }),
+          ...(stakeholderId && {
+            stakeholder: { connect: { stakeId: stakeholderId } },
+          }),
+          ...(employeeId && { user: { connect: { employeeId } } }),
+        },
       });
 
     // 2. create bank transaction
     const BankTXData: {
-      transectionId: number;
+      transactionId: number;
       bankAccountId: number;
       debitAmount: number;
       date: Date;
     }[] = [];
 
-    payload.debitItem.map(async (item: any) => {
-      if (item.bankId) {
-        BankTXData.push({
-          transectionId: createTransactionInfo.id,
-          bankAccountId: item.bankId,
-          date: payload.date,
-          debitAmount: item?.amount,
-        });
-      }
+    await tx.journal.createMany({
+      data: [
+        {
+          transactionId: createTransactionInfo.id,
+          ledgerHeadId: payload.creditItemId,
+          date: new Date(payload.date),
+          depoId: payload.depoId,
+          creditAmount: payload.amount,
+          narration: payload.narration,
+        },
+        {
+          transactionId: createTransactionInfo.id,
+          ledgerHeadId: payload.debitItemId,
+          date: new Date(payload.date),
+          depoId: payload.depoId,
+          debitAmount: payload.amount,
+          narration: payload.narration,
+        },
+      ],
     });
 
-    if (BankTXData) {
-      await tx.bankTransaction.createMany({
-        data: BankTXData,
-      });
-    }
-
-    if (!Array.isArray(payload.creditItem) || payload.creditItem.length === 0) {
-      throw new Error("Invalid data: salseItem must be a non-empty array");
-    }
-
-    const journalCreditItems: {
-      transectionId: number;
-      accountsItemId: number;
-      creditAmount: number;
-      narration: string;
-    }[] = [];
-
-    payload.creditItem.map((item: any) => {
-      if (!item.bankId)
-        journalCreditItems.push({
-          transectionId: createTransactionInfo.id,
-          accountsItemId: item.accountsItemId,
-          creditAmount: item.amount || 0,
-          narration: item?.narration || "",
-        });
-    });
-
-    if (!Array.isArray(payload.debitItem) || payload.debitItem.length === 0) {
-      throw new Error("Invalid data: salseItem must be a non-empty array");
-    }
-
-    // Step 7: Prepare Journal Credit Entries (For Payment Accounts)
-    const journalDebitItems = payload.debitItem.map((item: any) => ({
-      transectionId: createTransactionInfo.id,
-      accountsItemId: item.accountsItemId,
-      debitAmount: item.amount || 0,
-      narration: item?.narration || "",
-    }));
-
-    const journalItems = [...journalDebitItems, ...journalCreditItems];
-
-    const createJournal = await tx.journal.createMany({
-      data: journalItems,
-    });
-    return createJournal;
+    return createTransactionInfo;
   });
   return createVoucher;
 };
@@ -609,7 +611,7 @@ const createReceiptVoucher = async (payload: any) => {
 
     // 2. create bank transaction
     const BankTXData: {
-      transectionId: number;
+      transactionId: number;
       bankAccountId: number;
       debitAmount: number;
       date: Date;
@@ -618,7 +620,7 @@ const createReceiptVoucher = async (payload: any) => {
     payload.debitItem.map(async (item: any) => {
       if (item.bankId) {
         BankTXData.push({
-          transectionId: createTransactionInfo.id,
+          transactionId: createTransactionInfo.id,
           bankAccountId: item.bankId,
           date: payload.date,
           debitAmount: item?.amount,
@@ -637,7 +639,7 @@ const createReceiptVoucher = async (payload: any) => {
     }
 
     const journalDebitItems: {
-      transectionId: number;
+      transactionId: number;
       accountsItemId: number;
       debitAmount: number;
       narration: string;
@@ -646,7 +648,7 @@ const createReceiptVoucher = async (payload: any) => {
     payload.debitItem.map((item: any) => {
       if (!item.bankId)
         journalDebitItems.push({
-          transectionId: createTransactionInfo.id,
+          transactionId: createTransactionInfo.id,
           accountsItemId: item.accountsItemId,
           debitAmount: item.amount || 0,
           narration: item?.narration || "",
@@ -659,7 +661,7 @@ const createReceiptVoucher = async (payload: any) => {
 
     // Step 7: Prepare Journal Credit Entries (For Payment Accounts)
     const journalCreditItems = payload.creditItem.map((item: any) => ({
-      transectionId: createTransactionInfo.id,
+      transactionId: createTransactionInfo.id,
       accountsItemId: item.accountsItemId,
       creditAmount: item.amount || 0,
       narration: item?.narration || "",
@@ -677,7 +679,6 @@ const createReceiptVoucher = async (payload: any) => {
 
 const createMoneyReceivedVoucher = async (payload: any, user: any) => {
   console.log(payload);
-
   const moneyReceived = await prisma.$transaction(async (tx): Promise<any> => {
     const chemist = await tx.chemist.findFirst({
       where: {
@@ -702,18 +703,22 @@ const createMoneyReceivedVoucher = async (payload: any, user: any) => {
       );
     }
 
+    const voucherNo = await generateVoucherNumber("MRV");
+
+    console.log(voucherNo, "voucherNo");
+
     // step 1. create transaction entries
     const createTransactionInfo: TransactionInfo =
       await tx.transactionInfo.create({
         data: {
-          date: new Date(payload.date),
-          voucherNo: payload.voucherNo,
+          date: new Date(),
+          voucherNo: voucherNo,
           voucherType: VoucherType.MONEY_RECEIVED,
           chemistId: chemist?.chemistId,
           journal: {
             create: {
               ledgerHeadId: ledgerId.id,
-              date: new Date(payload.date),
+              date: new Date(),
               depoId: payload.depoId,
               narration: "Paid",
               debitAmount: payload.totalAmount,
@@ -724,14 +729,15 @@ const createMoneyReceivedVoucher = async (payload: any, user: any) => {
 
     await tx.transactionInfo.create({
       data: {
-        date: new Date(payload.date),
-        voucherNo: payload.voucherNo,
+        date: new Date(),
+        voucherNo: voucherNo,
         voucherType: VoucherType.MONEY_RECEIVED,
-        chemistId: user?.employeeId,
+        employeeId: user?.employeeId,
         journal: {
           create: payload.paymentItems.map((item: any) => ({
-            date: new Date(payload.date),
+            date: new Date(),
             depoId: payload.depoId,
+            ledgerHeadId: item.ledgerItemId,
             creditAmount: item.amount,
             narration: item.narration,
           })),
@@ -771,14 +777,14 @@ const createJournalVoucher = async (payload: any) => {
     await tx.journal.createMany({
       data: [
         {
-          transectionId: createTransactionInfo.id,
+          transactionId: createTransactionInfo.id,
           ledgerHeadId: payload.debitItemId,
           date: payload.date,
           debitAmount: payload.amount,
           narration: payload.narration,
         },
         {
-          transectionId: createTransactionInfo.id,
+          transactionId: createTransactionInfo.id,
           ledgerHeadId: payload.creditItemId,
           date: payload.date,
           creditAmount: payload.amount,

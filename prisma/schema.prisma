@@ -383,15 +383,15 @@ model BankTransaction {
   bankAccountId   Int
   debitAmount     Int?
   creditAmount    Int?
-  transectionId   Int?
+  transactionId   Int?
   isClosing       Boolean          @default(false)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   bankAccount     BankAccount      @relation(fields: [bankAccountId], references: [id])
-  transactionInfo TransactionInfo? @relation(fields: [transectionId], references: [id])
+  transactionInfo TransactionInfo? @relation(fields: [transactionId], references: [id])
 
   @@index([bankAccountId])
-  @@index([transectionId], map: "bank_transactions_transectionId_fkey")
+  @@index([transactionId], map: "bank_transactions_transactionId_fkey")
   @@map("bank_transactions")
 }
 
@@ -400,7 +400,7 @@ model Inventory {
   date            DateTime
   productId       Int
   depoId          Int?
-  transectionId   Int?
+  transactionId   Int?
   unitPrice       Float            @default(0)
   quantityAdd     Float?           @default(0)
   quantityLess    Float?           @default(0)
@@ -414,11 +414,11 @@ model Inventory {
   depo            Depo?            @relation(fields: [depoId], references: [id])
   fixedJournal    FixedJournal?    @relation(fields: [fixedJournalId], references: [id])
   product         Product          @relation(fields: [productId], references: [id])
-  transactionInfo TransactionInfo? @relation(fields: [transectionId], references: [id])
+  transactionInfo TransactionInfo? @relation(fields: [transactionId], references: [id])
 
   @@index([productId])
   @@index([depoId], map: "inventories_depoId_fkey")
-  @@index([transectionId], map: "inventories_transectionId_fkey")
+  @@index([transactionId], map: "inventories_transactionId_fkey")
   @@index([fixedJournalId], map: "inventories_fixedJournalId_fkey")
   @@map("inventories")
 }
@@ -430,7 +430,7 @@ model TransactionInfo {
   invoiceNo       String?
   chemistId       String?
   customerId      Int?
-  stakeholerId    String?
+  stakeholderId   String?
   voucherType     VoucherType
   paymentType     PaymentType?
   status          Status            @default(PENDING)
@@ -445,11 +445,11 @@ model TransactionInfo {
   customers       Customers?        @relation(fields: [customerId], references: [id])
   user            User?             @relation(fields: [employeeId], references: [employeeId])
   party           Party?            @relation(fields: [partyId], references: [id])
-  stakeholder     Stakeholder?      @relation(fields: [stakeholerId], references: [stakeId])
+  stakeholder     Stakeholder?      @relation(fields: [stakeholderId], references: [stakeId])
 
   @@index([chemistId], map: "transaction_info_chemistId_fkey")
   @@index([customerId], map: "transaction_info_customerId_fkey")
-  @@index([stakeholerId], map: "transaction_info_stakeholerId_fkey")
+  @@index([stakeholderId], map: "transaction_info_stakeholerId_fkey")
   @@index([partyId], map: "transaction_info_partyId_fkey")
   @@index([employeeId], map: "transaction_info_employeeId_fkey")
   @@map("transaction_info")
@@ -457,7 +457,7 @@ model TransactionInfo {
 
 model Journal {
   id              Int              @id @default(autoincrement())
-  transectionId   Int?
+  transactionId   Int?
   ledgerHeadId    Int?
   date            DateTime
   depoId          Int?
@@ -469,11 +469,11 @@ model Journal {
   updatedAt       DateTime         @updatedAt
   depo            Depo?            @relation(fields: [depoId], references: [id])
   ledgerHead      LedgerHead?      @relation(fields: [ledgerHeadId], references: [id])
-  transactionInfo TransactionInfo? @relation(fields: [transectionId], references: [id])
+  transactionInfo TransactionInfo? @relation(fields: [transactionId], references: [id])
 
   @@index([depoId], map: "journals_depoId_fkey")
   @@index([ledgerHeadId], map: "journals_ledgerHeadId_fkey")
-  @@index([transectionId], map: "journals_transectionId_fkey")
+  @@index([transactionId], map: "journals_transactionId_fkey")
   @@map("journals")
 }
 

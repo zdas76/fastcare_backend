@@ -2,7 +2,8 @@ import { StatusCodes } from "http-status-codes";
 import AppError from "../../errors/AppError";
 import prisma from "../../shared/prisma";
 import { Order, OrdStatus } from "@prisma/client";
-import { ca, is } from "zod/v4/locales/index.cjs";
+
+import { generateVoucherNumber } from "../../helpers/createVoucherNo";
 
 const createOrder = async (payload: any, user: any) => {
   const isUser = await prisma.user.findFirst({
@@ -15,26 +16,22 @@ const createOrder = async (payload: any, user: any) => {
     throw new AppError(StatusCodes.BAD_REQUEST, "User Not Found");
   }
 
-  const isExied = await prisma.order.findFirst({
-    where: {
-      orderNo: payload.orderNo,
-    },
-    include: {
-      orderItem: true,
-      orderStatus: true,
-    },
-  });
+  const orderNo = await generateVoucherNumber("ODR");
 
-  if (isExied) {
-    throw new AppError(StatusCodes.BAD_REQUEST, "This order already done");
+  if (!orderNo) {
+    throw new AppError(
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      "Failed to generate order number"
+    );
   }
+
   const addOrder = await prisma.$transaction(async (tx) => {
     const orderinfo = await tx.order.create({
       data: {
         employeeId: isUser.employeeId,
         chemistId: payload.chemistId,
-        orderNo: payload.orderNo,
-        date: new Date(payload.date),
+        orderNo: orderNo,
+        date: new Date(),
         discount: payload.discount | 0,
         orderStatus: {
           create: {},

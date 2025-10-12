@@ -353,13 +353,13 @@ CREATE TABLE `bank_transactions` (
     `bankAccountId` INTEGER NOT NULL,
     `debitAmount` INTEGER NULL,
     `creditAmount` INTEGER NULL,
-    `transectionId` INTEGER NULL,
+    `transactionId` INTEGER NULL,
     `isClosing` BOOLEAN NOT NULL DEFAULT false,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
     INDEX `bank_transactions_bankAccountId_idx`(`bankAccountId`),
-    INDEX `bank_transactions_transectionId_fkey`(`transectionId`),
+    INDEX `bank_transactions_transactionId_fkey`(`transactionId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -369,8 +369,7 @@ CREATE TABLE `inventories` (
     `date` DATETIME(3) NOT NULL,
     `productId` INTEGER NOT NULL,
     `depoId` INTEGER NULL,
-    `transectionId` INTEGER NULL,
-    `fixedJournalId` INTEGER NULL,
+    `transactionId` INTEGER NULL,
     `unitPrice` DOUBLE NOT NULL DEFAULT 0,
     `quantityAdd` DOUBLE NULL DEFAULT 0,
     `quantityLess` DOUBLE NULL DEFAULT 0,
@@ -380,10 +379,12 @@ CREATE TABLE `inventories` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `isFixted` BOOLEAN NOT NULL DEFAULT false,
+    `fixedJournalId` INTEGER NULL,
 
     INDEX `inventories_productId_idx`(`productId`),
     INDEX `inventories_depoId_fkey`(`depoId`),
-    INDEX `inventories_transectionId_fkey`(`transectionId`),
+    INDEX `inventories_transactionId_fkey`(`transactionId`),
+    INDEX `inventories_fixedJournalId_fkey`(`fixedJournalId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -394,34 +395,34 @@ CREATE TABLE `transaction_info` (
     `voucherNo` VARCHAR(191) NOT NULL,
     `invoiceNo` VARCHAR(191) NULL,
     `chemistId` VARCHAR(191) NULL,
-    `partyId` INTEGER NULL,
     `customerId` INTEGER NULL,
     `stakeholerId` VARCHAR(191) NULL,
-    `employeeId` VARCHAR(191) NULL,
     `voucherType` ENUM('SALES', 'PURCHASE', 'RECEIVED', 'PAYMENT', 'JOURNAL', 'CONTRA', 'TRANSFER', 'ALLOCATION', 'GIFT', 'MONEY_RECEIVED', 'OTHER') NOT NULL,
     `paymentType` ENUM('PAID', 'DUE', 'PARTIAL') NULL,
     `status` ENUM('IN_STOCK', 'OUT_OF_STOCK', 'ACTIVE', 'DELETED', 'PUSH', 'BLOCK', 'PENDING', 'CHECKED') NOT NULL DEFAULT 'PENDING',
+    `employeeId` VARCHAR(191) NULL,
+    `partyId` INTEGER NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
-    `orderStatusId` INTEGER NULL,
 
     UNIQUE INDEX `transaction_info_voucherNo_key`(`voucherNo`),
     INDEX `transaction_info_chemistId_fkey`(`chemistId`),
     INDEX `transaction_info_customerId_fkey`(`customerId`),
     INDEX `transaction_info_stakeholerId_fkey`(`stakeholerId`),
     INDEX `transaction_info_partyId_fkey`(`partyId`),
+    INDEX `transaction_info_employeeId_fkey`(`employeeId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `journals` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `transectionId` INTEGER NULL,
+    `transactionId` INTEGER NULL,
     `ledgerHeadId` INTEGER NULL,
     `date` DATETIME(3) NOT NULL,
     `depoId` INTEGER NULL,
-    `creditAmount` DOUBLE NULL DEFAULT 0,
-    `debitAmount` DOUBLE NULL DEFAULT 0,
+    `creditAmount` DOUBLE NULL,
+    `debitAmount` DOUBLE NULL,
     `narration` VARCHAR(191) NULL,
     `isClosing` BOOLEAN NOT NULL DEFAULT false,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -429,7 +430,7 @@ CREATE TABLE `journals` (
 
     INDEX `journals_depoId_fkey`(`depoId`),
     INDEX `journals_ledgerHeadId_fkey`(`ledgerHeadId`),
-    INDEX `journals_transectionId_fkey`(`transectionId`),
+    INDEX `journals_transactionId_fkey`(`transactionId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -460,14 +461,14 @@ CREATE TABLE `orders` (
     `employeeId` VARCHAR(191) NOT NULL,
     `chemistId` VARCHAR(191) NOT NULL,
     `orderNo` VARCHAR(191) NOT NULL,
-    `date` DATETIME(3) NOT NULL,
+    `date` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `discount` INTEGER NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `orders_orderNo_key`(`orderNo`),
     INDEX `orders_chemistId_fkey`(`chemistId`),
-    INDEX `orders_userId_fkey`(`employeeId`),
+    INDEX `orders_employeeId_fkey`(`employeeId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -670,22 +671,19 @@ ALTER TABLE `products` ADD CONSTRAINT `products_unitId_fkey` FOREIGN KEY (`unitI
 ALTER TABLE `bank_transactions` ADD CONSTRAINT `bank_transactions_bankAccountId_fkey` FOREIGN KEY (`bankAccountId`) REFERENCES `bank_accounts`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `bank_transactions` ADD CONSTRAINT `bank_transactions_transectionId_fkey` FOREIGN KEY (`transectionId`) REFERENCES `transaction_info`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `bank_transactions` ADD CONSTRAINT `bank_transactions_transactionId_fkey` FOREIGN KEY (`transactionId`) REFERENCES `transaction_info`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `inventories` ADD CONSTRAINT `inventories_depoId_fkey` FOREIGN KEY (`depoId`) REFERENCES `depos`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `inventories` ADD CONSTRAINT `inventories_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `products`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `inventories` ADD CONSTRAINT `inventories_transectionId_fkey` FOREIGN KEY (`transectionId`) REFERENCES `transaction_info`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE `inventories` ADD CONSTRAINT `inventories_fixedJournalId_fkey` FOREIGN KEY (`fixedJournalId`) REFERENCES `fixed_journals`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `transaction_info` ADD CONSTRAINT `transaction_info_orderStatusId_fkey` FOREIGN KEY (`orderStatusId`) REFERENCES `orderStatus`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `inventories` ADD CONSTRAINT `inventories_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `products`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `inventories` ADD CONSTRAINT `inventories_transactionId_fkey` FOREIGN KEY (`transactionId`) REFERENCES `transaction_info`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `transaction_info` ADD CONSTRAINT `transaction_info_chemistId_fkey` FOREIGN KEY (`chemistId`) REFERENCES `chemistes`(`chemistId`) ON DELETE SET NULL ON UPDATE CASCADE;
@@ -694,13 +692,13 @@ ALTER TABLE `transaction_info` ADD CONSTRAINT `transaction_info_chemistId_fkey` 
 ALTER TABLE `transaction_info` ADD CONSTRAINT `transaction_info_customerId_fkey` FOREIGN KEY (`customerId`) REFERENCES `customers`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `transaction_info` ADD CONSTRAINT `transaction_info_stakeholerId_fkey` FOREIGN KEY (`stakeholerId`) REFERENCES `stakeholder`(`stakeId`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `transaction_info` ADD CONSTRAINT `transaction_info_employeeId_fkey` FOREIGN KEY (`employeeId`) REFERENCES `user`(`employeeId`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `transaction_info` ADD CONSTRAINT `transaction_info_partyId_fkey` FOREIGN KEY (`partyId`) REFERENCES `parties`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `transaction_info` ADD CONSTRAINT `transaction_info_employeeId_fkey` FOREIGN KEY (`employeeId`) REFERENCES `user`(`employeeId`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `transaction_info` ADD CONSTRAINT `transaction_info_stakeholerId_fkey` FOREIGN KEY (`stakeholerId`) REFERENCES `stakeholder`(`stakeId`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `journals` ADD CONSTRAINT `journals_depoId_fkey` FOREIGN KEY (`depoId`) REFERENCES `depos`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
@@ -709,7 +707,7 @@ ALTER TABLE `journals` ADD CONSTRAINT `journals_depoId_fkey` FOREIGN KEY (`depoI
 ALTER TABLE `journals` ADD CONSTRAINT `journals_ledgerHeadId_fkey` FOREIGN KEY (`ledgerHeadId`) REFERENCES `ledger_head`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `journals` ADD CONSTRAINT `journals_transectionId_fkey` FOREIGN KEY (`transectionId`) REFERENCES `transaction_info`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `journals` ADD CONSTRAINT `journals_transactionId_fkey` FOREIGN KEY (`transactionId`) REFERENCES `transaction_info`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `fixed_journals` ADD CONSTRAINT `fixed_journals_chemistId_fkey` FOREIGN KEY (`chemistId`) REFERENCES `chemistes`(`chemistId`) ON DELETE RESTRICT ON UPDATE CASCADE;
