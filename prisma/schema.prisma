@@ -121,7 +121,7 @@ model Party {
   partyName       String
   contactNo       String
   address         String
-  partytype       PartyType         @default(SUPPLIER)
+  partytype       PartyType
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   transactionInfo TransactionInfo[]
@@ -325,7 +325,7 @@ model LedgerHead {
   headCodeId   Int
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
-  FixedJournal FixedJournal[]
+  fixedJournal FixedJournal[]
   journal      Journal[]
   accountHead  AccountHead    @relation(fields: [headCodeId], references: [id])
 

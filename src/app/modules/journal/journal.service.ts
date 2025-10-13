@@ -13,30 +13,131 @@ import { generateVoucherNumber } from "../../helpers/createVoucherNo";
 
 //Create Purchase Received Voucher
 const createPurchestReceivedIntoDB = async (payload: any) => {
+  console.log(payload);
+
   const createPurchestVoucher = await prisma.$transaction(async (tx: any) => {
     // Check if supplier exists
-    const supplierExists = await tx.supplier.findUnique({
+    const supplierExists = await tx.party.findFirst({
       where: { id: payload.supplierId },
     });
 
+    console.log(supplierExists, "suppliers");
+
     if (!supplierExists) {
-      throw new Error(
-        `Invalid supplierId: ${payload.supplierId}. No matching Supplier found.`
-      );
+      throw new Error(`Invalid supplierId: No Supplier found.`);
     }
 
     // step 1. create transaction entries
-    const createTransactionInfo: TransactionInfo =
-      await tx.transactionInfo.create({
+    const createTransaction: TransactionInfo = await tx.transactionInfo.create({
+      data: {
+        date: payload?.date,
+        invoiceNo: payload.invoiceNo || null,
+        voucherNo: payload.voucherNo,
+        voucherType: VoucherType.PURCHASE,
+        partyId: supplierExists.id,
+      },
+    });
+
+    //Step 3: Insert Inventory Records
+
+    if (
+      !Array.isArray(payload.productItem) ||
+      payload.productItem.length === 0
+    ) {
+      throw new Error("Invalid data: items must be a non-empty array");
+    }
+
+    for (const item of payload.productItem) {
+      await tx.inventory.create({
         data: {
-          date: payload?.date,
-          invoiceNo: payload.invoiceNo || null,
-          voucherNo: payload.voucherNo,
-          paymentType: payload.paymentType,
-          voucherType: VoucherType.PURCHASE,
-          suplierId: supplierExists.id,
+          transactionId: createTransaction.id,
+          date: new Date(payload.date),
+          depoId: payload.depoId,
+          productId: item.productId,
+          unitPrice: item.unitPrice,
+          quantityAdd: item.quantity,
+          debitAmount: item.amount,
         },
       });
+    }
+    // await Promise.all(
+    //   payload.productItem.map((item: any) =>
+    //     tx.Inventory.create({
+    //       data: {
+    //         productId: item.productId,
+    //         transactionId: createTransactionInfo.id,
+    //         date: new Date(payload.date),
+    //         unitPrice: item.unitPrice,
+    //         quantityAdd: item.quantity,
+    //         debitAmount: item.amount,
+    //         depoId: payload.depoId,
+    //       },
+    //     })
+    //   )
+    // );
+
+    // 4️⃣ Build Journal Entries
+    const journalEntries: any[] = [];
+
+    const totalPurchaseAmount = payload.productItem.reduce(
+      (sum: number, p: any) => sum + p.amount,
+      0
+    );
+
+    const totalPaymentAmount = payload.paymentItem.reduce(
+      (sum: number, p: any) => sum + p.amount,
+      0
+    );
+    if (totalPurchaseAmount !== totalPaymentAmount) {
+      throw new AppError(
+        StatusCodes.BAD_REQUEST,
+        "Invalid data: items must be a non-empty array"
+      );
+    }
+
+    const purchaseLedger = await tx.ledgerHead.findFirst({
+      where: {
+        ledgerName: {
+          contains: "purchase",
+        },
+      },
+    });
+
+    if (!purchaseLedger) {
+      throw new AppError(
+        StatusCodes.NOT_FOUND,
+        "Purchase ledger item not found"
+      );
+    }
+
+    // (a) Debit Purchase A/C
+    journalEntries.push({
+      transactionId: createTransaction.id,
+      ledgerHeadId: purchaseLedger.id,
+      date: new Date(payload.date),
+      depoId: payload.depoId,
+      debitAmount: totalPurchaseAmount,
+      narration: "Goods purchased",
+    });
+
+    if (
+      !Array.isArray(payload.paymentItem) ||
+      payload.paymentItem.length === 0
+    ) {
+      throw new Error("Invalid data: Payment option must be a non-empty array");
+    }
+
+    // (b) Credit Payment Ledgers
+    for (const pay of payload.paymentItem) {
+      journalEntries.push({
+        transactionId: createTransaction.id,
+        ledgerHeadId: pay.ledgerItemId,
+        date: new Date(payload.date),
+        depoId: payload.depoId,
+        creditAmount: pay.amount,
+        narration: pay.narration || "",
+      });
+    }
 
     // 2. create bank transaction
     const BankTXData: {
@@ -49,7 +150,7 @@ const createPurchestReceivedIntoDB = async (payload: any) => {
     payload.paymentItem.map(async (item: any) => {
       if (item.bankId) {
         BankTXData.push({
-          transactionId: createTransactionInfo.id,
+          transactionId: createTransaction.id,
           bankAccountId: item.bankId,
           date: new Date(payload.date),
           creditAmount: Number(item.amount),
@@ -63,54 +164,12 @@ const createPurchestReceivedIntoDB = async (payload: any) => {
       });
     }
 
-    if (
-      !Array.isArray(payload.productItem) ||
-      payload.productItem.length === 0
-    ) {
-      throw new Error("Invalid data: items must be a non-empty array");
-    }
+    // 6️⃣ Save Journal Entries
+    await tx.journal.createMany({ data: journalEntries });
 
-    //Step 3: Insert Inventory Records
-    await Promise.all(
-      payload.productItem.map((item: any) =>
-        tx.Inventory.create({
-          data: {
-            productId: item.productId,
-            transactionId: createTransactionInfo.id,
-            date: new Date(payload.date),
-            unitPrice: item.unitPrice,
-            quantityAdd: item.quantity,
-            debitAmount: item.amount,
-            depoId: payload.depoId,
-          },
-        })
-      )
-    );
-
-    if (
-      !Array.isArray(payload.paymentItem) ||
-      payload.paymentItem.length === 0
-    ) {
-      throw new Error("Invalid data: Payment option must be a non-empty array");
-    }
-
-    // Step 4: Insert Journal Entries
-    await Promise.all(
-      payload.paymentItem.map(async (item: any) => {
-        await tx.journals.createMany({
-          data: {
-            transactionId: createTransactionInfo.id,
-            accountsItemId: item.accountsItemId,
-            date: new Date(payload.date),
-            creditAmount: item.amount || 0,
-            narration: item?.narration || "",
-          },
-        });
-      })
-    );
     // end  insert journal entries
 
-    return createTransactionInfo;
+    return createTransaction;
   });
 
   const result = await prisma.transactionInfo.findFirst({
