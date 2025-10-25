@@ -20,7 +20,11 @@ const createOrder = catchAsync(
 );
 
 const getAllOrder = catchAsync(async (req: Request, res: Response) => {
-  const result = await OrderService.getAllOrder();
+  const status = req.query.status as string;
+  const startDate = req.query.startDate as string;
+  const endDate = req.query.endDate as string;
+
+  const result = await OrderService.getAllOrder(status, startDate, endDate);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,

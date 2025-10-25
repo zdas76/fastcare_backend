@@ -1,7 +1,8 @@
 import { StatusCodes } from "http-status-codes";
 import AppError from "../../errors/AppError";
 import prisma from "../../shared/prisma";
-import { Order, OrdStatus } from "@prisma/client";
+import { Order, OrdStatus, Prisma } from "@prisma/client";
+import { ParsedQs } from "qs";
 
 import { generateVoucherNumber } from "../../helpers/createVoucherNo";
 
@@ -69,8 +70,37 @@ const createOrder = async (payload: any, user: any) => {
   return result;
 };
 
-const getAllOrder = async () => {
+const getAllOrder = async (
+  status?: string,
+  startDate?: string,
+  endDate?: string
+) => {
+  const where: Prisma.OrderWhereInput = {};
+
+  if (status) {
+    // Convert CSV string to array and filter valid enum values
+    const statusArray = status
+      .split(",")
+      .map((s) => s.trim())
+      .filter((s): s is keyof typeof OrdStatus => s in OrdStatus);
+
+    if (statusArray.length > 0) {
+      where.orderStatus = {
+        some: {
+          OR: statusArray.map((s) => ({ status: OrdStatus[s] })),
+        },
+      };
+    }
+  }
+  // Handle date filters
+  if (startDate || endDate) {
+    where.date = {};
+    if (startDate) where.date.gte = new Date(startDate);
+    if (endDate) where.date.lte = new Date(endDate);
+  }
+
   const result = await prisma.order.findMany({
+    where,
     include: {
       orderItem: {
         select: {

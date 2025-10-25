@@ -8,16 +8,17 @@ const getInventory = async (
   startDate: string | undefined,
   endDate: string | undefined
 ) => {
-  const result = await prisma.$queryRaw<
-    {
-      productId: number;
-      productName: string;
-      depoId: number;
-      depoName: string;
-      netQuantity: number;
-      netAmount: number;
-    }[]
-  >`
+  if (depoId) {
+    const result = await prisma.$queryRaw<
+      {
+        productId: number;
+        productName: string;
+        depoId: number;
+        depoName: string;
+        netQuantity: number;
+        netAmount: number;
+      }[]
+    >`
   SELECT 
     i.productId,
     p.name AS productName,
@@ -36,7 +37,8 @@ const getInventory = async (
   ORDER BY i.productId ASC
 `;
 
-  return result;
+    return result;
+  }
 };
 
 const getInventoryById = async (

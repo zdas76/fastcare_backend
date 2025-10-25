@@ -378,20 +378,19 @@ model BankAccount {
 }
 
 model BankTransaction {
-  id              Int              @id @default(autoincrement())
-  date            DateTime
-  bankAccountId   Int
-  debitAmount     Int?
-  creditAmount    Int?
-  transactionId   Int?
-  isClosing       Boolean          @default(false)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  bankAccount     BankAccount      @relation(fields: [bankAccountId], references: [id])
-  transactionInfo TransactionInfo? @relation(fields: [transactionId], references: [id])
+  id            Int         @id @default(autoincrement())
+  date          DateTime
+  bankAccountId Int
+  debitAmount   Int?
+  creditAmount  Int?
+  journalId     Int?
+  isClosing     Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  bankAccount   BankAccount @relation(fields: [bankAccountId], references: [id])
+  journal       Journal?    @relation(fields: [journalId], references: [id])
 
   @@index([bankAccountId])
-  @@index([transactionId], map: "bank_transactions_transactionId_fkey")
   @@map("bank_transactions")
 }
 
@@ -401,6 +400,7 @@ model Inventory {
   productId       Int
   depoId          Int?
   transactionId   Int?
+  fixedJournalId  Int?
   unitPrice       Float            @default(0)
   quantityAdd     Float?           @default(0)
   quantityLess    Float?           @default(0)
@@ -410,7 +410,6 @@ model Inventory {
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   isFixted        Boolean          @default(false)
-  fixedJournalId  Int?
   depo            Depo?            @relation(fields: [depoId], references: [id])
   fixedJournal    FixedJournal?    @relation(fields: [fixedJournalId], references: [id])
   product         Product          @relation(fields: [productId], references: [id])
@@ -424,28 +423,27 @@ model Inventory {
 }
 
 model TransactionInfo {
-  id              Int               @id @default(autoincrement())
-  date            DateTime
-  voucherNo       String            @unique
-  invoiceNo       String?
-  chemistId       String?
-  customerId      Int?
-  stakeholderId   String?
-  voucherType     VoucherType
-  paymentType     PaymentType?
-  status          Status            @default(PENDING)
-  employeeId      String?
-  partyId         Int?
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  bankTransaction BankTransaction[]
-  inventory       Inventory[]
-  journal         Journal[]
-  chemist         Chemist?          @relation(fields: [chemistId], references: [chemistId])
-  customers       Customers?        @relation(fields: [customerId], references: [id])
-  user            User?             @relation(fields: [employeeId], references: [employeeId])
-  party           Party?            @relation(fields: [partyId], references: [id])
-  stakeholder     Stakeholder?      @relation(fields: [stakeholderId], references: [stakeId])
+  id            Int          @id @default(autoincrement())
+  date          DateTime
+  voucherNo     String       @unique
+  invoiceNo     String?
+  chemistId     String?
+  customerId    Int?
+  stakeholderId String?
+  employeeId    String?
+  partyId       Int?
+  voucherType   VoucherType
+  paymentType   PaymentType?
+  status        Status       @default(PENDING)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  inventory     Inventory[]
+  journal       Journal[]
+  chemist       Chemist?     @relation(fields: [chemistId], references: [chemistId])
+  customers     Customers?   @relation(fields: [customerId], references: [id])
+  user          User?        @relation(fields: [employeeId], references: [employeeId])
+  party         Party?       @relation(fields: [partyId], references: [id])
+  stakeholder   Stakeholder? @relation(fields: [stakeholderId], references: [stakeId])
 
   @@index([chemistId], map: "transaction_info_chemistId_fkey")
   @@index([customerId], map: "transaction_info_customerId_fkey")
@@ -456,7 +454,7 @@ model TransactionInfo {
 }
 
 model Journal {
-  id              Int              @id @default(autoincrement())
+  id              Int               @id @default(autoincrement())
   transactionId   Int?
   ledgerHeadId    Int?
   date            DateTime
@@ -464,12 +462,13 @@ model Journal {
   creditAmount    Float?
   debitAmount     Float?
   narration       String?
-  isClosing       Boolean          @default(false)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  depo            Depo?            @relation(fields: [depoId], references: [id])
-  ledgerHead      LedgerHead?      @relation(fields: [ledgerHeadId], references: [id])
-  transactionInfo TransactionInfo? @relation(fields: [transactionId], references: [id])
+  isClosing       Boolean           @default(false)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  depo            Depo?             @relation(fields: [depoId], references: [id])
+  ledgerHead      LedgerHead?       @relation(fields: [ledgerHeadId], references: [id])
+  transactionInfo TransactionInfo?  @relation(fields: [transactionId], references: [id])
+  bankTransaction BankTransaction[]
 
   @@index([depoId], map: "journals_depoId_fkey")
   @@index([ledgerHeadId], map: "journals_ledgerHeadId_fkey")
