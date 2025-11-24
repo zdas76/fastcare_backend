@@ -1,11 +1,10 @@
 generator client {
-  provider      = "prisma-client-js"
+  provider = "prisma-client"
   binaryTargets = ["native", "debian-openssl-1.0.x"]
 }
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -122,6 +121,9 @@ model Party {
   contactNo       String
   address         String
   partytype       PartyType
+  openingAmount   Float?            @default(0)
+  openingDate     DateTime          @default(now())
+  isDeleted       Boolean           @default(false)
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   transactionInfo TransactionInfo[]
@@ -350,9 +352,9 @@ model Product {
   status             Status               @default(ACTIVE)
   createdAt          DateTime             @default(now())
   updateAt           DateTime             @updatedAt
-  TargetProductBatch TargetProductBatch[]
+  targetProductBatch TargetProductBatch[]
   inventory          Inventory[]
-  OrderItem          OrderItem[]
+  orderItem          OrderItem[]
   Stakeholder        Stakeholder?         @relation(fields: [stakeholderId], references: [id])
   subCategory        SubCategory          @relation(fields: [subCategoryId], references: [id])
   unit               Unit                 @relation(fields: [unitId], references: [id])

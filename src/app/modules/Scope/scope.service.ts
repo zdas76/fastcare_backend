@@ -3,9 +3,10 @@ import AppError from "../../errors/AppError";
 import prisma from "../../shared/prisma";
 
 const createScope = async (payload: any) => {
+  console.log("first", payload);
   const employee = await prisma.user.findFirst({
     where: {
-      id: payload.userId,
+      employeeId: payload.employeeId,
     },
   });
 
@@ -49,26 +50,31 @@ const getallScopes = async () => {
       stakeholder: {
         select: {
           name: true,
+          stakeId: true,
         },
       },
       depo: {
         select: {
           depoName: true,
+          id: true,
         },
       },
       chemist: {
         select: {
           pharmacyName: true,
+          chemistId: true,
         },
       },
       user: {
         select: {
           name: true,
+          employeeId: true,
         },
       },
       jobPost: {
         select: {
           postName: true,
+          id: true,
         },
       },
     },

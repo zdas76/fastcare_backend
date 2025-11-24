@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { UserfiltersFields } from "./user.constant";
 import catchAsync from "../../shared/catchAsync";
-import sendResponse from "../../shared/sendResponse";
 import pick from "../../shared/pick";
+import sendResponse from "../../shared/sendResponse";
+import { UserfiltersFields } from "./user.constant";
 import { UserService } from "./user.service";
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
@@ -45,6 +45,7 @@ const getUserById = catchAsync(async (req: Request, res: Response) => {
 
 const updateUserById = catchAsync(async (req: Request, res: Response) => {
   const id = parseInt(req.params.id!);
+
   const result = await UserService.updateUserById(id, req.body);
 
   sendResponse(res, {

@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { JurnalService } from "./journal.service";
 import { StatusCodes } from "http-status-codes";
 import catchAsync from "../../shared/catchAsync";
 import sendResponse from "../../shared/sendResponse";
+import { JurnalService } from "./journal.service";
 
 const addPurcherReceived = catchAsync(async (req: Request, res: Response) => {
   const result = await JurnalService.createPurchestReceivedIntoDB(req.body);
@@ -73,7 +73,7 @@ const createMoneyRecivedVoucher = catchAsync(
     sendResponse(res, {
       statusCode: StatusCodes.OK,
       success: true,
-      message: "Payment created successfully",
+      message: "Money Received successfully",
       data: result,
     });
   }

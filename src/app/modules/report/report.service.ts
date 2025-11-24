@@ -1,4 +1,6 @@
 import { VoucherType } from "@prisma/client";
+import { StatusCodes } from "http-status-codes";
+import AppError from "../../errors/AppError";
 import prisma from "../../shared/prisma";
 
 const getLastVoucherNumber = async (vcode: string) => {
@@ -124,20 +126,7 @@ const getReportByVoucherNo = async (voucherNo: string) => {
             creditAmount: true,
           },
         },
-        bankTransaction: {
-          select: {
-            date: true,
-            bankAccount: {
-              select: {
-                bankName: true,
-                branceName: true,
-                accountNumber: true,
-              },
-            },
-            debitAmount: true,
-            creditAmount: true,
-          },
-        },
+
         journal: {
           select: {
             ledgerHead: {
@@ -156,6 +145,20 @@ const getReportByVoucherNo = async (voucherNo: string) => {
             creditAmount: true,
             debitAmount: true,
             narration: true,
+            bankTransaction: {
+              select: {
+                date: true,
+                bankAccount: {
+                  select: {
+                    bankName: true,
+                    branceName: true,
+                    accountNumber: true,
+                  },
+                },
+                debitAmount: true,
+                creditAmount: true,
+              },
+            },
           },
         },
       },
@@ -194,7 +197,7 @@ const getpartyLadgertoBdById = async (params: any) => {
   }
 
   if (partyType === "supplier") {
-    const result = await prisma.transactionInfo.findFirst({
+    const result = await prisma.transactionInfo.findMany({
       where: {
         id: supplierId,
         date: {
@@ -218,21 +221,51 @@ const getChemistLedgerById = async (params: any) => {
       chemistId: chemistId,
       isDeleted: false,
     },
+    select: {
+      chemistId: true,
+      pharmacyName: true,
+      address: true,
+      openingDate: true,
+      contactNo: true,
+      contactPerson: true,
+    },
   });
 
-  const result = await prisma.transactionInfo.findFirst({
+  const LedgerHead = await prisma.ledgerHead.findFirst({
     where: {
-      chemistId: chemistId,
+      ledgerName: {
+        equals: "Accounts Receivable",
+      },
+    },
+  });
+
+  if (LedgerHead == null) {
+    throw new AppError(StatusCodes.NOT_FOUND, "Ledger Head not found");
+  }
+
+  const start = startDate ? new Date(startDate) : chemist?.openingDate;
+  const end = endDate ? new Date(endDate) : new Date();
+
+  const ChemistLedgerData = await prisma.journal.findMany({
+    where: {
+      ledgerHeadId: LedgerHead.headCodeId,
+      transactionInfo: { chemistId: chemistId },
       date: {
-        gte: startDate ? new Date(startDate) : chemist?.openingDate,
-        lte: endDate ? new Date(endDate) : new Date(),
+        gte: start,
+        lte: end,
       },
     },
     include: {
-      journal: true,
+      transactionInfo: {
+        select: {
+          voucherNo: true,
+          voucherType: true,
+        },
+      },
     },
   });
-  return result;
+
+  return { ChemistLedgerData, chemist };
 };
 
 export const ReportService = {

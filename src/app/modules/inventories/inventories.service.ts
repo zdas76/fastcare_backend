@@ -1,13 +1,14 @@
+import { Inventory, Product } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
 import AppError from "../../errors/AppError";
 import prisma from "../../shared/prisma";
-import { Inventory, Product } from "@prisma/client";
 
 const getInventory = async (
   depoId: number | undefined,
   startDate: string | undefined,
   endDate: string | undefined
 ) => {
+  console.log(depoId, startDate, endDate);
   if (depoId) {
     const result = await prisma.$queryRaw<
       {

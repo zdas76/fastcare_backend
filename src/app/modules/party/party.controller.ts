@@ -18,7 +18,6 @@ const creadtParty = catchAsync(async (req: Request, res: Response) => {
 const getAllParty = catchAsync(async (req: Request, res: Response) => {
   const partytype = req.query.partytype as string;
 
-  console.log(partytype);
   const result = await PartyService.getAllParty(partytype);
 
   sendResponse(res, {

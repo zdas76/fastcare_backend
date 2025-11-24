@@ -1,16 +1,13 @@
-import { FixedJournal } from "./../../../../node_modules/.prisma/client/index.d";
 import {
   OrdStatus,
-  PaymentType,
   VoucherType,
   type LedgerHead,
   type TransactionInfo,
 } from "@prisma/client";
-import prisma from "../../shared/prisma";
-import AppError from "../../errors/AppError";
 import { StatusCodes } from "http-status-codes";
+import AppError from "../../errors/AppError";
 import { generateVoucherNumber } from "../../helpers/createVoucherNo";
-import { version } from "zod/v4/core/versions.cjs";
+import prisma from "../../shared/prisma";
 
 //Create Purchase Received Voucher
 const createPurchestReceivedIntoDB = async (payload: any) => {
@@ -160,21 +157,22 @@ const createPurchestReceivedIntoDB = async (payload: any) => {
       journal: {
         include: {
           ledgerHead: true,
-        },
-      },
-      bankTransaction: {
-        select: {
-          bankAccount: {
+          bankTransaction: {
             select: {
-              bankName: true,
-              branceName: true,
-              accountNumber: true,
+              bankAccount: {
+                select: {
+                  bankName: true,
+                  branceName: true,
+                  accountNumber: true,
+                },
+              },
+              creditAmount: true,
+              date: true,
             },
           },
-          creditAmount: true,
-          date: true,
         },
       },
+
       inventory: {
         select: {
           product: {
@@ -345,7 +343,6 @@ const addProductTransferIntoDB = async (payload: any) => {
 };
 
 const createSalesVoucher = async (payload: any) => {
-  console.log(payload);
   const result = await prisma.$transaction(async (tx) => {
     // 1️⃣ Validate Party / Chemist
     if (payload.chemistId) {
@@ -508,8 +505,6 @@ const createSalesVoucher = async (payload: any) => {
       0
     );
 
-    console.log("JournalEntries", journalEntries);
-
     if (Math.abs(totalDebit - totalCredit) > 0.01) {
       throw new Error(
         `Unbalanced entry: Debit=${totalDebit}, Credit=${totalCredit}`
@@ -642,8 +637,6 @@ const createPaymentVoucher = async (payload: any) => {
 };
 
 const createReceiptVoucher = async (payload: any) => {
-  console.log(payload, "payload");
-
   const createVoucher = await prisma.$transaction(async (tx: any) => {
     let partyId: number | undefined;
     let employeeId: string | undefined;
@@ -694,9 +687,9 @@ const createReceiptVoucher = async (payload: any) => {
       data: {
         date: new Date(payload.date),
         voucherNo: payload.voucherNo,
-        partyId: partyId,
-        emoloyeeId: employeeId,
-        chemistId: chemistId,
+        partyId: partyId || null,
+        employeeId: employeeId || null,
+        chemistId: chemistId || null,
         voucherType: VoucherType.RECEIVED,
       },
     });
@@ -796,20 +789,20 @@ const createMoneyReceivedVoucher = async (payload: any, user: any) => {
             date: new Date(),
             depoId: payload.depoId,
             narration: "Paid",
-            debitAmount: payload.totalAmount,
+            creditAmount: payload.totalAmount,
           },
         },
       },
     });
 
     for (const item of payload.paymentItems) {
-      tx.journal.create({
+      await tx.journal.create({
         data: {
           date: new Date(),
           transactionId: createTransaction.id,
           depoId: payload.depoId,
           ledgerHeadId: item.ledgerItemId,
-          creditAmount: item.amount,
+          debitAmount: item.amount,
           narration: item.narration,
         },
       });
@@ -822,8 +815,6 @@ const createMoneyReceivedVoucher = async (payload: any, user: any) => {
 };
 
 const createJournalVoucher = async (payload: any) => {
-  console.log(payload);
-
   // Step 1: Resolve related entities
   let employeeId: string | null = null;
   let partyId: number | null = null;
@@ -910,8 +901,6 @@ const createJournalVoucher = async (payload: any) => {
 };
 
 const createFixedVoucher = async (payload: any) => {
-  console.log(payload);
-
   const createFixedVoucher = await prisma.$transaction(async (tx: any) => {
     //check party
     if (payload.chemistId) {

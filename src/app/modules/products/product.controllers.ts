@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { ProductService } from "./product.service";
 import { StatusCodes } from "http-status-codes";
 import catchAsync from "../../shared/catchAsync";
 import sendResponse from "../../shared/sendResponse";
+import { ProductService } from "./product.service";
 
 const createProduct = catchAsync(async (req: Request, res: Response) => {
   const result = await ProductService.createProduct(req.body);
@@ -16,7 +16,7 @@ const createProduct = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllProduct = catchAsync(async (req: Request, res: Response) => {
-  const result = await ProductService.gerProduct();
+  const result = await ProductService.getProduct();
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
@@ -29,7 +29,7 @@ const getAllProduct = catchAsync(async (req: Request, res: Response) => {
 const getProductById = catchAsync(async (req: Request, res: Response) => {
   const id = parseInt(req.params.id!);
 
-  const result = await ProductService.gerProductById(id);
+  const result = await ProductService.getProductById(id);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,

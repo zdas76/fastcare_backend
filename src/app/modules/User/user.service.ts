@@ -1,13 +1,13 @@
 import { Prisma, UserStatus } from "@prisma/client";
 import bcrypt from "bcryptjs";
-import config from "../../../config";
-import { UserSearchAbleFields } from "./user.constant";
-import prisma from "../../shared/prisma";
-import { IPaginationOptions } from "../../interface/pagination";
-import { paginationHelper } from "../../helpers/pagination";
-import { generateId } from "../../helpers/generateId";
-import AppError from "../../errors/AppError";
 import { StatusCodes } from "http-status-codes";
+import config from "../../../config";
+import AppError from "../../errors/AppError";
+import { generateId } from "../../helpers/generateId";
+import { paginationHelper } from "../../helpers/pagination";
+import { IPaginationOptions } from "../../interface/pagination";
+import prisma from "../../shared/prisma";
+import { UserSearchAbleFields } from "./user.constant";
 import { User } from "./user.validation";
 
 const creatUserToDB = async (payload: User) => {
@@ -148,7 +148,26 @@ const updateUserById = async (id: number, payload: Partial<User>) => {
       id: id,
       status: UserStatus.ACTIVE,
     },
-    data: payload,
+    data: {
+      name: payload.name || undefined,
+      email: payload.email || undefined,
+      password: payload.password || undefined,
+      photo: payload.photo || undefined,
+      roles: payload.role || undefined,
+      employeeProfile: {
+        update: {
+          fatherName: payload.fatherName || undefined,
+          motherName: payload.motherName || undefined,
+          officeContactNo: payload.officeContactNo || undefined,
+          currentAddress: payload.currentAddress || undefined,
+          permanentAddress: payload.permanentAddress || undefined,
+          nid: payload.nid || undefined,
+          dob: payload.dob ? new Date(payload.dob) : undefined,
+          contactNo: payload.contactNo || undefined,
+          emergencyContactNo: payload.emergencyContactNo || undefined,
+        },
+      },
+    },
   });
 
   return result;

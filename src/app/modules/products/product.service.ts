@@ -1,8 +1,8 @@
-import AppError from "../../errors/AppError";
-import { StatusCodes } from "http-status-codes";
-import { TcreateProduct } from "./product.type";
-import prisma from "../../shared/prisma";
 import { Product, Status } from "@prisma/client";
+import { StatusCodes } from "http-status-codes";
+import AppError from "../../errors/AppError";
+import prisma from "../../shared/prisma";
+import { TcreateProduct } from "./product.type";
 
 const createProduct = async (payload: TcreateProduct) => {
   const isExist = await prisma.product.findFirst({
@@ -51,7 +51,8 @@ const createProduct = async (payload: TcreateProduct) => {
   return result;
 };
 
-const gerProduct = async () => {
+//get all product
+const getProduct = async () => {
   const result = await prisma.product.findMany({
     where: {
       status: Status.ACTIVE,
@@ -69,7 +70,8 @@ const gerProduct = async () => {
   return result;
 };
 
-const gerProductById = async (id: number) => {
+//get product by id
+const getProductById = async (id: number) => {
   const result = await prisma.product.findFirst({
     where: {
       id: id,
@@ -80,7 +82,11 @@ const gerProductById = async (id: number) => {
   return result;
 };
 
-const updateProductById = async (id: number, payload: Partial<Product>) => {
+//update product by id
+const updateProductById = async (
+  id: number,
+  payload: Partial<Product> & { amount?: number; depoId?: number }
+) => {
   const isExist = await prisma.product.findFirst({
     where: { id: id, status: Status.ACTIVE },
   });
@@ -90,6 +96,7 @@ const updateProductById = async (id: number, payload: Partial<Product>) => {
   }
 
   const updateData: Record<string, any> = {};
+
   if (payload?.name !== undefined) updateData.name = payload.name;
   if (payload?.description !== undefined)
     updateData.description = payload.description;
@@ -99,15 +106,51 @@ const updateProductById = async (id: number, payload: Partial<Product>) => {
   if (payload?.mrp !== undefined) updateData.mrp = payload.mrp;
   if (payload?.tp !== undefined) updateData.tp = payload.tp;
   if (payload?.size !== undefined) updateData.size = payload.size;
+  if (payload?.quantity !== undefined) updateData.quantity = payload.quantity;
+  if (payload?.unitPrice !== undefined)
+    updateData.unitPrice = payload.unitPrice;
+  if (payload?.date !== undefined) updateData.date = new Date(payload.date);
+  if (payload?.amount !== undefined) updateData.balance = payload.amount;
 
-  const result = await prisma.product.update({
-    where: {
-      id: id,
-    },
-    data: updateData,
+  const updateProduct = await prisma.$transaction(async (tx) => {
+    const product = await tx.product.update({
+      where: { id },
+      data: updateData,
+    });
+
+    const inventory = await tx.inventory.findFirst({
+      where: { productId: isExist.id, isClosing: true },
+      orderBy: { createdAt: "desc" },
+    });
+    if (inventory) {
+      await tx.inventory.update({
+        where: { id: inventory.id },
+        data: {
+          depoId: payload.depoId!,
+          unitPrice: payload.unitPrice!,
+          date: new Date(payload.date!),
+          quantityAdd: payload.quantity!,
+          debitAmount: payload.amount!,
+          isClosing: true,
+        },
+      });
+    } else {
+      await tx.inventory.create({
+        data: {
+          productId: isExist.id,
+          depoId: payload.depoId!,
+          unitPrice: payload.unitPrice!,
+          date: new Date(payload.date!),
+          quantityAdd: payload.quantity!,
+          debitAmount: payload.amount!,
+          isClosing: true,
+        },
+      });
+    }
+    return product;
   });
 
-  return result;
+  return updateProduct;
 };
 
 const deleteProductById = async (id: number) => {
@@ -133,8 +176,8 @@ const deleteProductById = async (id: number) => {
 
 export const ProductService = {
   createProduct,
-  gerProduct,
-  gerProductById,
+  getProduct,
+  getProductById,
   updateProductById,
   deleteProductById,
 };

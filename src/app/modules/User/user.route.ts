@@ -1,8 +1,8 @@
-import { UserControllers } from "./user.controllers";
 import express, { NextFunction, Request, Response } from "express";
-import { userValidaton } from "./user.validation";
-import upload from "../../helpers/upload";
 import { resizeUserImage } from "../../helpers/resizeUserphoto";
+import upload from "../../helpers/upload";
+import { UserControllers } from "./user.controllers";
+import { userValidaton } from "./user.validation";
 const route = express.Router();
 
 route.post(
