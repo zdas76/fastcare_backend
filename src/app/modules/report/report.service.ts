@@ -1,4 +1,4 @@
-import { VoucherType } from "@prisma/client";
+import { UserStatus, VoucherType } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
 import AppError from "../../errors/AppError";
 import prisma from "../../shared/prisma";
@@ -171,45 +171,146 @@ const getReportByVoucherNo = async (voucherNo: string) => {
 };
 
 const getpartyLadgertoBdById = async (params: any) => {
-  const { chemistId, endDate, partyType, startDate, supplierId } = params;
+  const { ledgerType, endDate, startDate, id } = params;
 
-  if (partyType === "chemist") {
-    const chemist = await prisma.chemist.findFirst({
+  if (ledgerType === "employee") {
+    const employee = await prisma.user.findFirst({
       where: {
-        chemistId: chemistId,
+        id: Number(id),
+        status: UserStatus.ACTIVE,
+      },
+    });
+
+    if (!employee) {
+      throw new AppError(StatusCodes.NOT_FOUND, "No Employee ofund");
+    }
+
+    const closingDate = await prisma.journal.findFirst({
+      where: {
+        transactionInfo: {
+          employeeId: employee.employeeId,
+        },
+        isClosing: true,
+      },
+      orderBy: {
+        date: "desc",
+      },
+    });
+
+    const result = await prisma.journal.findMany({
+      where: {
+        transactionInfo: {
+          employeeId: employee.employeeId,
+        },
+        date: {
+          gte: startDate
+            ? new Date(startDate)
+            : closingDate?.date || new Date(),
+          lte: endDate ? new Date(endDate) : new Date(),
+        },
+      },
+      include: {
+        transactionInfo: {
+          select: {
+            voucherNo: true,
+            employeeId: true,
+            voucherType: true,
+          },
+        },
+      },
+      orderBy: {
+        date: "asc",
+      },
+    });
+
+    return { employee, result };
+  }
+
+  if (ledgerType === "vendor") {
+    const vendor = await prisma.party.findFirst({
+      where: {
+        id: Number(id),
         isDeleted: false,
       },
     });
 
-    const result = await prisma.transactionInfo.findFirst({
+    if (!vendor) {
+      throw new AppError(StatusCodes.NOT_FOUND, "No vendor found");
+    }
+
+    const result = await prisma.journal.findMany({
       where: {
-        chemistId: chemistId,
+        transactionInfo: {
+          partyId: vendor.id,
+        },
         date: {
-          gte: startDate ? new Date(startDate) : chemist?.openingDate,
+          gte: startDate ? new Date(startDate) : vendor.openingDate,
           lte: endDate ? new Date(endDate) : new Date(),
         },
       },
       include: {
-        journal: true,
+        transactionInfo: {
+          select: {
+            voucherNo: true,
+            partyId: true,
+            voucherType: true,
+          },
+        },
+      },
+      orderBy: {
+        date: "asc",
       },
     });
-    return result;
+
+    return { vendor, result };
   }
 
-  if (partyType === "supplier") {
-    const result = await prisma.transactionInfo.findMany({
+  if (ledgerType === "depo") {
+    const depo = await prisma.depo.findFirst({
       where: {
-        id: supplierId,
+        id: Number(id),
+        status: UserStatus.ACTIVE,
+      },
+    });
+
+    if (!depo) {
+      throw new AppError(StatusCodes.NOT_FOUND, "No depo found");
+    }
+
+    const closingDate = await prisma.journal.findFirst({
+      where: {
+        depoId: depo.id,
+        isClosing: true,
+      },
+      orderBy: {
+        date: "desc",
+      },
+    });
+
+    const result = await prisma.journal.findMany({
+      where: {
+        depoId: depo.id,
         date: {
-          gte: new Date(startDate),
+          gte: startDate
+            ? new Date(startDate)
+            : closingDate?.date || new Date(),
           lte: endDate ? new Date(endDate) : new Date(),
         },
       },
       include: {
-        journal: true,
+        transactionInfo: {
+          select: {
+            voucherNo: true,
+            voucherType: true,
+          },
+        },
+      },
+      orderBy: {
+        date: "asc",
       },
     });
-    return result;
+
+    return { depo, result };
   }
 };
 

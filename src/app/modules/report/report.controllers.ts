@@ -46,7 +46,7 @@ const getPartyReportById = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: "PartyInfo retrived Successfully by Voucher No.",
+    message: "LedgerInfo retrived Successfully",
     data: result,
   });
 });

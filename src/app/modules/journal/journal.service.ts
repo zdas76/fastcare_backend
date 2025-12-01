@@ -343,6 +343,7 @@ const addProductTransferIntoDB = async (payload: any) => {
 };
 
 const createSalesVoucher = async (payload: any) => {
+  let preDue: any = null;
   const result = await prisma.$transaction(async (tx) => {
     // 1️⃣ Validate Party / Chemist
     if (payload.chemistId) {
@@ -352,6 +353,26 @@ const createSalesVoucher = async (payload: any) => {
       if (!chemistExists) {
         throw new Error(`Invalid chemistId: ${payload.chemistId}`);
       }
+
+      //Previus chemist due
+      preDue = await tx.journal.aggregate({
+        _sum: {
+          debitAmount: true,
+          creditAmount: true,
+        },
+        where: {
+          AND: [
+            { transactionInfo: { chemistId: payload.chemistId } },
+            {
+              transactionInfo: {
+                date: { gt: chemistExists?.openingDate || new Date(0) },
+              },
+            },
+          ],
+        },
+      });
+
+      console.log("predue", preDue);
     }
 
     if (payload.partyId) {
@@ -361,6 +382,25 @@ const createSalesVoucher = async (payload: any) => {
       if (!partyExists) {
         throw new Error(`Invalid partyId: ${payload.partyId}`);
       }
+
+      preDue = await tx.journal.aggregate({
+        _sum: {
+          debitAmount: true,
+          creditAmount: true,
+        },
+        where: {
+          AND: [
+            { transactionInfo: { partyId: payload.partyId } },
+            {
+              transactionInfo: {
+                date: { gt: partyExists?.openingDate || new Date(0) },
+              },
+            },
+          ],
+        },
+      });
+
+      console.log("predue", preDue);
     }
 
     if (payload.voucherNo) {
@@ -533,13 +573,14 @@ const createSalesVoucher = async (payload: any) => {
   });
 
   // 🔁 Fetch Final Transaction Info
-  return prisma.transactionInfo.findUnique({
+  const salseVoucher = await prisma.transactionInfo.findUnique({
     where: { id: result },
     include: {
       inventory: true,
       journal: { include: { ledgerHead: true } },
     },
   });
+  return { preDue, salseVoucher };
 };
 
 // Create Payment Voucher
