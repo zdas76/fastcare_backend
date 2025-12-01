@@ -1,7 +1,7 @@
 import express from "express";
-import { ScopeControllers } from "./scope.controllers";
+import { UserRole } from "../../../../generated/prisma/client";
 import auth from "../../middlewares/auth";
-import { UserRole } from "@prisma/client";
+import { ScopeControllers } from "./scope.controllers";
 
 const route = express.Router();
 

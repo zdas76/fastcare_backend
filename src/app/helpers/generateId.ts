@@ -1,4 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../../../generated/prisma/client";
+
 import prisma from "../shared/prisma";
 
 export const generateId = async (prefix: string, model: keyof PrismaClient) => {

@@ -1,5 +1,5 @@
-import { UserRole } from "@prisma/client";
 import { z } from "zod";
+import { UserRole } from "../../../../generated/prisma/enums";
 
 const createEmployee = z.object({
   email: z.string(),

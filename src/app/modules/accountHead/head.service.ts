@@ -1,4 +1,4 @@
-import type { AccountHead } from "@prisma/client";
+import { AccountHead } from "../../../../generated/prisma/client";
 import prisma from "../../shared/prisma";
 
 const createHeadItemIntoDB = async (payLoad: AccountHead) => {

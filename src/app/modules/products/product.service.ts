@@ -1,5 +1,5 @@
-import { Product, Status } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
+import { Product, Status } from "../../../../generated/prisma/client";
 import AppError from "../../errors/AppError";
 import prisma from "../../shared/prisma";
 import { TcreateProduct } from "./product.type";

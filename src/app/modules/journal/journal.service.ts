@@ -1,10 +1,10 @@
+import { StatusCodes } from "http-status-codes";
 import {
   OrdStatus,
   VoucherType,
   type LedgerHead,
   type TransactionInfo,
-} from "@prisma/client";
-import { StatusCodes } from "http-status-codes";
+} from "../../../../generated/prisma/client";
 import AppError from "../../errors/AppError";
 import { generateVoucherNumber } from "../../helpers/createVoucherNo";
 import prisma from "../../shared/prisma";

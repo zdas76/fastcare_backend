@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
-import type { Category, StakeholderDegree } from "@prisma/client";
-import prisma from "../../shared/prisma";
+import type { StakeholderDegree } from "../../../../generated/prisma/client";
 import AppError from "../../errors/AppError";
+import prisma from "../../shared/prisma";
 
 const createDegreeToDB = async (payLoad: StakeholderDegree) => {
   const degree = await prisma.stakeholderDegree.findFirst({

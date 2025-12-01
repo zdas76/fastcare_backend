@@ -1,6 +1,6 @@
-import { Prisma, UserStatus } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { StatusCodes } from "http-status-codes";
+import { Prisma, UserStatus } from "../../../../generated/prisma/client";
 import config from "../../../config";
 import AppError from "../../errors/AppError";
 import { generateId } from "../../helpers/generateId";

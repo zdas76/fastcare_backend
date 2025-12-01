@@ -1,12 +1,12 @@
-import type { Secret } from "jsonwebtoken";
-import StatusCodes from "http-status-codes";
-import { UserStatus } from "@prisma/client";
 import * as bcrypt from "bcryptjs";
+import StatusCodes from "http-status-codes";
+import type { Secret } from "jsonwebtoken";
+import { UserStatus } from "../../../../generated/prisma/client";
 import config from "../../../config";
 // import emailSender from "./emailSender";
 import AppError from "../../errors/AppError";
-import prisma from "../../shared/prisma";
 import { jwtHelpers } from "../../helpers/jwt";
+import prisma from "../../shared/prisma";
 
 const loginUser = async (payLoad: { employeeId: string; password: string }) => {
   const userData = await prisma.user.findFirst({

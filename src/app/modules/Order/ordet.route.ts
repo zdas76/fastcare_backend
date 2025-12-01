@@ -1,7 +1,7 @@
 import express from "express";
-import { OrderControllers } from "./ordet.controllers";
+import { UserRole } from "../../../../generated/prisma/client";
 import auth from "../../middlewares/auth";
-import { UserRole } from "@prisma/client";
+import { OrderControllers } from "./ordet.controllers";
 
 const route = express.Router();
 

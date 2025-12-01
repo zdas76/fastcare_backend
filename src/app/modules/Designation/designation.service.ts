@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
-import type { StakeholderDeisgnation } from "@prisma/client";
-import prisma from "../../shared/prisma";
+import { StakeholderDeisgnation } from "../../../../generated/prisma/client";
 import AppError from "../../errors/AppError";
+import prisma from "../../shared/prisma";
 
 const createDesignation = async (payLoad: StakeholderDeisgnation) => {
   const Designation = await prisma.stakeholderDeisgnation.findFirst({

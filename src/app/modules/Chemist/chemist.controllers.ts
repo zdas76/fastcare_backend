@@ -1,11 +1,10 @@
-import { Chemist } from "@prisma/client";
-import { StatusCodes } from "http-status-codes";
-import { ChemistService } from "./chemist.service";
 import { Request, Response } from "express";
-import { partyfiltersFields } from "./chemist.constant";
+import { StatusCodes } from "http-status-codes";
 import catchAsync from "../../shared/catchAsync";
 import pick from "../../shared/pick";
 import sendResponse from "../../shared/sendResponse";
+import { partyfiltersFields } from "./chemist.constant";
+import { ChemistService } from "./chemist.service";
 
 const createChemist = catchAsync(async (req: Request, res: Response) => {
   const result = await ChemistService.createChemist(req);

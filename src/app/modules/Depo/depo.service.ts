@@ -1,7 +1,7 @@
-import { Depo } from "@prisma/client";
-import prisma from "../../shared/prisma";
-import AppError from "../../errors/AppError";
 import { StatusCodes } from "http-status-codes";
+import { Depo } from "../../../../generated/prisma/client";
+import AppError from "../../errors/AppError";
+import prisma from "../../shared/prisma";
 
 const createDepo = async (payload: Depo) => {
   const isExist = await prisma.depo.findFirst({

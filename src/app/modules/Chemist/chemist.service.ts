@@ -1,12 +1,12 @@
-import { Chemist, LedgerHead, Prisma, VoucherType } from "@prisma/client";
-import { StatusCodes } from "http-status-codes";
-import { PartySearchAbleFields } from "./chemist.constant";
-import AppError from "../../errors/AppError";
-import { paginationHelper } from "../../helpers/pagination";
-import prisma from "../../shared/prisma";
-import { IPaginationOptions } from "../../interface/pagination";
 import { Request } from "express";
+import { StatusCodes } from "http-status-codes";
+import { Chemist, Prisma } from "../../../../generated/prisma/client";
+import AppError from "../../errors/AppError";
 import { generateId } from "../../helpers/generateId";
+import { paginationHelper } from "../../helpers/pagination";
+import { IPaginationOptions } from "../../interface/pagination";
+import prisma from "../../shared/prisma";
+import { PartySearchAbleFields } from "./chemist.constant";
 
 const createChemist = async (req: Request) => {
   const payload = req.body;

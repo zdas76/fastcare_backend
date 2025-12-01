@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
+import { LedgerHead } from "../../../../generated/prisma/client";
 import AppError from "../../errors/AppError";
 import prisma from "../../shared/prisma";
-import { LedgerHead } from "@prisma/client";
 
 const createAccountsItemtoDB = async (payLoad: LedgerHead) => {
   const isExist = await prisma.ledgerHead.findFirst({

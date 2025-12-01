@@ -1,7 +1,7 @@
-import { JobPost } from "@prisma/client";
-import prisma from "../../shared/prisma";
-import AppError from "../../errors/AppError";
 import { StatusCodes } from "http-status-codes";
+import { JobPost } from "../../../../generated/prisma/client";
+import AppError from "../../errors/AppError";
+import prisma from "../../shared/prisma";
 
 const addPostToDB = async (payLod: JobPost) => {
   const isExist = await prisma.jobPost.findFirst({

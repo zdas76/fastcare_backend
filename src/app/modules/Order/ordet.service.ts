@@ -1,8 +1,7 @@
 import { StatusCodes } from "http-status-codes";
+import { OrdStatus, Prisma } from "../../../../generated/prisma/client";
 import AppError from "../../errors/AppError";
 import prisma from "../../shared/prisma";
-import { Order, OrdStatus, Prisma } from "@prisma/client";
-import { ParsedQs } from "qs";
 
 import { generateVoucherNumber } from "../../helpers/createVoucherNo";
 

@@ -1,5 +1,5 @@
-import { UserStatus, VoucherType } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
+import { UserStatus, VoucherType } from "../../../../generated/prisma/client";
 import AppError from "../../errors/AppError";
 import prisma from "../../shared/prisma";
 

@@ -1,7 +1,7 @@
-import AppError from "../../errors/AppError";
 import { StatusCodes } from "http-status-codes";
+import { Unit } from "../../../../generated/prisma/client";
+import AppError from "../../errors/AppError";
 import prisma from "../../shared/prisma";
-import type { Unit } from "@prisma/client";
 
 const createUnit = async (payload: Unit) => {
   const isExist = await prisma.unit.findFirst({
