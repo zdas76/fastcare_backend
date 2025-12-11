@@ -3,7 +3,6 @@ import AppError from "../../errors/AppError";
 import prisma from "../../shared/prisma";
 
 const createScope = async (payload: any) => {
-  console.log("first", payload);
   const employee = await prisma.user.findFirst({
     where: {
       employeeId: payload.employeeId,
@@ -83,7 +82,65 @@ const getallScopes = async () => {
   return result;
 };
 
+const updateScope = async (payload: any) => {
+  const myscope = await prisma.scope.findFirst({
+    where: {
+      id: payload.id,
+    },
+    include: {
+      depo: {
+        select: {
+          id: true,
+        },
+      },
+      chemist: {
+        select: {
+          chemistId: true,
+        },
+      },
+      stakeholder: {
+        select: {
+          stakeId: true,
+        },
+      },
+    },
+  });
+
+  if (!myscope) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "No Scope found");
+  }
+
+  const result = await prisma.scope.update({
+    where: {
+      id: payload.id,
+    },
+    data: {
+      depo: {
+        set: [],
+        connect: payload.depo.map((id: number) => ({ id })) || myscope.depo,
+      },
+      chemist: {
+        set: [],
+        connect:
+          payload.chemist.map((id: string) => ({ chemistId: id })) ||
+          myscope.chemist,
+      },
+      stakeholder: {
+        set: [],
+        connect:
+          payload.stakeholders?.map((id: string) => ({ stakeId: id })) ||
+          myscope.stakeholder,
+      },
+      employeeId: payload.employeeId || myscope.employeeId,
+      postId: payload.jobPostId || myscope.postId,
+    },
+  });
+
+  return result;
+};
+
 export const ScopeService = {
   createScope,
   getallScopes,
+  updateScope,
 };

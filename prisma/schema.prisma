@@ -1,9 +1,8 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider      = "prisma-client-js"
+  output        = "../generated/prisma"
   binaryTargets = ["native", "debian-openssl-1.0.x"]
 }
-
 
 datasource db {
   provider = "mysql"
@@ -31,6 +30,7 @@ model User {
   salaryInfo        SalaryInfo[]
   scope             Scope?
   transactionInfo   TransactionInfo[]
+  inventories       Inventory[]
 
   @@map("user")
 }
@@ -74,7 +74,6 @@ model Chemist {
   id               Int               @id @default(autoincrement())
   chemistId        String            @unique @db.VarChar(13)
   depoId           Int
-  scopeId          Int?
   pharmacyName     String            @db.VarChar(50)
   contactPerson    String            @db.VarChar(50)
   contactNo        String            @db.VarChar(50)
@@ -87,14 +86,13 @@ model Chemist {
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
   depo             Depo              @relation(fields: [depoId], references: [id])
-  scope            Scope?            @relation(fields: [scopeId], references: [id])
+  scopes           Scope[]           @relation("ScopeChemists")
   FixedJournal     FixedJournal[]
   order            Order[]
   transactionInfo  TransactionInfo[]
 
   @@index([chemistId])
   @@index([depoId], map: "chemistes_depoId_fkey")
-  @@index([scopeId], map: "chemistes_scopeId_fkey")
   @@map("chemistes")
 }
 
@@ -107,11 +105,11 @@ model Depo {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   chemist      Chemist[]
-  scope        Scope?         @relation(fields: [scopeId], references: [id])
   FixedJournal FixedJournal[]
   inventory    Inventory[]
   jobPost      JobPost[]
   journal      Journal[]
+  scopes       Scope[]        @relation("ScopeDepos")
 
   @@index([scopeId], map: "depos_scopeId_fkey")
   @@map("depos")
@@ -129,6 +127,7 @@ model Party {
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   transactionInfo TransactionInfo[]
+  inventories     Inventory[]
 
   @@map("parties")
 }
@@ -151,7 +150,7 @@ model Stakeholder {
   product                Product[]
   stakeholderDegree      StakeholderDegree      @relation(fields: [degreeId], references: [id])
   stakeholderDeisgnation StakeholderDeisgnation @relation(fields: [designationId], references: [id])
-  scope                  Scope?                 @relation(fields: [scopeId], references: [id])
+  scopes                 Scope[]                @relation("ScopeStakeholders")
   stakeholderChember     stakeholderChember[]
   stakeholderOcation     StakeholderOcation[]
   transactionInfo        TransactionInfo[]
@@ -229,11 +228,11 @@ model Scope {
   postId      Int
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
-  chemist     Chemist[]
-  depo        Depo[]
+  chemist     Chemist[]     @relation("ScopeChemists")
+  depo        Depo[]        @relation("ScopeDepos")
+  stakeholder Stakeholder[] @relation("ScopeStakeholders")
   user        User          @relation(fields: [employeeId], references: [employeeId])
   jobPost     JobPost       @relation(fields: [postId], references: [id])
-  stakeholder Stakeholder[]
 
   @@index([postId], map: "scopeOfEmployee_postId_fkey")
   @@map("scopeOfEmployee")
@@ -403,6 +402,8 @@ model Inventory {
   date            DateTime
   productId       Int
   depoId          Int?
+  employeeId      String?
+  partyId         Int?
   transactionId   Int?
   fixedJournalId  Int?
   unitPrice       Float            @default(0)
@@ -414,6 +415,8 @@ model Inventory {
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   isFixted        Boolean          @default(false)
+  user            User?            @relation(fields: [employeeId], references: [employeeId])
+  party           Party?           @relation(fields: [partyId], references: [id])
   depo            Depo?            @relation(fields: [depoId], references: [id])
   fixedJournal    FixedJournal?    @relation(fields: [fixedJournalId], references: [id])
   product         Product          @relation(fields: [productId], references: [id])

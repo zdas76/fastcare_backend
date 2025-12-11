@@ -98,7 +98,7 @@ const getAllChemist = async (params: any, paginat: IPaginationOptions) => {
             [paginat.sortBy]: paginat.sortOrder,
           }
         : {
-            chemistId: "asc",
+            pharmacyName: "asc",
           },
   });
 

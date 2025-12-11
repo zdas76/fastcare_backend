@@ -66,23 +66,11 @@ const updateAccountsItemFromDBbyId = async (
     throw new AppError(StatusCodes.BAD_REQUEST, "This item not found");
   }
 
-  const isExistLedgerCode = await prisma.ledgerHead.findFirst({
-    where: {
-      headCodeId: payLoad.headCodeId,
-      ledgerCode: payLoad.ledgerCode,
-    },
-  });
-
-  if (isExistLedgerCode) {
-    throw new AppError(
-      StatusCodes.BAD_REQUEST,
-      `This ${payLoad.ledgerCode} Code already existed`
-    );
-  }
-
   const result = await prisma.ledgerHead.update({
     where: { id },
-    data: payLoad,
+    data: {
+      ledgerName: payLoad.ledgerName,
+    },
   });
   return result;
 };

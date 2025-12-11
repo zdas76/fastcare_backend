@@ -1,4 +1,3 @@
-import { date } from "zod";
 import prisma from "../shared/prisma";
 
 export const generateVoucherNumber = async (type: string) => {
@@ -22,6 +21,24 @@ export const generateVoucherNumber = async (type: string) => {
       where: {
         voucherNo: {
           contains: "MRV",
+        },
+      },
+      orderBy: {
+        id: "desc",
+      },
+      select: {
+        voucherNo: true,
+      },
+    });
+
+    voucherNo = VoucherNo?.voucherNo;
+  }
+
+  if (type === "SRV") {
+    const VoucherNo = await prisma.transactionInfo.findFirst({
+      where: {
+        voucherNo: {
+          contains: "SRV",
         },
       },
       orderBy: {

@@ -13,4 +13,6 @@ route.post(
 
 route.get("/", ScopeControllers.getAllScope);
 
+route.put("/", ScopeControllers.updateScope);
+
 export const scopeRoute = route;

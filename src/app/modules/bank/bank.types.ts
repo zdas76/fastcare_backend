@@ -1,5 +1,3 @@
-import { Status } from "@prisma/client";
-
 export type TBankAccount = {
   id: number;
   bankName: string;

@@ -1,8 +1,7 @@
-import { BankAccount } from "@prisma/client";
+import { BankAccount } from "../../../../generated/prisma/client";
 
-import AppError from "../../errors/AppError";
 import { StatusCodes } from "http-status-codes";
-import { date } from "zod";
+import AppError from "../../errors/AppError";
 import prisma from "../../shared/prisma";
 
 const getAllTransaction = async () => {

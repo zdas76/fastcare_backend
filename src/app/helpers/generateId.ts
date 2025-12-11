@@ -23,8 +23,6 @@ export const generateId = async (prefix: string, model: keyof PrismaClient) => {
     const lastId = findLast?.chemistId || "2106";
     const lastIdNumber = lastId?.split("-")[1];
 
-    console.log(lastIdNumber);
-
     const nextNumber = lastIdNumber
       ? String(Number(lastIdNumber) + 1).padStart(7, "0")
       : "2106001";

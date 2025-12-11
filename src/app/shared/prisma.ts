@@ -3,7 +3,6 @@ import * as dotenv from "dotenv";
 import { PrismaClient } from "../../../generated/prisma/client";
 
 dotenv.config();
-// import { PrismaClient } from "../.../../../../generated/prisma/models";
 
 const adapter = new PrismaMariaDb({
   host: process.env.DATABASE_HOST,
@@ -14,6 +13,12 @@ const adapter = new PrismaMariaDb({
 });
 const prisma = new PrismaClient({
   adapter,
+  log: [
+    "query",
+    // "info",
+    // "warn",
+    "error",
+  ],
 });
 
 export default prisma;

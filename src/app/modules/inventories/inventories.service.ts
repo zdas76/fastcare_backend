@@ -8,7 +8,6 @@ const getInventory = async (
   startDate: string | undefined,
   endDate: string | undefined
 ) => {
-  console.log(depoId, startDate, endDate);
   if (depoId) {
     const result = await prisma.$queryRaw<
       {

@@ -1,9 +1,8 @@
-import { BankAccount, Prisma } from "@prisma/client";
-import AppError from "../../errors/AppError";
 import { StatusCodes } from "http-status-codes";
-import { date } from "zod";
-import { TBankAccount } from "./bank.types";
+import { BankAccount } from "../../../../generated/prisma/client";
+import AppError from "../../errors/AppError";
 import prisma from "../../shared/prisma";
+import { TBankAccount } from "./bank.types";
 
 const createBankAccount = async (payload: TBankAccount) => {
   //check account number isExisted

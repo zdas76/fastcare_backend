@@ -1,5 +1,4 @@
-import { Status } from "@prisma/client";
-import z from "zod";
+import { Status } from "../../../../generated/prisma/client";
 
 export type TcreateProduct = {
   id: number;

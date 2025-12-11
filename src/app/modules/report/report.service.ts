@@ -164,7 +164,58 @@ const getReportByVoucherNo = async (voucherNo: string) => {
       },
     });
 
-    return result;
+    // Calculate PreDue for Sales Voucher
+    let PreDue;
+
+    if (voucherNo.startsWith("SV")) {
+      if (!result) {
+        throw new AppError(
+          StatusCodes.NOT_FOUND,
+          "No transaction found with the given voucher number"
+        );
+      }
+      const chemistExists = await prisma.chemist.findFirst({
+        where: {
+          chemistId: result.chemistId!,
+          isDeleted: false,
+        },
+        select: {
+          chemistId: true,
+          openingDate: true,
+        },
+      });
+
+      if (!chemistExists) {
+        throw new AppError(
+          StatusCodes.NOT_FOUND,
+          "No chemist found for the given transaction"
+        );
+      }
+
+      PreDue = await prisma.journal.aggregate({
+        _sum: {
+          debitAmount: true,
+          creditAmount: true,
+        },
+        where: {
+          AND: [
+            { transactionInfo: { chemistId: chemistExists.chemistId } },
+            {
+              transactionInfo: {
+                date: { gt: chemistExists.openingDate || new Date(0) },
+              },
+            },
+            {
+              transactionInfo: {
+                voucherNo: { not: voucherNo },
+              },
+            },
+          ],
+        },
+      });
+    }
+
+    return { PreDue, result };
   } else {
     return null;
   }

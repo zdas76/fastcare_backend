@@ -39,6 +39,22 @@ const createSalseVoucher = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const createSalseReturnVoucher = catchAsync(
+  async (req: Request & { user?: any }, res: Response) => {
+    const result = await JurnalService.createSalesReturnVoucher(
+      req.body,
+      req.user
+    );
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "Salse created successfully",
+      data: result,
+    });
+  }
+);
+
 const createReceiptVoucher = catchAsync(async (req: Request, res: Response) => {
   const result = await JurnalService.createReceiptVoucher(req.body);
 
