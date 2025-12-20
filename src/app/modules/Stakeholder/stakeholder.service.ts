@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
-import prisma from "../../shared/prisma";
 import AppError from "../../errors/AppError";
 import { generateId } from "../../helpers/generateId";
+import prisma from "../../shared/prisma";
 import { TStakeholders } from "./stakeholder";
 
 const createStakeholderToDB = async (payLoad: TStakeholders) => {
@@ -48,6 +48,7 @@ const getStakeholder = async () => {
       id: "asc",
     },
     select: {
+      id: true,
       stakeId: true,
       name: true,
       stakeholderDeisgnation: true,

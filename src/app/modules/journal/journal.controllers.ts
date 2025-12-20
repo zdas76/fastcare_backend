@@ -39,9 +39,25 @@ const createSalseVoucher = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const createSalseReturnVoucher = catchAsync(
+const createSalseReturnVoucherBySR = catchAsync(
   async (req: Request & { user?: any }, res: Response) => {
-    const result = await JurnalService.createSalesReturnVoucher(
+    const result = await JurnalService.createSalesReturnVoucherbySR(
+      req.body,
+      req.user
+    );
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "Salse created successfully",
+      data: result,
+    });
+  }
+);
+
+const createSalseReturnVoucherByOffice = catchAsync(
+  async (req: Request & { user?: any }, res: Response) => {
+    const result = await JurnalService.createSalesReturnVoucherByOffice(
       req.body,
       req.user
     );
@@ -119,13 +135,27 @@ const createFixedJournalVoucher = catchAsync(
   }
 );
 
+const createGiftVoucher = catchAsync(async (req: Request, res: Response) => {
+  const result = await JurnalService.creategiftedVoucher(req.body);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Gift voucher created successfully",
+    data: result,
+  });
+});
+
 export const JournalControllers = {
   addPurcherReceived,
   productTransferInvontory,
   createSalseVoucher,
+  createSalseReturnVoucherBySR,
+  createSalseReturnVoucherByOffice,
   createReceiptVoucher,
   createJournalVoucher,
   createPaymentdVoucher,
   createMoneyRecivedVoucher,
   createFixedJournalVoucher,
+  createGiftVoucher,
 };

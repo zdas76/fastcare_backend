@@ -127,7 +127,6 @@ model Party {
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   transactionInfo TransactionInfo[]
-  inventories     Inventory[]
 
   @@map("parties")
 }
@@ -403,7 +402,6 @@ model Inventory {
   productId       Int
   depoId          Int?
   employeeId      String?
-  partyId         Int?
   transactionId   Int?
   fixedJournalId  Int?
   unitPrice       Float            @default(0)
@@ -415,12 +413,11 @@ model Inventory {
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   isFixted        Boolean          @default(false)
-  user            User?            @relation(fields: [employeeId], references: [employeeId])
-  party           Party?           @relation(fields: [partyId], references: [id])
   depo            Depo?            @relation(fields: [depoId], references: [id])
   fixedJournal    FixedJournal?    @relation(fields: [fixedJournalId], references: [id])
   product         Product          @relation(fields: [productId], references: [id])
   transactionInfo TransactionInfo? @relation(fields: [transactionId], references: [id])
+  user            User             @relation(fields: [employeeId], references: [employeeId])
 
   @@index([productId])
   @@index([depoId], map: "inventories_depoId_fkey")
@@ -700,6 +697,7 @@ enum VoucherType {
   GIFT
   MONEY_RECEIVED
   OTHER
+  SALES_RETURN
 }
 
 enum OrdStatus {

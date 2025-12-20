@@ -52,6 +52,24 @@ export const generateVoucherNumber = async (type: string) => {
     voucherNo = VoucherNo?.voucherNo;
   }
 
+  if (type === "GFT") {
+    const VoucherNo = await prisma.transactionInfo.findFirst({
+      where: {
+        voucherNo: {
+          contains: "GFT",
+        },
+      },
+      orderBy: {
+        id: "desc",
+      },
+      select: {
+        voucherNo: true,
+      },
+    });
+
+    voucherNo = VoucherNo?.voucherNo;
+  }
+
   if (voucherNo) {
     const nextNumber = getNextNumber(voucherNo);
 

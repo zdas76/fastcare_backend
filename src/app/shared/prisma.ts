@@ -14,11 +14,35 @@ const adapter = new PrismaMariaDb({
 const prisma = new PrismaClient({
   adapter,
   log: [
-    "query",
-    // "info",
-    // "warn",
-    "error",
+    {
+      emit: "event",
+      level: "query",
+    },
+    {
+      emit: "event",
+      level: "error",
+    },
+    {
+      emit: "event",
+      level: "info",
+    },
+    {
+      emit: "event",
+      level: "warn",
+    },
   ],
+});
+
+prisma.$on("warn", (e) => {
+  console.log(e);
+});
+
+prisma.$on("info", (e) => {
+  console.log(e);
+});
+
+prisma.$on("error", (e) => {
+  console.log(e);
 });
 
 export default prisma;

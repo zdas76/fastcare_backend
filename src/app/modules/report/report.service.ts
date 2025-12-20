@@ -248,11 +248,24 @@ const getpartyLadgertoBdById = async (params: any) => {
       },
     });
 
+    const ledgerId = await prisma.ledgerHead.findFirst({
+      where: {
+        ledgerName: {
+          contains: "Market Collection Payable",
+        },
+      },
+    });
+
+    if (!ledgerId) {
+      throw new AppError(StatusCodes.NOT_FOUND, "Ledger head not found");
+    }
+
     const result = await prisma.journal.findMany({
       where: {
         transactionInfo: {
           employeeId: employee.employeeId,
         },
+        ledgerHeadId: ledgerId.id,
         date: {
           gte: startDate
             ? new Date(startDate)
@@ -338,9 +351,22 @@ const getpartyLadgertoBdById = async (params: any) => {
       },
     });
 
+    const ledgerId = await prisma.ledgerHead.findFirst({
+      where: {
+        ledgerName: {
+          contains: "Market Collection Payable",
+        },
+      },
+    });
+
+    if (!ledgerId) {
+      throw new AppError(StatusCodes.NOT_FOUND, "Ledger head not found");
+    }
+
     const result = await prisma.journal.findMany({
       where: {
         depoId: depo.id,
+        ledgerHeadId: ledgerId.id,
         date: {
           gte: startDate
             ? new Date(startDate)

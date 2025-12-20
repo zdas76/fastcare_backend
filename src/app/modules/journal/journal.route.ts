@@ -9,7 +9,23 @@ route.post("/purchase", JournalControllers.addPurcherReceived);
 
 route.post("/allocation", JournalControllers.productTransferInvontory);
 
-route.post("/sales", JournalControllers.createSalseVoucher);
+route.post(
+  "/sales",
+  auth(UserRole.ACCOUNTS, UserRole.ADMIN),
+  JournalControllers.createSalseVoucher
+);
+
+route.post(
+  "/sales_return_by_sr",
+  auth(UserRole.SR, UserRole.ADMIN),
+  JournalControllers.createSalseReturnVoucherBySR
+);
+
+route.post(
+  "/sales_return_by_office",
+  auth(UserRole.ACCOUNTS, UserRole.ADMIN),
+  JournalControllers.createSalseReturnVoucherByOffice
+);
 
 route.post("/received", JournalControllers.createReceiptVoucher);
 
@@ -18,6 +34,8 @@ route.post("/payment", JournalControllers.createPaymentdVoucher);
 route.post("/journal", JournalControllers.createJournalVoucher);
 
 route.post("/contra", JournalControllers.addPurcherReceived);
+
+route.post("/gift", JournalControllers.createGiftVoucher);
 
 route.post(
   "/fixed",

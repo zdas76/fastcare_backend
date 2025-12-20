@@ -8,8 +8,6 @@ import {
 import AppError from "../../errors/AppError";
 import { generateVoucherNumber } from "../../helpers/createVoucherNo";
 import prisma from "../../shared/prisma";
-import { UserRole } from "./../../../../generated/prisma/enums";
-
 //Create Purchase Received Voucher
 const createPurchestReceivedIntoDB = async (payload: any) => {
   const createPurchestVoucher = await prisma.$transaction(async (tx: any) => {
@@ -75,25 +73,25 @@ const createPurchestReceivedIntoDB = async (payload: any) => {
       );
     }
 
-    const purchaseLedger = await tx.ledgerHead.findFirst({
+    const inventory = await tx.ledgerHead.findFirst({
       where: {
         ledgerName: {
-          contains: "purchase",
+          contains: "inventory",
         },
       },
     });
 
-    if (!purchaseLedger) {
+    if (!inventory) {
       throw new AppError(
         StatusCodes.NOT_FOUND,
-        "Purchase ledger item not found"
+        "Inventory ledger item not found"
       );
     }
 
     // (a) Debit Purchase A/C
     journalEntries.push({
       transactionId: createTransaction.id,
-      ledgerHeadId: purchaseLedger.id,
+      ledgerHeadId: inventory.id,
       date: new Date(payload.date),
       depoId: payload.depoId,
       debitAmount: totalPurchaseAmount,
@@ -472,10 +470,10 @@ const createSalesVoucher = async (payload: any) => {
     }
 
     // 7️⃣ Credit Sales Ledger
-    const salesLedger = await tx.ledgerHead.findFirst({
+    const inventoryLedger = await tx.ledgerHead.findFirst({
       where: { ledgerName: { contains: "sales" } },
     });
-    if (!salesLedger) throw new Error("Sales Ledger Head Not Found");
+    if (!inventoryLedger) throw new Error("Inventory Ledger Head Not Found");
 
     const totalSaleAmount = payload.productItems.reduce(
       (sum: number, p: any) => sum + p.amount,
@@ -486,7 +484,7 @@ const createSalesVoucher = async (payload: any) => {
       transactionId: createTransaction.id,
       date: new Date(payload.date),
       depoId: depo.id,
-      ledgerHeadId: salesLedger.id,
+      ledgerHeadId: inventoryLedger.id,
       creditAmount: totalSaleAmount,
       narration: "Sales transaction",
     });
@@ -539,35 +537,22 @@ const createSalesVoucher = async (payload: any) => {
   return salseVoucher;
 };
 
-const createSalesReturnVoucher = async (payload: any, user: any) => {
-  console.log(user);
-  let employeeId: string | null = null;
-  if (
-    user &&
-    (user.UserRole === UserRole.MPO || user.UserRole === UserRole.SR)
-  ) {
-    employeeId = user.id;
-  }
+const createSalesReturnVoucherbySR = async (payload: any, user: any) => {
   const result = await prisma.$transaction(async (tx) => {
     // 1️⃣ Validate Party / Chemist
-    if (payload.chemistId) {
-      const chemistExists = await tx.chemist.findUnique({
-        where: { chemistId: payload.chemistId },
-      });
-      if (!chemistExists) {
-        throw new Error(`Invalid chemistId: ${payload.chemistId}`);
-      }
-
-      //Previus chemist due
+    const chemistExists = await tx.chemist.findUnique({
+      where: { chemistId: payload.chemistId },
+    });
+    if (!chemistExists) {
+      throw new Error(`Invalid chemistId: ${payload.chemistId}`);
     }
 
-    if (payload.partyId) {
-      const partyExists = await tx.party.findUnique({
-        where: { id: payload.partyId },
-      });
-      if (!partyExists) {
-        throw new Error(`Invalid partyId: ${payload.partyId}`);
-      }
+    //get employee id from user
+    const employeeExists = await tx.user.findFirst({
+      where: { employeeId: user.employeeId },
+    });
+    if (!employeeExists) {
+      throw new Error(`Invalid user: ${user.id}`);
     }
 
     const voucherNo = await generateVoucherNumber("SRV");
@@ -578,23 +563,11 @@ const createSalesReturnVoucher = async (payload: any, user: any) => {
         date: new Date(payload.date),
         invoiceNo: payload.orderNo || null,
         voucherNo: voucherNo,
-        voucherType: VoucherType.SALES,
-        chemistId: payload.chemistId || null,
-        partyId: payload.partyId || null,
-        employeeId: employeeId || null,
+        voucherType: VoucherType.SALES_RETURN,
+        chemistId: payload.chemistId,
+        employeeId: employeeExists.employeeId,
       },
     });
-
-    // Step 2: Handle bank transactions if ledgerItemId is a bank account
-    // for (const item of payload.paymentItems) {
-    //   // check if this ledgerItemId belongs to a bank account
-    // }
-
-    // 3️⃣ Validate Depo
-    const depo = await tx.depo.findUnique({
-      where: { id: payload.depoId },
-    });
-    if (!depo) throw new Error(`Invalid depoId: ${payload.depoId}`);
 
     // 4️⃣ Insert Inventory (quantityLess)
     if (!payload.productItems?.length)
@@ -605,7 +578,154 @@ const createSalesReturnVoucher = async (payload: any, user: any) => {
         tx.inventory.create({
           data: {
             date: new Date(payload.date),
-            depoId: depo.id,
+            depoId: chemistExists.depoId,
+            employeeId: employeeExists.employeeId,
+            transactionId: createTransaction.id,
+            productId: item.productId,
+            unitPrice: item.unitPrice,
+            quantityAdd: item.quantity,
+            debitAmount: item.amount,
+          },
+        })
+      )
+    );
+
+    // 5️⃣ Create Payment Journal Entries (Debit)
+    if (!payload.paymentItems?.length)
+      throw new Error("Invalid data: paymentItems must be non-empty");
+
+    const journalEntries: any[] = [];
+
+    for (const payItem of payload.paymentItems) {
+      journalEntries.push({
+        transactionId: createTransaction.id,
+        date: new Date(payload.date),
+        depoId: chemistExists.depoId,
+        ledgerHeadId: payItem.ledgerItemId,
+        creditAmount: payItem.amount,
+        narration: payItem.narration || "",
+      });
+    }
+
+    // 6️⃣ Handle Discount (Debit)
+    if (payload.discount && Number(payload.discount) > 0) {
+      const discountLedger = await tx.ledgerHead.findFirst({
+        where: {
+          ledgerName: { contains: "discount" },
+        },
+      });
+
+      if (!discountLedger) throw new Error("Discount Ledger Head Not Found");
+
+      journalEntries.push({
+        transactionId: createTransaction.id,
+        date: new Date(payload.date),
+        depoId: chemistExists.depoId,
+        ledgerHeadId: discountLedger.id,
+        creditAmount: Number(payload.discount),
+        narration: "Get back Discount by salse return",
+      });
+    }
+
+    const totalSalseReturntAmount = payload.productItems.reduce(
+      (sum: number, p: any) => sum + p.amount,
+      0
+    );
+
+    const LedgerItem = await tx.ledgerHead.findFirst({
+      where: {
+        ledgerName: {
+          contains: "market collection payable",
+        },
+      },
+    });
+    if (!LedgerItem) {
+      throw new AppError(
+        StatusCodes.NOT_FOUND,
+        "Market Collection Ledger Id Not Found"
+      );
+    }
+    // step 1. create transaction entries
+
+    // 9️⃣ Insert Journals
+
+    journalEntries.push({
+      transactionId: createTransaction.id,
+      ledgerHeadId: LedgerItem.id,
+      date: new Date(),
+      depoId: chemistExists.depoId,
+      narration: "Product received from chemist",
+      debitAmount: totalSalseReturntAmount,
+    });
+
+    // 8️⃣ Validate Journal Balance (Debit = Credit)
+    const totalDebit = journalEntries.reduce(
+      (sum, j) => sum + (j.debitAmount || 0),
+      0
+    );
+    const totalCredit = journalEntries.reduce(
+      (sum, j) => sum + (j.creditAmount || 0),
+      0
+    );
+
+    if (Math.abs(totalDebit - totalCredit) > 0.01) {
+      throw new Error(
+        `Unbalanced entry: Debit=${totalDebit}, Credit=${totalCredit}`
+      );
+    }
+    await Promise.all(
+      journalEntries.map((entry) => tx.journal.create({ data: entry }))
+    );
+
+    return createTransaction.id;
+  });
+
+  // 🔁 Fetch Final Transaction Info
+  const salseReturnVoucher = await prisma.transactionInfo.findUnique({
+    where: { id: result },
+    include: {
+      inventory: true,
+      journal: { include: { ledgerHead: true } },
+    },
+  });
+  return salseReturnVoucher;
+};
+
+const createSalesReturnVoucherByOffice = async (payload: any, user: any) => {
+  console.log(payload);
+
+  const result = await prisma.$transaction(async (tx) => {
+    //get employee id from user
+    const employeeExists = await tx.user.findFirst({
+      where: { employeeId: payload.employeeId },
+    });
+    if (!employeeExists) {
+      throw new Error(`Invalid Employee`);
+    }
+
+    const voucherNo = await generateVoucherNumber("SRV");
+
+    // 2️⃣ Create Transaction Entry
+    const createTransaction = await tx.transactionInfo.create({
+      data: {
+        date: new Date(payload.date),
+        invoiceNo: payload.orderNo || null,
+        voucherNo: voucherNo,
+        voucherType: VoucherType.SALES_RETURN,
+        employeeId: payload.employeeId,
+      },
+    });
+
+    // 4️⃣ Insert Inventory (quantityLess)
+    if (!payload.productItems?.length)
+      throw new Error("Invalid data: productItems must be non-empty");
+
+    await Promise.all(
+      payload.productItems.map((item: any) =>
+        tx.inventory.create({
+          data: {
+            date: new Date(payload.date),
+            employeeId: payload.employeeId,
             transactionId: createTransaction.id,
             productId: item.productId,
             unitPrice: item.unitPrice,
@@ -623,66 +743,23 @@ const createSalesReturnVoucher = async (payload: any, user: any) => {
     const journalEntries: any[] = [];
 
     for (const payItem of payload.paymentItems) {
-      if (payItem.bankAccountId) {
-        const isBankAccount = await tx.bankAccount.findFirst({
-          where: { id: payItem.bankAccountId },
-        });
-
-        if (isBankAccount) {
-          journalEntries.push({
-            transactionId: createTransaction.id,
-            date: new Date(payload.date),
-            depoId: depo.id,
-            ledgerHeadId: payItem.ledgerItemId,
-            debitAmount: payItem.amount,
-            narration: payItem.narration || "",
-            bankTransaction: {
-              create: {
-                date: new Date(payload.date),
-                bankAccountId: isBankAccount.id,
-                debitAmount: payItem.amount,
-              },
-            },
-          });
-        }
-      } else {
-        journalEntries.push({
-          transactionId: createTransaction.id,
-          date: new Date(payload.date),
-          depoId: depo.id,
-          ledgerHeadId: payItem.ledgerItemId,
-          debitAmount: payItem.amount,
-          narration: payItem.narration || "",
-        });
-      }
-    }
-
-    // 6️⃣ Handle Discount (Debit)
-    if (payload.discount && payload.discount > 0) {
-      const discountLedger = await tx.ledgerHead.findFirst({
-        where: {
-          ledgerName: { contains: "discount" },
-        },
-      });
-      if (!discountLedger) throw new Error("Discount Ledger Head Not Found");
-
       journalEntries.push({
         transactionId: createTransaction.id,
         date: new Date(payload.date),
-        depoId: depo.id,
-        ledgerHeadId: discountLedger.id,
-        debitAmount: payload.discount,
-        narration: "Discount",
+        depoId: payload.depoId,
+        ledgerHeadId: payItem.ledgerItemId,
+        creditAmount: payItem.amount,
+        narration: payItem.narration || "",
       });
     }
 
     // 7️⃣ Credit Sales Ledger
-    const salesLedger = await tx.ledgerHead.findFirst({
-      where: { ledgerName: { contains: "sales" } },
+    const inventoryLedger = await tx.ledgerHead.findFirst({
+      where: { ledgerName: { contains: "inventory" } },
     });
-    if (!salesLedger) throw new Error("Sales Ledger Head Not Found");
+    if (!inventoryLedger) throw new Error("inventory Ledger Head Not Found");
 
-    const totalSaleAmount = payload.productItems.reduce(
+    const totalSalseReturntAmount = payload.productItems.reduce(
       (sum: number, p: any) => sum + p.amount,
       0
     );
@@ -690,10 +767,10 @@ const createSalesReturnVoucher = async (payload: any, user: any) => {
     journalEntries.push({
       transactionId: createTransaction.id,
       date: new Date(payload.date),
-      depoId: depo.id,
-      ledgerHeadId: salesLedger.id,
-      creditAmount: totalSaleAmount,
-      narration: "Sales transaction",
+      depoId: payload.depoId,
+      ledgerHeadId: inventoryLedger.id,
+      debitAmount: totalSalseReturntAmount,
+      narration: "Sales return transaction",
     });
 
     // 8️⃣ Validate Journal Balance (Debit = Credit)
@@ -717,31 +794,18 @@ const createSalesReturnVoucher = async (payload: any, user: any) => {
       journalEntries.map((entry) => tx.journal.create({ data: entry }))
     );
 
-    // 🔟 Update Order Status if exists
-    if (payload.orderNo) {
-      const order = await tx.orderStatus.findFirst({
-        where: { orderNo: payload.orderNo },
-      });
-      if (order) {
-        await tx.orderStatus.update({
-          where: { id: order.id },
-          data: { status: OrdStatus.CONFIRMED },
-        });
-      }
-    }
-
     return createTransaction.id;
   });
 
   // 🔁 Fetch Final Transaction Info
-  const salseVoucher = await prisma.transactionInfo.findUnique({
+  const salseReturnVoucher = await prisma.transactionInfo.findUnique({
     where: { id: result },
     include: {
       inventory: true,
       journal: { include: { ledgerHead: true } },
     },
   });
-  return salseVoucher;
+  return salseReturnVoucher;
 };
 
 // Create Payment Voucher
@@ -1150,6 +1214,151 @@ const createJournalVoucher = async (payload: any) => {
   return Journal;
 };
 
+const creategiftedVoucher = async (payload: any) => {
+  //check customer
+  let customerId: number | null = null;
+  let stakeholderId: string | null = null;
+  let employeeId: string | null = null;
+
+  const createGiftedVoucher = await prisma.$transaction(async (tx: any) => {
+    if (payload.userType === "Others") {
+      const customerExists = await tx.customers.findFirst({
+        where: { contactNo: payload.contactNo },
+      });
+
+      if (customerExists) {
+        customerId = customerExists.id;
+      } else {
+        const newCustomer = await tx.customer.create({
+          data: {
+            name: payload.name,
+            contactNo: payload.contactNo,
+            address: payload.address,
+          },
+        });
+        customerId = newCustomer.id;
+      }
+    }
+
+    //check Stakeholder
+    if (payload.userType === "Stakeholder") {
+      const stakeholder = await tx.stakeholder.findUnique({
+        where: { id: payload.stakeholderId },
+      });
+
+      if (!stakeholder) {
+        throw new Error(`Invalid stakeholderId: ${payload.stakeholderId}`);
+      }
+
+      stakeholderId = stakeholder.id;
+    }
+
+    //check employee
+    if (payload.userType === "Employee") {
+      const employee = await tx.user.findUnique({
+        where: { id: payload.employeeId },
+      });
+
+      if (!employee) {
+        throw new Error(`Invalid employeeId: ${payload.employeeId}`);
+      }
+
+      employeeId = employee.id;
+    }
+
+    const voucherNo = await generateVoucherNumber("GFT");
+
+    console.log("voucherNo", voucherNo);
+    // step 1. create transaction entries
+    const transaction: TransactionInfo = await tx.transactionInfo.create({
+      data: {
+        date: payload?.date,
+        voucherNo: voucherNo,
+        invoiceNo: payload.reference || null,
+        customerId: customerId || null,
+        stakeholderId: stakeholderId || null,
+        employeeId: employeeId || null,
+        depoId: payload.depoId,
+        voucherType: VoucherType.GIFT,
+      },
+    });
+
+    console.log("transaction", transaction);
+
+    await Promise.all(
+      payload.productItems.map((item: any) =>
+        tx.inventory.create({
+          data: {
+            date: new Date(payload.date),
+            productId: item.productId,
+            depoId: payload.depoId,
+            transactionId: transaction.id,
+            unitPrice: item.unitPrice,
+            quantityLess: item.quantity,
+            creditAmount: item.amount,
+          },
+        })
+      )
+    );
+
+    const ledgerId = await tx.ledgerHead.findFirst({
+      where: {
+        ledgerName: {
+          contains: "inventory",
+        },
+      },
+    });
+
+    if (!ledgerId) {
+      throw new AppError(
+        StatusCodes.BAD_REQUEST,
+        "Please chreate a Inventory ledger item"
+      );
+    }
+    console.log(ledgerId);
+
+    await tx.journal.create({
+      data: [
+        {
+          transactionId: transaction.id,
+          ledgerHeadId: ledgerId.id,
+          date: new Date(payload.date),
+          creditAmount: payload.totalAmount,
+          narration: payload.narration,
+        },
+      ],
+    });
+
+    await Promise.all(
+      payload.paymentItems.map((item: any) =>
+        tx.journal.create({
+          data: {
+            transactionId: transaction.id,
+            ledgerHeadId: item.ledgerItemId,
+            date: new Date(payload.date),
+            debitAmount: item.amount,
+            narration: item.narration,
+          },
+        })
+      )
+    );
+
+    return transaction.id;
+  });
+
+  console.log(createGiftedVoucher);
+  const result = await prisma.transactionInfo.findFirst({
+    where: {
+      id: createGiftedVoucher,
+    },
+    include: {
+      inventory: true,
+      journal: { include: { ledgerHead: true } },
+    },
+  });
+  return result;
+};
+
 const createFixedVoucher = async (payload: any) => {
   const createFixedVoucher = await prisma.$transaction(async (tx: any) => {
     //check party
@@ -1256,7 +1465,7 @@ const createQantaVoucher = async () => {};
 export const JurnalService = {
   createPurchestReceivedIntoDB,
   createSalesVoucher,
-  createSalesReturnVoucher,
+  createSalesReturnVoucherbySR,
   addProductTransferIntoDB,
   createPaymentVoucher,
   createReceiptVoucher,
@@ -1264,4 +1473,6 @@ export const JurnalService = {
   createQantaVoucher,
   createMoneyReceivedVoucher,
   createFixedVoucher,
+  creategiftedVoucher,
+  createSalesReturnVoucherByOffice,
 };
