@@ -11,6 +11,8 @@ route.get("/voucher_report/:voucherNo", ReportControllers.getVoucherById);
 
 route.get("/party_ledger", ReportControllers.getPartyReportById);
 
-route.get("/chemist_ledger/", ReportControllers.getChemistLedgerById);
+route.get("/chemist_ledger", ReportControllers.getChemistLedgerById);
+
+route.get("/supplier_ledger", ReportControllers.getSuppliertLedgerById);
 
 export const ReportRouter = route;

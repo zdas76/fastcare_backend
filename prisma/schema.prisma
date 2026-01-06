@@ -417,7 +417,7 @@ model Inventory {
   fixedJournal    FixedJournal?    @relation(fields: [fixedJournalId], references: [id])
   product         Product          @relation(fields: [productId], references: [id])
   transactionInfo TransactionInfo? @relation(fields: [transactionId], references: [id])
-  user            User             @relation(fields: [employeeId], references: [employeeId])
+  user            User?            @relation(fields: [employeeId], references: [employeeId])
 
   @@index([productId])
   @@index([depoId], map: "inventories_depoId_fkey")
@@ -698,6 +698,7 @@ enum VoucherType {
   MONEY_RECEIVED
   OTHER
   SALES_RETURN
+  WHOLESALE
 }
 
 enum OrdStatus {

@@ -29,7 +29,7 @@
     "zod": "^4.0.14"
   },
   "devDependencies": {
-    "@prisma/client": "^7.1.0",
+    "@prisma/client": "^7.2.0",
     "@types/connect": "^3.4.38",
     "@types/cookie-parser": "^1.4.9",
     "@types/cors": "^2.8.19",
@@ -41,7 +41,7 @@
     "i": "^0.3.7",
     "nodemon": "^3.1.10",
     "npm": "^11.7.0",
-    "prisma": "^7.1.0",
+    "prisma": "^7.2.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }

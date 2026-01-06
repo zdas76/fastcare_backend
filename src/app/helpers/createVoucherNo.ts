@@ -70,6 +70,42 @@ export const generateVoucherNumber = async (type: string) => {
     voucherNo = VoucherNo?.voucherNo;
   }
 
+  if (type === "PV") {
+    const VoucherNo = await prisma.transactionInfo.findFirst({
+      where: {
+        voucherNo: {
+          contains: "PV",
+        },
+      },
+      orderBy: {
+        id: "desc",
+      },
+      select: {
+        voucherNo: true,
+      },
+    });
+
+    voucherNo = VoucherNo?.voucherNo;
+  }
+
+  if (type === "WSV") {
+    const VoucherNo = await prisma.transactionInfo.findFirst({
+      where: {
+        voucherNo: {
+          contains: "WSV",
+        },
+      },
+      orderBy: {
+        id: "desc",
+      },
+      select: {
+        voucherNo: true,
+      },
+    });
+
+    voucherNo = VoucherNo?.voucherNo;
+  }
+
   if (voucherNo) {
     const nextNumber = getNextNumber(voucherNo);
 

@@ -231,8 +231,6 @@ const changeOrderStatus = async (
   orderNo: string,
   payload: { status: string }
 ) => {
-  console.log(orderNo, payload);
-
   const isOrder = await prisma.orderStatus.findFirst({
     where: {
       orderNo: orderNo,

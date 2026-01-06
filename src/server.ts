@@ -1,5 +1,5 @@
-import app from "./app";
 import type { Server } from "http";
+import app from "./app";
 import config from "./config";
 
 async function main() {

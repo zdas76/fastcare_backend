@@ -224,6 +224,13 @@ const getReportByVoucherNo = async (voucherNo: string) => {
 const getpartyLadgertoBdById = async (params: any) => {
   const { ledgerType, endDate, startDate, id } = params;
 
+  const start = startDate ? new Date(startDate) : null;
+
+  let end = new Date(); // Default to now
+  if (endDate) {
+    end = new Date(endDate);
+  }
+
   if (ledgerType === "employee") {
     const employee = await prisma.user.findFirst({
       where: {
@@ -251,7 +258,7 @@ const getpartyLadgertoBdById = async (params: any) => {
     const ledgerId = await prisma.ledgerHead.findFirst({
       where: {
         ledgerName: {
-          contains: "Market Collection Payable",
+          contains: "office Payable",
         },
       },
     });
@@ -267,10 +274,8 @@ const getpartyLadgertoBdById = async (params: any) => {
         },
         ledgerHeadId: ledgerId.id,
         date: {
-          gte: startDate
-            ? new Date(startDate)
-            : closingDate?.date || new Date(),
-          lte: endDate ? new Date(endDate) : new Date(),
+          gte: start || closingDate?.date || new Date(),
+          lte: end,
         },
       },
       include: {
@@ -281,9 +286,6 @@ const getpartyLadgertoBdById = async (params: any) => {
             voucherType: true,
           },
         },
-      },
-      orderBy: {
-        date: "asc",
       },
     });
 
@@ -302,14 +304,28 @@ const getpartyLadgertoBdById = async (params: any) => {
       throw new AppError(StatusCodes.NOT_FOUND, "No vendor found");
     }
 
+    const ledgerId = await prisma.ledgerHead.findFirst({
+      where: {
+        ledgerName: {
+          contains: "receivable",
+        },
+      },
+    });
+
+    if (!ledgerId) {
+      throw new AppError(StatusCodes.NOT_FOUND, "Ledger head not found");
+    }
+
     const result = await prisma.journal.findMany({
       where: {
         transactionInfo: {
           partyId: vendor.id,
         },
+        ledgerHeadId: ledgerId.id,
+
         date: {
-          gte: startDate ? new Date(startDate) : vendor.openingDate,
-          lte: endDate ? new Date(endDate) : new Date(),
+          gte: start || new Date(),
+          lte: end,
         },
       },
       include: {
@@ -354,7 +370,7 @@ const getpartyLadgertoBdById = async (params: any) => {
     const ledgerId = await prisma.ledgerHead.findFirst({
       where: {
         ledgerName: {
-          contains: "Market Collection Payable",
+          contains: "receivable",
         },
       },
     });
@@ -368,10 +384,8 @@ const getpartyLadgertoBdById = async (params: any) => {
         depoId: depo.id,
         ledgerHeadId: ledgerId.id,
         date: {
-          gte: startDate
-            ? new Date(startDate)
-            : closingDate?.date || new Date(),
-          lte: endDate ? new Date(endDate) : new Date(),
+          gte: start || closingDate?.date || new Date(),
+          lte: end || new Date(),
         },
       },
       include: {
@@ -446,10 +460,77 @@ const getChemistLedgerById = async (params: any) => {
   return { ChemistLedgerData, chemist };
 };
 
+const getSupplierLedgerById = async (params: any) => {
+  const { supplierId, endDate, startDate } = params;
+
+  const supplier = await prisma.party.findFirst({
+    where: {
+      id: Number(supplierId),
+      isDeleted: false,
+    },
+    select: {
+      id: true,
+      partyName: true,
+      address: true,
+      contactNo: true,
+    },
+  });
+
+  const LedgerHead = await prisma.ledgerHead.findFirst({
+    where: {
+      ledgerName: {
+        equals: "accounts payable",
+      },
+    },
+  });
+
+  if (LedgerHead == null) {
+    throw new AppError(StatusCodes.NOT_FOUND, "Ledger Head not found");
+  }
+
+  const closingDate = await prisma.journal.findFirst({
+    where: {
+      transactionInfo: {
+        partyId: supplier?.id,
+      },
+      isClosing: true,
+    },
+    orderBy: {
+      date: "desc",
+    },
+  });
+
+  const start = startDate ? new Date(startDate) : closingDate?.date;
+  const end = endDate ? new Date(endDate) : new Date();
+
+  const SupplierLedgerData = await prisma.journal.findMany({
+    where: {
+      ledgerHeadId: LedgerHead.headCodeId,
+      transactionInfo: { partyId: supplier?.id },
+      date: {
+        gte: start || new Date(),
+        lte: end,
+      },
+    },
+    include: {
+      transactionInfo: {
+        select: {
+          voucherNo: true,
+          voucherType: true,
+          partyId: true,
+        },
+      },
+    },
+  });
+
+  return { SupplierLedgerData, supplier };
+};
+
 export const ReportService = {
   getLastVoucherNumber,
   getAllVoucher,
   getReportByVoucherNo,
   getpartyLadgertoBdById,
   getChemistLedgerById,
+  getSupplierLedgerById,
 };

@@ -62,10 +62,22 @@ const getChemistLedgerById = catchAsync(async (req, res) => {
   });
 });
 
+const getSuppliertLedgerById = catchAsync(async (req, res) => {
+  const result = await ReportService.getSupplierLedgerById(req.query);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Suppliers Info retrived Successfully by ChemistId.",
+    data: result,
+  });
+});
+
 export const ReportControllers = {
   getLastVoucher,
   getAllVoucher,
   getVoucherById,
   getPartyReportById,
   getChemistLedgerById,
+  getSuppliertLedgerById,
 };

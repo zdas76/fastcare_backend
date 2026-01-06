@@ -39,6 +39,19 @@ const createSalseVoucher = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const createWholeSalseVoucher = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await JurnalService.createHoleSalesVoucher(req.body);
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "Wholesalse created successfully",
+      data: result,
+    });
+  }
+);
+
 const createSalseReturnVoucherBySR = catchAsync(
   async (req: Request & { user?: any }, res: Response) => {
     const result = await JurnalService.createSalesReturnVoucherbySR(
@@ -49,7 +62,7 @@ const createSalseReturnVoucherBySR = catchAsync(
     sendResponse(res, {
       statusCode: StatusCodes.OK,
       success: true,
-      message: "Salse created successfully",
+      message: "Salse return created successfully",
       data: result,
     });
   }
@@ -65,7 +78,7 @@ const createSalseReturnVoucherByOffice = catchAsync(
     sendResponse(res, {
       statusCode: StatusCodes.OK,
       success: true,
-      message: "Salse created successfully",
+      message: "Salse return created successfully",
       data: result,
     });
   }
@@ -150,6 +163,7 @@ export const JournalControllers = {
   addPurcherReceived,
   productTransferInvontory,
   createSalseVoucher,
+  createWholeSalseVoucher,
   createSalseReturnVoucherBySR,
   createSalseReturnVoucherByOffice,
   createReceiptVoucher,

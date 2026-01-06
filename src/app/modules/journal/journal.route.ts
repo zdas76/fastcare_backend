@@ -16,6 +16,12 @@ route.post(
 );
 
 route.post(
+  "/wholesales",
+  auth(UserRole.ADMIN),
+  JournalControllers.createWholeSalseVoucher
+);
+
+route.post(
   "/sales_return_by_sr",
   auth(UserRole.SR, UserRole.ADMIN),
   JournalControllers.createSalseReturnVoucherBySR
