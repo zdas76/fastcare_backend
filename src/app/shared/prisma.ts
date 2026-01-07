@@ -33,23 +33,4 @@ const prisma = new PrismaClient({
   ],
 });
 
-// prisma.$on("warn", (e) => {
-//   console.log(e);
-// });
-
-// prisma.$on("info", (e) => {
-//   console.log(e);
-// });
-
-// prisma.$on("error", (e) => {
-//   console.log(e);
-// });
-
-async function setTimezone() {
-  // OR Bangladesh
-  await prisma.$executeRawUnsafe(`SET time_zone = '+06:00'`);
-}
-
-setTimezone().catch(console.error);
-
 export default prisma;

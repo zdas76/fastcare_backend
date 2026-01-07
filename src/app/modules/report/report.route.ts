@@ -15,4 +15,6 @@ route.get("/chemist_ledger", ReportControllers.getChemistLedgerById);
 
 route.get("/supplier_ledger", ReportControllers.getSuppliertLedgerById);
 
+route.get("/account_head_ledger", ReportControllers.getAccountHeadLedgerById);
+
 export const ReportRouter = route;

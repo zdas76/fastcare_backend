@@ -1,0 +1,729 @@
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../generated/prisma"
+  binaryTargets = ["native", "debian-openssl-1.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model User {
+  id                Int                @id @default(autoincrement())
+  employeeId        String             @unique
+  name              String             @db.VarChar(100)
+  email             String
+  password          String
+  photo             String?
+  roles             Json
+  status            UserStatus         @default(ACTIVE)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  productWiseTarget ProductWiseTarget?
+  attendance        Attendance[]
+  employeeProfile   EmployeeProfile?
+  leves             Leves[]
+  mpoTarget         MpoTarget?
+  order             Order[]
+  overtime          Overtime[]
+  payroll           Payroll[]
+  salaryInfo        SalaryInfo[]
+  scope             Scope?
+  transactionInfo   TransactionInfo[]
+  inventories       Inventory[]
+
+  @@map("user")
+}
+
+model EmployeeProfile {
+  id                 Int      @id @default(autoincrement())
+  employeeId         String   @unique
+  fatherName         String   @db.VarChar(100)
+  motherName         String   @db.VarChar(100)
+  officeContactNo    String?  @db.VarChar(14)
+  currentAddress     String?
+  permanentAddress   String?  @db.VarChar(100)
+  nid                String?  @db.VarChar(20)
+  dob                DateTime @db.Date
+  contactNo          String   @db.VarChar(14)
+  emergencyContactNo String?  @db.VarChar(14)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  user               User     @relation(fields: [employeeId], references: [employeeId])
+
+  @@map("employee_profile")
+}
+
+model JobPost {
+  id             Int      @id @default(autoincrement())
+  depoId         Int
+  postName       String   @unique @db.VarChar(50)
+  qualification  String   @db.VarChar(250)
+  responsibility String   @db.VarChar(500)
+  isDelete       Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  depo           Depo     @relation(fields: [depoId], references: [id])
+  scope          Scope[]
+
+  @@index([depoId], map: "job_post_depoId_fkey")
+  @@map("job_post")
+}
+
+model Chemist {
+  id               Int               @id @default(autoincrement())
+  chemistId        String            @unique @db.VarChar(13)
+  depoId           Int
+  pharmacyName     String            @db.VarChar(50)
+  contactPerson    String            @db.VarChar(50)
+  contactNo        String            @db.VarChar(50)
+  address          String            @db.VarChar(300)
+  photo            String?           @db.VarChar(200)
+  discountRate     Int?
+  openingDueAmount Float?            @default(0)
+  openingDate      DateTime          @default(now())
+  isDeleted        Boolean           @default(false)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  depo             Depo              @relation(fields: [depoId], references: [id])
+  scopes           Scope[]           @relation("ScopeChemists")
+  FixedJournal     FixedJournal[]
+  order            Order[]
+  transactionInfo  TransactionInfo[]
+
+  @@index([chemistId])
+  @@index([depoId], map: "chemistes_depoId_fkey")
+  @@map("chemistes")
+}
+
+model Depo {
+  id           Int            @id @default(autoincrement())
+  depoName     String         @unique
+  location     String
+  scopeId      Int?
+  status       Status         @default(ACTIVE)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  chemist      Chemist[]
+  FixedJournal FixedJournal[]
+  inventory    Inventory[]
+  jobPost      JobPost[]
+  journal      Journal[]
+  scopes       Scope[]        @relation("ScopeDepos")
+
+  @@index([scopeId], map: "depos_scopeId_fkey")
+  @@map("depos")
+}
+
+model Party {
+  id              Int               @id @default(autoincrement())
+  partyName       String
+  contactNo       String
+  address         String
+  partytype       PartyType
+  openingAmount   Float?            @default(0)
+  openingDate     DateTime          @default(now())
+  isDeleted       Boolean           @default(false)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  transactionInfo TransactionInfo[]
+
+  @@map("parties")
+}
+
+model Stakeholder {
+  id                     Int                    @id @default(autoincrement())
+  scopeId                Int?
+  stakeId                String                 @unique
+  name                   String
+  designationId          Int
+  degreeId               Int
+  category               String
+  officeAddress          String
+  contactNo              String
+  honorary               Int
+  paymentDate            DateTime
+  rxCommitment           Int
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime               @updatedAt
+  product                Product[]
+  stakeholderDegree      StakeholderDegree      @relation(fields: [degreeId], references: [id])
+  stakeholderDeisgnation StakeholderDeisgnation @relation(fields: [designationId], references: [id])
+  scopes                 Scope[]                @relation("ScopeStakeholders")
+  stakeholderChember     stakeholderChember[]
+  stakeholderOcation     StakeholderOcation[]
+  transactionInfo        TransactionInfo[]
+
+  @@index([degreeId], map: "stakeholder_degreeId_fkey")
+  @@index([designationId], map: "stakeholder_designationId_fkey")
+  @@index([scopeId], map: "stakeholder_scopeId_fkey")
+  @@map("stakeholder")
+}
+
+model StakeholderDeisgnation {
+  id          Int           @id @default(autoincrement())
+  designation String
+  description String?
+  isDelete    Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  stakeholder Stakeholder[]
+}
+
+model StakeholderDegree {
+  id          Int           @id @default(autoincrement())
+  degreeName  String
+  description String?
+  isDelete    Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  stakeholder Stakeholder[]
+}
+
+model stakeholderChember {
+  id          Int          @id @default(autoincrement())
+  stakeId     String?
+  address     String
+  chemberDay  String
+  chemberTime String
+  chemberName String
+  location    String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  stakeholder Stakeholder? @relation(fields: [stakeId], references: [stakeId])
+
+  @@index([stakeId], map: "stakeholderChember_stakeId_fkey")
+}
+
+model StakeholderOcation {
+  id          Int         @id @default(autoincrement())
+  stakeId     String
+  ocationName String
+  relation    String
+  personName  String?
+  dob         DateTime?
+  otherInfo   String?
+  stakeholder Stakeholder @relation(fields: [stakeId], references: [stakeId])
+
+  @@index([stakeId], map: "stakeholder_falily_info_stakeId_fkey")
+  @@map("stakeholder_falily_info")
+}
+
+model Customers {
+  id              Int               @id @default(autoincrement())
+  name            String?
+  contactNo       String
+  address         String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  transactionInfo TransactionInfo[]
+
+  @@map("customers")
+}
+
+model Scope {
+  id          Int           @id @default(autoincrement())
+  employeeId  String        @unique
+  postId      Int
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  chemist     Chemist[]     @relation("ScopeChemists")
+  depo        Depo[]        @relation("ScopeDepos")
+  stakeholder Stakeholder[] @relation("ScopeStakeholders")
+  user        User          @relation(fields: [employeeId], references: [employeeId])
+  jobPost     JobPost       @relation(fields: [postId], references: [id])
+
+  @@index([postId], map: "scopeOfEmployee_postId_fkey")
+  @@map("scopeOfEmployee")
+}
+
+model MpoTarget {
+  id           Int      @id @default(autoincrement())
+  employeeId   String   @unique
+  month        String
+  tergatAmount Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [employeeId], references: [employeeId])
+
+  @@map("mop_target")
+}
+
+model ProductWiseTarget {
+  id                 Int                  @id @default(autoincrement())
+  employeeId         String               @unique
+  targetStart        DateTime
+  targetEnd          DateTime
+  targetType         TargetType
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  user               User                 @relation(fields: [employeeId], references: [employeeId])
+  targetProductBatch TargetProductBatch[]
+}
+
+model TargetProductBatch {
+  id                Int               @id @default(autoincrement())
+  productId         Int
+  productTargetId   Int
+  numberOfProduct   Int
+  insentiveAmount   Float
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  product           Product           @relation(fields: [productId], references: [id])
+  productWiseTarget ProductWiseTarget @relation(fields: [productTargetId], references: [id])
+
+  @@index([productId], map: "TargetProductBatch_productId_fkey")
+  @@index([productTargetId], map: "TargetProductBatch_productTargetId_fkey")
+}
+
+model Category {
+  id           Int           @id @default(autoincrement())
+  categoryName String        @unique @db.VarChar(100)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  subCategory  SubCategory[]
+
+  @@map("categoris")
+}
+
+model SubCategory {
+  id              Int       @id @default(autoincrement())
+  subCategoryName String    @db.VarChar(150)
+  categoryId      Int
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  product         Product[]
+  category        Category  @relation(fields: [categoryId], references: [id], map: "sub_categoris_categoryId_fk1")
+
+  @@index([categoryId])
+  @@map("sub_categoris")
+}
+
+model Unit {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique @db.VarChar(20)
+  createdAt DateTime  @default(now())
+  updateAt  DateTime  @updatedAt
+  product   Product[]
+
+  @@map("units")
+}
+
+model AccountHead {
+  id         Int          @id @default(autoincrement())
+  headName   String       @db.VarChar(50)
+  headCode   String       @db.VarChar(2)
+  createdAt  DateTime     @default(now())
+  updateAt   DateTime     @updatedAt
+  ledgerHead LedgerHead[]
+
+  @@map("account_heads")
+}
+
+model LedgerHead {
+  id           Int            @id @default(autoincrement())
+  ledgerName   String
+  ledgerCode   String         @db.VarChar(6)
+  headCodeId   Int
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  fixedJournal FixedJournal[]
+  journal      Journal[]
+  accountHead  AccountHead    @relation(fields: [headCodeId], references: [id])
+
+  @@index([headCodeId], map: "ledger_head_headCodeId_fkey")
+  @@map("ledger_head")
+}
+
+model Product {
+  id                 Int                  @id @default(autoincrement())
+  name               String               @db.VarChar(100)
+  description        String               @db.VarChar(250)
+  subCategoryId      Int
+  stakeholderId      Int?
+  size               String
+  unitId             Int
+  mrp                Float                @default(0)
+  tp                 Float                @default(0)
+  balance            Float
+  quantity           Float
+  unitPrice          Float                @default(0)
+  date               DateTime
+  status             Status               @default(ACTIVE)
+  createdAt          DateTime             @default(now())
+  updateAt           DateTime             @updatedAt
+  targetProductBatch TargetProductBatch[]
+  inventory          Inventory[]
+  orderItem          OrderItem[]
+  Stakeholder        Stakeholder?         @relation(fields: [stakeholderId], references: [id])
+  subCategory        SubCategory          @relation(fields: [subCategoryId], references: [id])
+  unit               Unit                 @relation(fields: [unitId], references: [id])
+
+  @@index([subCategoryId, name])
+  @@index([stakeholderId], map: "products_stakeholderId_fkey")
+  @@index([unitId], map: "products_unitId_fkey")
+  @@map("products")
+}
+
+model BankAccount {
+  id              Int               @id @default(autoincrement())
+  bankName        String
+  branceName      String?
+  accountNumber   String
+  status          Status            @default(ACTIVE)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  bankTransaction BankTransaction[]
+
+  @@unique([bankName, accountNumber])
+  @@map("bank_accounts")
+}
+
+model BankTransaction {
+  id            Int         @id @default(autoincrement())
+  date          DateTime
+  bankAccountId Int
+  debitAmount   Int?
+  creditAmount  Int?
+  journalId     Int?
+  isClosing     Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  bankAccount   BankAccount @relation(fields: [bankAccountId], references: [id])
+  journal       Journal?    @relation(fields: [journalId], references: [id])
+
+  @@index([bankAccountId])
+  @@map("bank_transactions")
+}
+
+model Inventory {
+  id              Int              @id @default(autoincrement())
+  date            DateTime
+  productId       Int
+  depoId          Int?
+  employeeId      String?
+  transactionId   Int?
+  fixedJournalId  Int?
+  unitPrice       Float            @default(0)
+  quantityAdd     Float?           @default(0)
+  quantityLess    Float?           @default(0)
+  debitAmount     Float?
+  creditAmount    Float?
+  isClosing       Boolean          @default(false)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  isFixted        Boolean          @default(false)
+  depo            Depo?            @relation(fields: [depoId], references: [id])
+  fixedJournal    FixedJournal?    @relation(fields: [fixedJournalId], references: [id])
+  product         Product          @relation(fields: [productId], references: [id])
+  transactionInfo TransactionInfo? @relation(fields: [transactionId], references: [id])
+  user            User?            @relation(fields: [employeeId], references: [employeeId])
+
+  @@index([productId])
+  @@index([depoId], map: "inventories_depoId_fkey")
+  @@index([transactionId], map: "inventories_transactionId_fkey")
+  @@index([fixedJournalId], map: "inventories_fixedJournalId_fkey")
+  @@map("inventories")
+}
+
+model TransactionInfo {
+  id            Int          @id @default(autoincrement())
+  date          DateTime
+  voucherNo     String       @unique
+  invoiceNo     String?
+  chemistId     String?
+  customerId    Int?
+  stakeholderId String?
+  employeeId    String?
+  partyId       Int?
+  voucherType   VoucherType
+  paymentType   PaymentType?
+  status        Status       @default(PENDING)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  inventory     Inventory[]
+  journal       Journal[]
+  chemist       Chemist?     @relation(fields: [chemistId], references: [chemistId])
+  customers     Customers?   @relation(fields: [customerId], references: [id])
+  user          User?        @relation(fields: [employeeId], references: [employeeId])
+  party         Party?       @relation(fields: [partyId], references: [id])
+  stakeholder   Stakeholder? @relation(fields: [stakeholderId], references: [stakeId])
+
+  @@index([chemistId], map: "transaction_info_chemistId_fkey")
+  @@index([customerId], map: "transaction_info_customerId_fkey")
+  @@index([stakeholderId], map: "transaction_info_stakeholerId_fkey")
+  @@index([partyId], map: "transaction_info_partyId_fkey")
+  @@index([employeeId], map: "transaction_info_employeeId_fkey")
+  @@map("transaction_info")
+}
+
+model Journal {
+  id              Int               @id @default(autoincrement())
+  transactionId   Int?
+  ledgerHeadId    Int?
+  date            DateTime
+  depoId          Int?
+  creditAmount    Float?
+  debitAmount     Float?
+  narration       String?
+  isClosing       Boolean           @default(false)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  depo            Depo?             @relation(fields: [depoId], references: [id])
+  ledgerHead      LedgerHead?       @relation(fields: [ledgerHeadId], references: [id])
+  transactionInfo TransactionInfo?  @relation(fields: [transactionId], references: [id])
+  bankTransaction BankTransaction[]
+
+  @@index([depoId], map: "journals_depoId_fkey")
+  @@index([ledgerHeadId], map: "journals_ledgerHeadId_fkey")
+  @@index([transactionId], map: "journals_transactionId_fkey")
+  @@map("journals")
+}
+
+model FixedJournal {
+  id           Int         @id @default(autoincrement())
+  date         DateTime
+  voucherNo    String
+  chemistId    String
+  ledgerHeadId Int
+  depoId       Int
+  creditAmount Float?      @default(0)
+  debitAmount  Float?      @default(0)
+  narration    String?
+  isClosing    Boolean     @default(false)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  chemist      Chemist     @relation(fields: [chemistId], references: [chemistId])
+  depo         Depo        @relation(fields: [depoId], references: [id])
+  ledgerHead   LedgerHead  @relation(fields: [ledgerHeadId], references: [id])
+  inventory    Inventory[]
+
+  @@index([chemistId], map: "transaction_info_chemistId_fkey")
+  @@index([depoId], map: "journals_depoId_fkey")
+  @@index([ledgerHeadId], map: "journals_ledgerHeadId_fkey")
+  @@map("fixed_journals")
+}
+
+model Order {
+  id          Int           @id @default(autoincrement())
+  employeeId  String
+  chemistId   String
+  orderNo     String        @unique
+  date        DateTime      @default(now())
+  discount    Int?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  orderItem   OrderItem[]
+  orderStatus OrderStatus[]
+  chemist     Chemist       @relation(fields: [chemistId], references: [chemistId])
+  user        User          @relation(fields: [employeeId], references: [employeeId])
+
+  @@index([chemistId], map: "orders_chemistId_fkey")
+  @@index([employeeId], map: "orders_employeeId_fkey")
+  @@map("orders")
+}
+
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  orderId   Int
+  productId Int
+  quintity  Int
+  tpRate    Int
+  amount    Int
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId], map: "orderItems_orderId_fkey")
+  @@index([productId], map: "orderItems_productId_fkey")
+  @@map("orderItems")
+}
+
+model OrderStatus {
+  id        Int       @id @default(autoincrement())
+  orderNo   String?
+  status    OrdStatus @default(PENDING)
+  comments  String?
+  dateTime  DateTime  @default(now())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  order     Order?    @relation(fields: [orderNo], references: [orderNo])
+
+  @@index([orderNo], map: "orderStatus_orderNo_fkey")
+  @@map("orderStatus")
+}
+
+model Attendance {
+  id         Int      @id @default(autoincrement())
+  employeeId String
+  date       DateTime
+  time       String
+  status     String
+  comments   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [employeeId], references: [employeeId])
+
+  @@index([employeeId], map: "attendences_employeeId_fkey")
+  @@map("attendences")
+}
+
+model Overtime {
+  id            Int      @id @default(autoincrement())
+  employeeId    String
+  overtimeDate  DateTime
+  overtimeHours String
+  others        String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  user          User     @relation(fields: [employeeId], references: [employeeId])
+
+  @@index([employeeId], map: "overtimes_employeeId_fkey")
+  @@map("overtimes")
+}
+
+model LeaveType {
+  id        Int     @id @default(autoincrement())
+  leaveName String
+  leves     Leves[]
+}
+
+model Leves {
+  id          Int       @id @default(autoincrement())
+  leaveTypeId Int
+  employeeId  String
+  startDate   DateTime
+  endDate     DateTime
+  leaveReason String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  user        User      @relation(fields: [employeeId], references: [employeeId])
+  leaveType   LeaveType @relation(fields: [leaveTypeId], references: [id])
+
+  @@index([employeeId], map: "leves_employeeId_fkey")
+  @@index([leaveTypeId], map: "leves_leaveTypeId_fkey")
+  @@map("leves")
+}
+
+model EmployeeBankDetails {
+  id                Int    @id @default(autoincrement())
+  bankName          String
+  bankAccountNumber String
+  branchName        String
+  ifsscode          String
+
+  @@map("employeeBankDetails")
+}
+
+model SalaryInfo {
+  id              Int      @id @default(autoincrement())
+  employeeId      String
+  basicSalary     Float
+  houseRend       Float
+  mobile          Float
+  medial          Float
+  taDa            Float
+  insuranceAmount Float
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [employeeId], references: [employeeId])
+
+  @@index([employeeId], map: "salaryInfo_employeeId_fkey")
+  @@map("salaryInfo")
+}
+
+model Payroll {
+  id          Int      @id @default(autoincrement())
+  employeeId  String
+  payDate     DateTime
+  basicSalary Float
+  houseRend   Float
+  mobile      Float
+  medial      Float
+  taDa        Float
+  insentive   Float
+  eidBonus    Float
+  boishakhi   Float
+  others      Float
+  fp          Float
+  insurance   Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [employeeId], references: [employeeId])
+
+  @@index([employeeId], map: "payrolls_employeeId_fkey")
+  @@map("payrolls")
+}
+
+enum TargetType {
+  MONTHLY
+  QUERTERLY
+  HALF_YEARLY
+  YEARLY
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  BLOCK
+  DELETED
+}
+
+enum Status {
+  IN_STOCK
+  OUT_OF_STOCK
+  ACTIVE
+  DELETED
+  PUSH
+  BLOCK
+  PENDING
+  CHECKED
+}
+
+enum PaymentType {
+  PAID
+  DUE
+  PARTIAL
+}
+
+enum VoucherType {
+  SALES
+  PURCHASE
+  RECEIVED
+  PAYMENT
+  JOURNAL
+  CONTRA
+  TRANSFER
+  ALLOCATION
+  GIFT
+  MONEY_RECEIVED
+  OTHER
+  SALES_RETURN
+}
+
+enum OrdStatus {
+  PENDING
+  REVIEWING
+  CONFIRMED
+  ON_THE_WAY
+  DELIVERED
+  CANCELLED
+  RETURNED
+}
+
+enum PartyType {
+  SUPPLIER
+  VENDOR
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  ACCOUNTS
+  OFFICE_ADMIN
+  GM
+  ASM
+  RSM
+  AM
+  MPO
+  SR
+}

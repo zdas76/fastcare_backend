@@ -185,6 +185,18 @@ const getReportByVoucherNo = async (voucherNo: string) => {
         },
       });
 
+      const ledgerHeadId = await prisma.ledgerHead.findFirst({
+        where: {
+          ledgerName: {
+            equals: "Accounts Receivable",
+          },
+        },
+      });
+
+      if (!ledgerHeadId) {
+        throw new AppError(StatusCodes.NOT_FOUND, "Ledger Head not found");
+      }
+
       if (!chemistExists) {
         throw new AppError(
           StatusCodes.NOT_FOUND,
@@ -202,7 +214,7 @@ const getReportByVoucherNo = async (voucherNo: string) => {
             { transactionInfo: { chemistId: chemistExists.chemistId } },
             {
               transactionInfo: {
-                date: { gt: chemistExists.openingDate || new Date(0) },
+                date: { gt: chemistExists.openingDate, lte: result.date },
               },
             },
             {
@@ -210,6 +222,7 @@ const getReportByVoucherNo = async (voucherNo: string) => {
                 voucherNo: { not: voucherNo },
               },
             },
+            { ledgerHeadId: ledgerHeadId.id },
           ],
         },
       });
@@ -526,6 +539,44 @@ const getSupplierLedgerById = async (params: any) => {
   return { SupplierLedgerData, supplier };
 };
 
+const getAccountHeadLedgerById = async (params: any) => {
+  const { headCodeId, endDate, startDate } = params;
+
+  const LedgerHead = await prisma.ledgerHead.findFirst({
+    where: {
+      id: Number(headCodeId),
+    },
+  });
+
+  if (!LedgerHead) {
+    throw new AppError(StatusCodes.NOT_FOUND, "Ledger Head not found");
+  }
+
+  const start = startDate ? new Date(startDate) : null;
+  const end = endDate ? new Date(endDate) : new Date();
+
+  const AccountHeadLedgerData = await prisma.journal.findMany({
+    where: {
+      ledgerHeadId: LedgerHead.id,
+      date: {
+        gte: start || new Date(),
+        lte: end,
+      },
+    },
+    include: {
+      transactionInfo: {
+        select: {
+          date: true,
+          voucherNo: true,
+          voucherType: true,
+        },
+      },
+    },
+  });
+
+  return { AccountHeadLedgerData, LedgerHead };
+};
+
 export const ReportService = {
   getLastVoucherNumber,
   getAllVoucher,
@@ -533,4 +584,5 @@ export const ReportService = {
   getpartyLadgertoBdById,
   getChemistLedgerById,
   getSupplierLedgerById,
+  getAccountHeadLedgerById,
 };

@@ -73,6 +73,17 @@ const getSuppliertLedgerById = catchAsync(async (req, res) => {
   });
 });
 
+const getAccountHeadLedgerById = catchAsync(async (req, res) => {
+  const result = await ReportService.getAccountHeadLedgerById(req.query);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Account Head Ledger Info retrived Successfully by id.",
+    data: result,
+  });
+});
+
 export const ReportControllers = {
   getLastVoucher,
   getAllVoucher,
@@ -80,4 +91,5 @@ export const ReportControllers = {
   getPartyReportById,
   getChemistLedgerById,
   getSuppliertLedgerById,
+  getAccountHeadLedgerById,
 };
