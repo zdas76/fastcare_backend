@@ -59,7 +59,7 @@ const getProduct = async () => {
     },
 
     orderBy: {
-      id: "desc",
+      name: "asc",
     },
     include: {
       subCategory: true,

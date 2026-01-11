@@ -210,10 +210,12 @@ const addProductTransferIntoDB = async (payload: any) => {
       })
     );
 
+    const voucherNo = await generateVoucherNumber("ALV");
+
     const transactionInfo = await tx.transactionInfo.create({
       data: {
         date: new Date(payload?.date),
-        voucherNo: payload.voucherNo,
+        voucherNo: voucherNo,
         voucherType: VoucherType.ALLOCATION,
       },
     });
@@ -250,25 +252,10 @@ const addProductTransferIntoDB = async (payload: any) => {
       )
     );
 
-    const ledgerId = await tx.ledgerHead.findFirst({
-      where: {
-        ledgerName: {
-          contains: "accounts receivable",
-        },
-      },
-    });
-
-    if (!ledgerId) {
-      throw new AppError(
-        StatusCodes.BAD_REQUEST,
-        "Please chreate a accounts receivable ledger item"
-      );
-    }
-
     await tx.journal.create({
       data: {
         transactionId: transactionInfo?.id,
-        ledgerHeadId: ledgerId.id,
+        ledgerHeadId: payload.debitItemId,
         date: new Date(payload?.date),
         depoId: payload.providerdepoId,
         debitAmount: payload.totalAmount,
@@ -276,25 +263,10 @@ const addProductTransferIntoDB = async (payload: any) => {
       },
     });
 
-    const PayableledgerId = await tx.ledgerHead.findFirst({
-      where: {
-        ledgerName: {
-          contains: "accounts payable",
-        },
-      },
-    });
-
-    if (!PayableledgerId) {
-      throw new AppError(
-        StatusCodes.BAD_REQUEST,
-        "Please chreate a accounts payable ledger item"
-      );
-    }
-
     await tx.journal.create({
       data: {
         transactionId: transactionInfo?.id,
-        ledgerHeadId: PayableledgerId.id,
+        ledgerHeadId: payload.creditItemId,
         date: new Date(payload?.date),
         depoId: payload.receverdepoId,
         creditAmount: payload.totalAmount,
@@ -1076,6 +1048,7 @@ const createReceiptVoucher = async (payload: any) => {
     let partyId: number | undefined;
     let employeeId: string | undefined;
     let chemistId: string | undefined;
+    let receivDepoId: number | undefined;
 
     //check party
     if (payload.userType === "SUPPLIER" || payload.userType === "VENDOR") {
@@ -1104,7 +1077,7 @@ const createReceiptVoucher = async (payload: any) => {
       employeeId = employeeExists.employeeId;
     }
 
-    //check employee
+    //check Chemist
     if (payload.userType === "CHEMIST") {
       const chemistIdExists = await tx.chemist.findFirst({
         where: { id: payload.receivedForm },
@@ -1115,6 +1088,19 @@ const createReceiptVoucher = async (payload: any) => {
       }
 
       chemistId = chemistIdExists.chemistId;
+    }
+
+    //check Depo
+    if (payload.userType === "DEPO") {
+      const ExistsDepo = await tx.depo.findFirst({
+        where: { id: payload.receivedForm },
+      });
+
+      if (!ExistsDepo) {
+        throw new Error(`Invalid employee, no employee found.`);
+      }
+
+      receivDepoId = ExistsDepo.id;
     }
 
     // step 1. create transaction entries
@@ -1158,22 +1144,78 @@ const createReceiptVoucher = async (payload: any) => {
       throw new Error("Invalid data: salseItem must be a non-empty array");
     }
 
-    const journalEntries = payload.items.flatMap((item: any) => [
-      {
-        transactionId: createTransaction.id,
-        ledgerHeadId: item.debitItemId,
-        date: new Date(payload.date),
-        debitAmount: item.amount,
-        narration: item.narration,
+    console.log(payload.items);
+
+    const journalEntries: any[] = [];
+
+    payload.items.forEach((item: any) =>
+      journalEntries.push(
+        {
+          transactionId: createTransaction.id,
+          ledgerHeadId: item.debitItemId,
+          date: new Date(payload.date),
+          depoId: payload.depoId,
+          debitAmount: item.amount,
+          narration: item.narration,
+        },
+        {
+          transactionId: createTransaction.id,
+          ledgerHeadId: item.creditItemId,
+          date: new Date(payload.date),
+          depoId: payload.depoId,
+          creditAmount: item.amount,
+          narration: item.narration,
+        }
+      )
+    );
+
+    const cashId = await tx.ledgerHead.findFirst({
+      where: {
+        ledgerName: {
+          contains: "cash",
+        },
       },
-      {
-        transactionId: createTransaction.id,
-        ledgerHeadId: item.creditItemId,
-        date: new Date(payload.date),
-        creditAmount: item.amount,
-        narration: item.narration,
+    });
+
+    const accpaybleId = await tx.ledgerHead.findFirst({
+      where: {
+        ledgerName: {
+          contains: "accounts payable",
+        },
       },
-    ]);
+    });
+
+    if (!cashId || !accpaybleId) {
+      throw new Error("Cash or Accounts Payable ledger not found");
+    }
+
+    const amount = payload.items.reduce(
+      (sum: number, item: any) => sum + item.amount,
+      0
+    );
+
+    if (receivDepoId) {
+      journalEntries.push(
+        {
+          transactionId: createTransaction.id,
+          ledgerHeadId: accpaybleId.id,
+          date: new Date(payload.date),
+          depoId: receivDepoId,
+          debitAmount: amount,
+          narration: "Pay to Head Depo",
+        },
+        {
+          transactionId: createTransaction.id,
+          ledgerHeadId: cashId.id,
+          date: new Date(payload.date),
+          depoId: receivDepoId,
+          creditAmount: amount,
+          narration: "Pay to Head Depo",
+        }
+      );
+    }
+
+    console.log(journalEntries);
 
     const createJournal = await tx.journal.createMany({
       data: journalEntries,
@@ -1260,7 +1302,7 @@ const createMoneyReceivedVoucher = async (payload: any, user: any) => {
           transactionId: createTransaction.id,
           depoId: payload.depoId,
           ledgerHeadId: item.ledgerItemId,
-          debitAmount: item.amount,
+          creditAmount: item.amount,
           narration: item.narration,
         },
       });
@@ -1286,7 +1328,7 @@ const createMoneyReceivedVoucher = async (payload: any, user: any) => {
         transactionId: createTransaction.id,
         depoId: payload.depoId,
         ledgerHeadId: LedgerItem.id,
-        creditAmount: payload.totalAmount,
+        debitAmount: payload.totalAmount,
         narration: payload.globalNarration || "Money received from chemist",
       },
     });

@@ -1,5 +1,9 @@
 import { StatusCodes } from "http-status-codes";
-import { UserStatus, VoucherType } from "../../../../generated/prisma/client";
+import {
+  Status,
+  UserStatus,
+  VoucherType,
+} from "../../../../generated/prisma/client";
 import AppError from "../../errors/AppError";
 import prisma from "../../shared/prisma";
 
@@ -96,7 +100,11 @@ const getReportByVoucherNo = async (voucherNo: string) => {
   if (voucherNo) {
     const result = await prisma.transactionInfo.findFirst({
       where: { voucherNo },
-      include: {
+      select: {
+        date: true,
+        chemistId: true,
+        voucherNo: true,
+        voucherType: true,
         chemist: {
           select: {
             chemistId: true,
@@ -176,7 +184,7 @@ const getReportByVoucherNo = async (voucherNo: string) => {
       }
       const chemistExists = await prisma.chemist.findFirst({
         where: {
-          chemistId: result.chemistId!,
+          chemistId: result?.chemistId!,
           isDeleted: false,
         },
         select: {
@@ -204,6 +212,9 @@ const getReportByVoucherNo = async (voucherNo: string) => {
         );
       }
 
+      let endDate = new Date(result.date);
+      endDate.setHours(23, 59, 59, 999);
+
       PreDue = await prisma.journal.aggregate({
         _sum: {
           debitAmount: true,
@@ -214,7 +225,7 @@ const getReportByVoucherNo = async (voucherNo: string) => {
             { transactionInfo: { chemistId: chemistExists.chemistId } },
             {
               transactionInfo: {
-                date: { gt: chemistExists.openingDate, lte: result.date },
+                date: { gt: chemistExists.openingDate, lte: endDate },
               },
             },
             {
@@ -242,13 +253,19 @@ const getpartyLadgertoBdById = async (params: any) => {
   let end = new Date(); // Default to now
   if (endDate) {
     end = new Date(endDate);
+    end.setHours(23, 59, 59, 999);
   }
 
   if (ledgerType === "employee") {
     const employee = await prisma.user.findFirst({
       where: {
-        id: Number(id),
+        employeeId: id,
         status: UserStatus.ACTIVE,
+      },
+      select: {
+        id: true,
+        employeeId: true,
+        name: true,
       },
     });
 
@@ -362,7 +379,7 @@ const getpartyLadgertoBdById = async (params: any) => {
     const depo = await prisma.depo.findFirst({
       where: {
         id: Number(id),
-        status: UserStatus.ACTIVE,
+        status: Status.ACTIVE,
       },
     });
 
@@ -380,22 +397,34 @@ const getpartyLadgertoBdById = async (params: any) => {
       },
     });
 
-    const ledgerId = await prisma.ledgerHead.findFirst({
-      where: {
-        ledgerName: {
-          contains: "receivable",
-        },
-      },
-    });
+    let ledgerHeadId;
 
-    if (!ledgerId) {
+    if (depo.id === 1) {
+      ledgerHeadId = await prisma.ledgerHead.findFirst({
+        where: {
+          ledgerName: {
+            contains: "accounts receivable",
+          },
+        },
+      });
+    } else {
+      ledgerHeadId = await prisma.ledgerHead.findFirst({
+        where: {
+          ledgerName: {
+            contains: "accounts payable",
+          },
+        },
+      });
+    }
+
+    if (!ledgerHeadId) {
       throw new AppError(StatusCodes.NOT_FOUND, "Ledger head not found");
     }
 
     const result = await prisma.journal.findMany({
       where: {
         depoId: depo.id,
-        ledgerHeadId: ledgerId.id,
+        ledgerHeadId: ledgerHeadId.id,
         date: {
           gte: start || closingDate?.date || new Date(),
           lte: end || new Date(),
@@ -448,8 +477,13 @@ const getChemistLedgerById = async (params: any) => {
     throw new AppError(StatusCodes.NOT_FOUND, "Ledger Head not found");
   }
 
+  let end = new Date(); // Default to now
+  if (endDate) {
+    end = new Date(endDate);
+    end.setHours(23, 59, 59, 999);
+  }
+
   const start = startDate ? new Date(startDate) : chemist?.openingDate;
-  const end = endDate ? new Date(endDate) : new Date();
 
   const ChemistLedgerData = await prisma.journal.findMany({
     where: {
@@ -459,6 +493,9 @@ const getChemistLedgerById = async (params: any) => {
         gte: start,
         lte: end,
       },
+    },
+    orderBy: {
+      date: "desc",
     },
     include: {
       transactionInfo: {
@@ -481,6 +518,7 @@ const getSupplierLedgerById = async (params: any) => {
       id: Number(supplierId),
       isDeleted: false,
     },
+
     select: {
       id: true,
       partyName: true,
@@ -513,8 +551,13 @@ const getSupplierLedgerById = async (params: any) => {
     },
   });
 
+  let end = new Date(); // Default to now
+  if (endDate) {
+    end = new Date(endDate);
+    end.setHours(23, 59, 59, 999);
+  }
+
   const start = startDate ? new Date(startDate) : closingDate?.date;
-  const end = endDate ? new Date(endDate) : new Date();
 
   const SupplierLedgerData = await prisma.journal.findMany({
     where: {
@@ -524,6 +567,9 @@ const getSupplierLedgerById = async (params: any) => {
         gte: start || new Date(),
         lte: end,
       },
+    },
+    orderBy: {
+      date: "desc",
     },
     include: {
       transactionInfo: {
@@ -551,9 +597,13 @@ const getAccountHeadLedgerById = async (params: any) => {
   if (!LedgerHead) {
     throw new AppError(StatusCodes.NOT_FOUND, "Ledger Head not found");
   }
+  let end = new Date(); // Default to now
+  if (endDate) {
+    end = new Date(endDate);
+    end.setHours(23, 59, 59, 999);
+  }
 
   const start = startDate ? new Date(startDate) : null;
-  const end = endDate ? new Date(endDate) : new Date();
 
   const AccountHeadLedgerData = await prisma.journal.findMany({
     where: {
@@ -562,6 +612,9 @@ const getAccountHeadLedgerById = async (params: any) => {
         gte: start || new Date(),
         lte: end,
       },
+    },
+    orderBy: {
+      date: "desc",
     },
     include: {
       transactionInfo: {
