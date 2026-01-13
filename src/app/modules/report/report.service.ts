@@ -248,6 +248,8 @@ const getReportByVoucherNo = async (voucherNo: string) => {
 const getpartyLadgertoBdById = async (params: any) => {
   const { ledgerType, endDate, startDate, id } = params;
 
+  console.log(params);
+
   const start = startDate ? new Date(startDate) : null;
 
   let end = new Date(); // Default to now
@@ -495,7 +497,7 @@ const getChemistLedgerById = async (params: any) => {
       },
     },
     orderBy: {
-      date: "desc",
+      date: "asc",
     },
     include: {
       transactionInfo: {
