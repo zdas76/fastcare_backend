@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import catchAsync from "../../shared/catchAsync";
-import { InventoryService } from "./inventories.service";
 import sendResponse from "../../shared/sendResponse";
+import { InventoryService } from "./inventories.service";
 
 const getInventory = catchAsync(async (req: Request, res: Response) => {
   const depoId = Number(req.query.depoId);
@@ -12,7 +12,7 @@ const getInventory = catchAsync(async (req: Request, res: Response) => {
   const result = await InventoryService.getInventory(
     depoId,
     startDate,
-    endDate
+    endDate,
   );
 
   sendResponse(res, {
@@ -40,7 +40,7 @@ const getInventoryById = catchAsync(async (req: Request, res: Response) => {
     productId,
     depoId,
     startDate,
-    endDate
+    endDate,
   );
 
   sendResponse(res, {
@@ -85,10 +85,25 @@ const getInventoryTotal = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getInventoryByVoucherNo = catchAsync(
+  async (req: Request, res: Response) => {
+    const voucherNo = req.params.voucherNo;
+    const result = await InventoryService.getInventoryByVoucherNo(voucherNo);
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "Inventory retrived Successfully",
+      data: result,
+    });
+  },
+);
+
 export const InventoryControllers = {
   getInventory,
   getInventoryById,
   updateInventory,
   deleteInventory,
   getInventoryTotal,
+  getInventoryByVoucherNo,
 };

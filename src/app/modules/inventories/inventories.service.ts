@@ -6,7 +6,7 @@ import prisma from "../../shared/prisma";
 const getInventory = async (
   depoId: number | undefined,
   startDate: string | undefined,
-  endDate: string | undefined
+  endDate: string | undefined,
 ) => {
   if (depoId) {
     const result = await prisma.$queryRaw<
@@ -45,7 +45,7 @@ const getInventoryById = async (
   productId: number,
   depoId: number,
   startDate: Date | null,
-  endDate: Date | null
+  endDate: Date | null,
 ) => {
   const product = await prisma.product.findFirst({
     where: {
@@ -145,11 +145,26 @@ const deleteInventory = async (id: number) => {
   return console.log("first");
 };
 
+const getInventoryByVoucherNo = async (voucherNo: string) => {
+  const result = await prisma.inventory.findMany({
+    where: {
+      transactionInfo: { voucherNo },
+    },
+    include: {
+      transactionInfo: {
+        select: { voucherNo: true, voucherType: true },
+      },
+    },
+  });
+  return result;
+};
+
 export const InventoryService = {
   getInventory,
   getInventoryById,
   getInventoryTotalById,
   getDepoInventoryTotalById,
+  getInventoryByVoucherNo,
   updateInventory,
   deleteInventory,
 };
