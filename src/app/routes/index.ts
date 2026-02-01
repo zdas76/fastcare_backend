@@ -1,24 +1,25 @@
 import express from "express";
+import { AccountHeadRoute } from "../modules/accountHead/head.route";
+import { AuthRoutes } from "../modules/Auth/auth.router";
 import { CategoryRouter } from "../modules/Category/category.route";
+import { ChemistRoute } from "../modules/Chemist/chemist.route";
+import { DegreeRouter } from "../modules/Degree/degree.route";
+import { DepoRouter } from "../modules/Depo/depo.route";
+import { DesignationRouter } from "../modules/Designation/designation.route";
+import { InventoryRoute } from "../modules/inventories/inventories.route";
+import { JournalRoute } from "../modules/journal/journal.route";
+import { LedgerHeadRoute } from "../modules/LedgerHead/LedgerHead.route";
+import { OrderRouter } from "../modules/Order/ordet.route";
+import { PartyRouter } from "../modules/party/party.route";
+import { PosrRoute } from "../modules/post/post.route";
+import { ProductRoute } from "../modules/products/product.route";
+import { ReportRouter } from "../modules/report/report.route";
+import { ReportManagementRouter } from "../modules/ReportManatemenr/report.route";
+import { scopeRoute } from "../modules/Scope/scope.route";
+import { StakeholderRoute } from "../modules/Stakeholder/stakeholder.route";
 import { SubCategoryRouter } from "../modules/SubCategory/subCategory.route";
 import { UnitRoute } from "../modules/unit/unit.route";
-import { ProductRoute } from "../modules/products/product.route";
-import { ChemistRoute } from "../modules/Chemist/chemist.route";
-import { PosrRoute } from "../modules/post/post.route";
 import { UserRoute } from "../modules/User/user.route";
-import { DepoRouter } from "../modules/Depo/depo.route";
-import { PartyRouter } from "../modules/party/party.route";
-import { LedgerHeadRoute } from "../modules/LedgerHead/LedgerHead.route";
-import { AccountHeadRoute } from "../modules/accountHead/head.route";
-import { JournalRoute } from "../modules/journal/journal.route";
-import { InventoryRoute } from "../modules/inventories/inventories.route";
-import { DegreeRouter } from "../modules/Degree/degree.route";
-import { StakeholderRoute } from "../modules/Stakeholder/stakeholder.route";
-import { DesignationRouter } from "../modules/Designation/designation.route";
-import { AuthRoutes } from "../modules/Auth/auth.router";
-import { scopeRoute } from "../modules/Scope/scope.route";
-import { OrderRouter } from "../modules/Order/ordet.route";
-import { ReportRouter } from "../modules/report/report.route";
 
 const router = express.Router();
 
@@ -102,6 +103,10 @@ const moduleroutes = [
   {
     path: "/report",
     route: ReportRouter,
+  },
+  {
+    path: "/reportManagement",
+    route: ReportManagementRouter,
   },
 ];
 

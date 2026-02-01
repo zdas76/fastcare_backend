@@ -1,7 +1,7 @@
 {
   "name": "new-backend",
   "version": "1.0.0",
-  "main": "server.ts",
+  "main": "dist/server.js",
   "type": "commonjs",
   "scripts": {
     "dev": "nodemon --exec ts-node src/server.ts",

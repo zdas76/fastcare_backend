@@ -86,8 +86,42 @@ const getLastVoucherNumber = async (vcode: string) => {
   return transactionResult;
 };
 
-const getAllVoucher = async () => {
+const getAllVoucher = async ({
+  fromDate,
+  toDate,
+  voucherType,
+  voucherNo,
+}: {
+  fromDate?: string;
+  toDate?: string;
+  voucherType?: string;
+  voucherNo?: string;
+}) => {
   const result = await prisma.transactionInfo.findMany({
+    where: {
+      AND: [
+        fromDate && toDate
+          ? {
+              date: {
+                gte: new Date(fromDate),
+                lte: new Date(new Date(toDate).setHours(23, 59, 59, 999)),
+              },
+            }
+          : {},
+        voucherType
+          ? {
+              voucherType: voucherType as VoucherType,
+            }
+          : {},
+        voucherNo
+          ? {
+              voucherNo: {
+                contains: voucherNo,
+              },
+            }
+          : {},
+      ],
+    },
     orderBy: {
       createdAt: "desc",
     },
@@ -105,6 +139,7 @@ const getReportByVoucherNo = async (voucherNo: string) => {
         chemistId: true,
         voucherNo: true,
         voucherType: true,
+        invoiceNo: true,
         chemist: {
           select: {
             chemistId: true,
@@ -179,7 +214,7 @@ const getReportByVoucherNo = async (voucherNo: string) => {
       if (!result) {
         throw new AppError(
           StatusCodes.NOT_FOUND,
-          "No transaction found with the given voucher number"
+          "No transaction found with the given voucher number",
         );
       }
       const chemistExists = await prisma.chemist.findFirst({
@@ -208,12 +243,15 @@ const getReportByVoucherNo = async (voucherNo: string) => {
       if (!chemistExists) {
         throw new AppError(
           StatusCodes.NOT_FOUND,
-          "No chemist found for the given transaction"
+          "No chemist found for the given transaction",
         );
       }
 
       let endDate = new Date(result.date);
       endDate.setHours(23, 59, 59, 999);
+
+      let openingDate = chemistExists.openingDate;
+      openingDate.setHours(0, 0, 0, 0);
 
       PreDue = await prisma.journal.aggregate({
         _sum: {
@@ -225,7 +263,7 @@ const getReportByVoucherNo = async (voucherNo: string) => {
             { transactionInfo: { chemistId: chemistExists.chemistId } },
             {
               transactionInfo: {
-                date: { gt: chemistExists.openingDate, lte: endDate },
+                date: { gt: openingDate, lte: endDate },
               },
             },
             {
@@ -247,8 +285,6 @@ const getReportByVoucherNo = async (voucherNo: string) => {
 
 const getpartyLadgertoBdById = async (params: any) => {
   const { ledgerType, endDate, startDate, id } = params;
-
-  console.log(params);
 
   const start = startDate ? new Date(startDate) : null;
 
@@ -588,7 +624,7 @@ const getSupplierLedgerById = async (params: any) => {
 };
 
 const getAccountHeadLedgerById = async (params: any) => {
-  const { headCodeId, endDate, startDate } = params;
+  const { headCodeId, endDate, startDate, depoId } = params;
 
   const LedgerHead = await prisma.ledgerHead.findFirst({
     where: {
@@ -596,8 +632,14 @@ const getAccountHeadLedgerById = async (params: any) => {
     },
   });
 
-  if (!LedgerHead) {
-    throw new AppError(StatusCodes.NOT_FOUND, "Ledger Head not found");
+  const depo = await prisma.depo.findFirst({
+    where: {
+      id: Number(depoId),
+    },
+  });
+
+  if (!LedgerHead || !depo) {
+    throw new AppError(StatusCodes.NOT_FOUND, "Ledger Head or Depo not found");
   }
   let end = new Date(); // Default to now
   if (endDate) {
@@ -610,13 +652,14 @@ const getAccountHeadLedgerById = async (params: any) => {
   const AccountHeadLedgerData = await prisma.journal.findMany({
     where: {
       ledgerHeadId: LedgerHead.id,
+      depoId: depo.id,
       date: {
         gte: start || new Date(),
         lte: end,
       },
     },
     orderBy: {
-      date: "desc",
+      date: "asc",
     },
     include: {
       transactionInfo: {

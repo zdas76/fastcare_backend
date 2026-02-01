@@ -17,7 +17,7 @@ const getLastVoucher = catchAsync(async (req, res) => {
 });
 
 const getAllVoucher = catchAsync(async (req, res) => {
-  const result = await ReportService.getAllVoucher();
+  const result = await ReportService.getAllVoucher(req.query);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,

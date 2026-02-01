@@ -259,7 +259,7 @@ const addProductTransferIntoDB = async (payload: any) => {
         date: new Date(payload?.date),
         depoId: payload.providerdepoId,
         debitAmount: payload.totalAmount,
-        narration: "Product Received",
+        narration: "Product Provided",
       },
     });
 
@@ -270,7 +270,7 @@ const addProductTransferIntoDB = async (payload: any) => {
         date: new Date(payload?.date),
         depoId: payload.receverdepoId,
         creditAmount: payload.totalAmount,
-        narration: "Product Provided",
+        narration: "Product Received",
       },
     });
 
