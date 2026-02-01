@@ -93,23 +93,43 @@ const getMpoReportByEmployeeId = async (
 ) => {
   const { startDate, endDate } = filters;
 
-  const scop = await prisma.scope.findFirst({
-    where: {
-      employeeId: employeeId,
-    },
+  // Scope
+  const scope = await prisma.scope.findFirst({
+    where: { employeeId },
     include: {
       chemist: { select: { chemistId: true } },
     },
   });
 
-  // Get the current date
+  // MPO info
+  const mpo = await prisma.user.findFirst({
+    where: { employeeId },
+    select: {
+      id: true,
+      employeeId: true,
+      name: true,
+      email: true,
+      status: true,
+    },
+  });
+
+  if (!scope || !mpo) {
+    throw new Error("MPO or Scope not found");
+  }
+
+  // Default dates
   const today = new Date();
+  const firstDayOfMonth = new Date(
+    Date.UTC(today.getFullYear(), today.getMonth(), 1),
+  );
 
-  const firstDay = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1));
+  const fromDate = startDate ? new Date(startDate) : firstDayOfMonth;
+  const toDate = endDate ? new Date(endDate) : today;
 
-  const chemistIds = scop?.chemist.map((c: any) => c.chemistId) || [];
+  const chemistIds = scope.chemist.map((c) => c.chemistId);
 
-  const ledgerHeadId = await prisma.ledgerHead.findFirst({
+  // Ledger head
+  const ledgerHead = await prisma.ledgerHead.findFirst({
     where: {
       ledgerName: {
         contains: "accounts receivable",
@@ -117,25 +137,47 @@ const getMpoReportByEmployeeId = async (
     },
   });
 
-  if (!ledgerHeadId) {
+  if (!ledgerHead) {
     throw new Error("Ledger head not found");
   }
 
-  const transections = await prisma.journal.findMany({
-    where: {
-      transactionInfo: {
-        is: {
-          chemistId: { in: chemistIds },
+  // Transactions per chemist
+  const transactions = await Promise.all(
+    chemistIds.map(async (chemistId) => {
+      const totals = await prisma.journal.aggregate({
+        _sum: {
+          debitAmount: true,
+          creditAmount: true,
         },
-      },
-      ledgerHeadId: ledgerHeadId?.id,
-      date: {
-        gte: startDate ? new Date(startDate) : firstDay,
-        lte: endDate ? new Date(endDate) : new Date(),
-      },
-    },
-  });
-  return transections;
+        where: {
+          ledgerHeadId: ledgerHead.id,
+          transactionInfo: {
+            chemistId,
+          },
+          date: {
+            gte: fromDate,
+            lte: toDate,
+          },
+        },
+      });
+
+      const debit = totals._sum.debitAmount ?? 0;
+      const credit = totals._sum.creditAmount ?? 0;
+
+      return {
+        chemistId,
+        debit,
+        credit,
+        balance: debit - credit,
+      };
+    }),
+  );
+
+  return {
+    mpo,
+    dateRange: { fromDate, toDate },
+    transactions,
+  };
 };
 
 export const ReportManagementService = {
