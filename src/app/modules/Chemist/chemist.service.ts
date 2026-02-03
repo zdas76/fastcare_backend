@@ -57,7 +57,11 @@ const createChemist = async (req: Request) => {
   return addChemist;
 };
 
-const getAllChemist = async (params: any, paginat: IPaginationOptions) => {
+const getAllChemist = async (
+  params: any,
+  paginat: IPaginationOptions,
+  user?: any,
+) => {
   const { page, limit, skip } = paginationHelper.Pagination(paginat);
 
   const { searchTerm, ...filterData } = params;
@@ -82,6 +86,25 @@ const getAllChemist = async (params: any, paginat: IPaginationOptions) => {
           equals: filterData[key],
         },
       })),
+    });
+  }
+
+  if ((user && user.role.includes("MPO")) || user.role.includes("SR")) {
+    const scope = await prisma.scope.findFirst({
+      where: { employeeId: user.employeeId },
+      include: {
+        chemist: { select: { chemistId: true } },
+      },
+    });
+
+    const chemistIds = scope?.chemist.map((c) => c.chemistId) || [];
+
+    andCondition.push({
+      transactionInfo: {
+        some: {
+          chemistId: { in: chemistIds },
+        },
+      },
     });
   }
 

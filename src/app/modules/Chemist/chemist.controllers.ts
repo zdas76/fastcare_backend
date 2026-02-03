@@ -17,19 +17,25 @@ const createChemist = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getAllChemist = catchAsync(async (req: Request, res: Response) => {
-  const filters = pick(req.query, partyfiltersFields);
-  const paginat = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
+const getAllChemist = catchAsync(
+  async (req: Request & { user?: any }, res: Response) => {
+    const filters = pick(req.query, partyfiltersFields);
+    const paginat = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
 
-  const result = await ChemistService.getAllChemist(filters, paginat);
+    const result = await ChemistService.getAllChemist(
+      filters,
+      paginat,
+      req.user,
+    );
 
-  sendResponse(res, {
-    statusCode: StatusCodes.OK,
-    success: true,
-    message: "Chemists retrived Successfully",
-    data: result,
-  });
-});
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "Chemists retrived Successfully",
+      data: result,
+    });
+  },
+);
 
 const getChemistById = catchAsync(async (req: Request, res: Response) => {
   const id = parseInt(req.params.id!);

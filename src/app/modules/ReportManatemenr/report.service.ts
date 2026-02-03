@@ -1,3 +1,4 @@
+import { VoucherType } from "../../../../generated/prisma";
 import prisma from "../../shared/prisma";
 import { DateRangeFilter } from "./report.controllers";
 
@@ -110,6 +111,7 @@ const getMpoReportByEmployeeId = async (
       name: true,
       email: true,
       status: true,
+      roles: true,
     },
   });
 
@@ -161,21 +163,80 @@ const getMpoReportByEmployeeId = async (
         },
       });
 
+      const chemist = await prisma.chemist.findFirst({
+        where: { chemistId },
+        select: {
+          pharmacyName: true,
+          openingDate: true,
+          openingDueAmount: true,
+        },
+      });
+
+      if (!chemist) {
+        throw new Error("Chemist not found");
+      }
+
+      const dueStart = chemist?.openingDate;
+      const dueEnd = new Date(fromDate.getTime() - 24 * 60 * 60 * 1000); // Subtract one day
+
+      const prev_due = await prisma.journal.aggregate({
+        _sum: {
+          debitAmount: true,
+          creditAmount: true,
+        },
+        where: {
+          ledgerHeadId: ledgerHead.id,
+          transactionInfo: {
+            chemistId,
+          },
+          date: {
+            gte: dueStart,
+            lte: dueEnd,
+          },
+        },
+      });
+
+      const salseReturn = await prisma.journal.aggregate({
+        _sum: {
+          debitAmount: true,
+          creditAmount: true,
+        },
+        where: {
+          ledgerHeadId: ledgerHead.id,
+          transactionInfo: {
+            chemistId,
+            voucherType: VoucherType.SALES_RETURN,
+          },
+          date: {
+            gte: fromDate,
+            lte: toDate,
+          },
+        },
+      });
+
       const debit = totals._sum.debitAmount ?? 0;
       const credit = totals._sum.creditAmount ?? 0;
+      const prev_debit = prev_due._sum.debitAmount ?? 0;
+      const prev_credit = prev_due._sum.creditAmount ?? 0;
+
+      const salesReturn =
+        (salseReturn?._sum?.creditAmount ?? 0) -
+          (salseReturn?._sum?.debitAmount ?? 0) || 0;
 
       return {
         chemistId,
+        chemist,
         debit,
         credit,
         balance: debit - credit,
+        salesReturn,
+        prev_due: prev_debit - prev_credit,
       };
     }),
   );
 
   return {
     mpo,
-    dateRange: { fromDate, toDate },
     transactions,
   };
 };

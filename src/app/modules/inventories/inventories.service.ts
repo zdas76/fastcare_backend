@@ -75,6 +75,27 @@ const getInventoryById = async (
       },
     },
     orderBy: [{ date: "asc" }, { id: "asc" }],
+    include: {
+      depo: { select: { depoName: true } },
+      transactionInfo: {
+        select: {
+          id: true,
+          voucherNo: true,
+          voucherType: true,
+          date: true,
+          party: {
+            select: {
+              partyName: true,
+            },
+          },
+          chemist: {
+            select: {
+              pharmacyName: true,
+            },
+          },
+        },
+      },
+    },
   });
   return { product, result };
 };

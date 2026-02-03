@@ -59,17 +59,17 @@ const createPurchestReceivedIntoDB = async (payload: any) => {
 
     const totalPurchaseAmount = payload.productItem.reduce(
       (sum: number, p: any) => sum + p.amount,
-      0
+      0,
     );
 
     const totalPaymentAmount = payload.paymentItem.reduce(
       (sum: number, p: any) => sum + p.amount,
-      0
+      0,
     );
     if (totalPurchaseAmount !== totalPaymentAmount) {
       throw new AppError(
         StatusCodes.BAD_REQUEST,
-        "Invalid data: items must be a non-empty array"
+        "Invalid data: items must be a non-empty array",
       );
     }
 
@@ -84,7 +84,7 @@ const createPurchestReceivedIntoDB = async (payload: any) => {
     if (!inventory) {
       throw new AppError(
         StatusCodes.NOT_FOUND,
-        "Inventory ledger item not found"
+        "Inventory ledger item not found",
       );
     }
 
@@ -204,10 +204,10 @@ const addProductTransferIntoDB = async (payload: any) => {
 
         if (!isExisted) {
           throw new Error(
-            `Invalid productId: ${payload.productId}. No matching Product found.`
+            `Invalid productId: ${payload.productId}. No matching Product found.`,
           );
         }
-      })
+      }),
     );
 
     const voucherNo = await generateVoucherNumber("ALV");
@@ -232,8 +232,8 @@ const addProductTransferIntoDB = async (payload: any) => {
             quantityLess: item.quantity,
             creditAmount: item.amount,
           },
-        })
-      )
+        }),
+      ),
     );
 
     await Promise.all(
@@ -248,8 +248,8 @@ const addProductTransferIntoDB = async (payload: any) => {
             quantityAdd: item.quantity,
             debitAmount: item.amount,
           },
-        })
-      )
+        }),
+      ),
     );
 
     await tx.journal.create({
@@ -367,8 +367,8 @@ const createSalesVoucher = async (payload: any) => {
             quantityLess: item.quantity,
             creditAmount: item.amount,
           },
-        })
-      )
+        }),
+      ),
     );
 
     // 5️⃣ Create Payment Journal Entries (Debit)
@@ -439,7 +439,7 @@ const createSalesVoucher = async (payload: any) => {
 
     const totalSaleAmount = payload.productItems.reduce(
       (sum: number, p: any) => sum + p.amount,
-      0
+      0,
     );
 
     journalEntries.push({
@@ -454,22 +454,22 @@ const createSalesVoucher = async (payload: any) => {
     // 8️⃣ Validate Journal Balance (Debit = Credit)
     const totalDebit = journalEntries.reduce(
       (sum, j) => sum + (j.debitAmount || 0),
-      0
+      0,
     );
     const totalCredit = journalEntries.reduce(
       (sum, j) => sum + (j.creditAmount || 0),
-      0
+      0,
     );
 
     if (Math.abs(totalDebit - totalCredit) > 0.01) {
       throw new Error(
-        `Unbalanced entry: Debit=${totalDebit}, Credit=${totalCredit}`
+        `Unbalanced entry: Debit=${totalDebit}, Credit=${totalCredit}`,
       );
     }
 
     // 9️⃣ Insert Journals
     await Promise.all(
-      journalEntries.map((entry) => tx.journal.create({ data: entry }))
+      journalEntries.map((entry) => tx.journal.create({ data: entry })),
     );
 
     // 🔟 Update Order Status if exists
@@ -546,8 +546,8 @@ const createHoleSalesVoucher = async (payload: any) => {
             quantityLess: item.quantity,
             creditAmount: item.amount,
           },
-        })
-      )
+        }),
+      ),
     );
 
     // 5️⃣ Create Payment Journal Entries (Debit)
@@ -618,7 +618,7 @@ const createHoleSalesVoucher = async (payload: any) => {
 
     const totalSaleAmount = payload.productItems.reduce(
       (sum: number, p: any) => sum + p.amount,
-      0
+      0,
     );
 
     journalEntries.push({
@@ -633,22 +633,22 @@ const createHoleSalesVoucher = async (payload: any) => {
     // 8️⃣ Validate Journal Balance (Debit = Credit)
     const totalDebit = journalEntries.reduce(
       (sum, j) => sum + (j.debitAmount || 0),
-      0
+      0,
     );
     const totalCredit = journalEntries.reduce(
       (sum, j) => sum + (j.creditAmount || 0),
-      0
+      0,
     );
 
     if (Math.abs(totalDebit - totalCredit) > 0.01) {
       throw new Error(
-        `Unbalanced entry: Debit=${totalDebit}, Credit=${totalCredit}`
+        `Unbalanced entry: Debit=${totalDebit}, Credit=${totalCredit}`,
       );
     }
 
     // 9️⃣ Insert Journals
     await Promise.all(
-      journalEntries.map((entry) => tx.journal.create({ data: entry }))
+      journalEntries.map((entry) => tx.journal.create({ data: entry })),
     );
 
     // 🔟 Update Order Status if exists
@@ -727,8 +727,8 @@ const createSalesReturnVoucherbySR = async (payload: any, user: any) => {
             quantityAdd: item.quantity,
             debitAmount: item.amount,
           },
-        })
-      )
+        }),
+      ),
     );
 
     // 5️⃣ Create Payment Journal Entries (Debit)
@@ -770,7 +770,7 @@ const createSalesReturnVoucherbySR = async (payload: any, user: any) => {
 
     const totalSalseReturntAmount = payload.productItems.reduce(
       (sum: number, p: any) => sum + p.amount,
-      0
+      0,
     );
 
     const LedgerItem = await tx.ledgerHead.findFirst({
@@ -783,7 +783,7 @@ const createSalesReturnVoucherbySR = async (payload: any, user: any) => {
     if (!LedgerItem) {
       throw new AppError(
         StatusCodes.NOT_FOUND,
-        "Market Collection Ledger Id Not Found"
+        "Market Collection Ledger Id Not Found",
       );
     }
     // step 1. create transaction entries
@@ -802,20 +802,20 @@ const createSalesReturnVoucherbySR = async (payload: any, user: any) => {
     // 8️⃣ Validate Journal Balance (Debit = Credit)
     const totalDebit = journalEntries.reduce(
       (sum, j) => sum + (j.debitAmount || 0),
-      0
+      0,
     );
     const totalCredit = journalEntries.reduce(
       (sum, j) => sum + (j.creditAmount || 0),
-      0
+      0,
     );
 
     if (Math.abs(totalDebit - totalCredit) > 0.01) {
       throw new Error(
-        `Unbalanced entry: Debit=${totalDebit}, Credit=${totalCredit}`
+        `Unbalanced entry: Debit=${totalDebit}, Credit=${totalCredit}`,
       );
     }
     await Promise.all(
-      journalEntries.map((entry) => tx.journal.create({ data: entry }))
+      journalEntries.map((entry) => tx.journal.create({ data: entry })),
     );
 
     return createTransaction.id;
@@ -871,8 +871,8 @@ const createSalesReturnVoucherByOffice = async (payload: any, user: any) => {
             quantityLess: item.quantity,
             creditAmount: item.amount,
           },
-        })
-      )
+        }),
+      ),
     );
 
     // 5️⃣ Create Payment Journal Entries (Debit)
@@ -900,7 +900,7 @@ const createSalesReturnVoucherByOffice = async (payload: any, user: any) => {
 
     const totalSalseReturntAmount = payload.productItems.reduce(
       (sum: number, p: any) => sum + p.amount,
-      0
+      0,
     );
 
     journalEntries.push({
@@ -915,22 +915,22 @@ const createSalesReturnVoucherByOffice = async (payload: any, user: any) => {
     // 8️⃣ Validate Journal Balance (Debit = Credit)
     const totalDebit = journalEntries.reduce(
       (sum, j) => sum + (j.debitAmount || 0),
-      0
+      0,
     );
     const totalCredit = journalEntries.reduce(
       (sum, j) => sum + (j.creditAmount || 0),
-      0
+      0,
     );
 
     if (Math.abs(totalDebit - totalCredit) > 0.01) {
       throw new Error(
-        `Unbalanced entry: Debit=${totalDebit}, Credit=${totalCredit}`
+        `Unbalanced entry: Debit=${totalDebit}, Credit=${totalCredit}`,
       );
     }
 
     // 9️⃣ Insert Journals
     await Promise.all(
-      journalEntries.map((entry) => tx.journal.create({ data: entry }))
+      journalEntries.map((entry) => tx.journal.create({ data: entry })),
     );
 
     return createTransaction.id;
@@ -1058,7 +1058,7 @@ const createReceiptVoucher = async (payload: any) => {
 
       if (!partyExists) {
         throw new Error(
-          `Invalid partyOrcustomerId: ${payload.partyOrcustomerId}. No matching Party or Customer found.`
+          `Invalid partyOrcustomerId: ${payload.partyOrcustomerId}. No matching Party or Customer found.`,
         );
       }
       partyId = partyExists.id;
@@ -1165,8 +1165,8 @@ const createReceiptVoucher = async (payload: any) => {
           depoId: payload.depoId,
           creditAmount: item.amount,
           narration: item.narration,
-        }
-      )
+        },
+      ),
     );
 
     const cashId = await tx.ledgerHead.findFirst({
@@ -1191,7 +1191,7 @@ const createReceiptVoucher = async (payload: any) => {
 
     const amount = payload.items.reduce(
       (sum: number, item: any) => sum + item.amount,
-      0
+      0,
     );
 
     if (receivDepoId) {
@@ -1211,7 +1211,7 @@ const createReceiptVoucher = async (payload: any) => {
           depoId: receivDepoId,
           creditAmount: amount,
           narration: "Pay to Head Depo",
-        }
+        },
       );
     }
 
@@ -1246,7 +1246,7 @@ const createMoneyReceivedVoucher = async (payload: any, user: any) => {
     if (!ARledger) {
       throw new AppError(
         StatusCodes.BAD_REQUEST,
-        "Please create a Accounts Receivable ledger item"
+        "Please create a Accounts Receivable ledger item",
       );
     }
     const mcledger = await tx.ledgerHead.findFirst({
@@ -1260,7 +1260,7 @@ const createMoneyReceivedVoucher = async (payload: any, user: any) => {
     if (!mcledger) {
       throw new AppError(
         StatusCodes.BAD_REQUEST,
-        "Please create a Market Collection ledger item"
+        "Please create a Market Collection ledger item",
       );
     }
     const voucherNo = await generateVoucherNumber("MRV");
@@ -1318,7 +1318,7 @@ const createMoneyReceivedVoucher = async (payload: any, user: any) => {
     if (!LedgerItem) {
       throw new AppError(
         StatusCodes.NOT_FOUND,
-        "Market Collection Ledger Id Not Found"
+        "Market Collection Ledger Id Not Found",
       );
     }
 
@@ -1474,7 +1474,7 @@ const creategiftedVoucher = async (payload: any) => {
         throw new Error(`Invalid employeeId: ${payload.employeeId}`);
       }
 
-      employeeId = employee.id;
+      employeeId = employee.employeeId;
     }
 
     const voucherNo = await generateVoucherNumber("GFT");
@@ -1504,8 +1504,8 @@ const creategiftedVoucher = async (payload: any) => {
             quantityLess: item.quantity,
             creditAmount: item.amount,
           },
-        })
-      )
+        }),
+      ),
     );
 
     const ledgerId = await tx.ledgerHead.findFirst({
@@ -1519,7 +1519,7 @@ const creategiftedVoucher = async (payload: any) => {
     if (!ledgerId) {
       throw new AppError(
         StatusCodes.BAD_REQUEST,
-        "Please chreate a Inventory ledger item"
+        "Please chreate a Inventory ledger item",
       );
     }
 
@@ -1545,8 +1545,8 @@ const creategiftedVoucher = async (payload: any) => {
             debitAmount: item.amount,
             narration: item.narration,
           },
-        })
-      )
+        }),
+      ),
     );
 
     return transaction.id;
@@ -1618,8 +1618,8 @@ const createFixedVoucher = async (payload: any) => {
             creditAmount: item.amount,
             isFixted: true,
           },
-        })
-      )
+        }),
+      ),
     );
 
     if (payload.discount && payload.discount > 0) {
@@ -1634,7 +1634,7 @@ const createFixedVoucher = async (payload: any) => {
       if (!discountItem) {
         throw new AppError(
           StatusCodes.NOT_FOUND,
-          "Discount Ledger Head Not Found"
+          "Discount Ledger Head Not Found",
         );
       }
 

@@ -1,7 +1,9 @@
 import express, { NextFunction, Request, Response } from "express";
-import { ChemistControllers } from "./chemist.controllers";
+import { UserRole } from "../../../../generated/prisma";
 import { resizeChemistImage } from "../../helpers/resizeChemistphoto";
 import upload from "../../helpers/upload";
+import auth from "../../middlewares/auth";
+import { ChemistControllers } from "./chemist.controllers";
 
 const route = express.Router();
 
@@ -20,10 +22,20 @@ route.post(
     req.body = parsedData;
 
     return ChemistControllers.createChemist(req, res, next);
-  }
+  },
 );
 
-route.get("/", ChemistControllers.getAllChemist);
+route.get(
+  "/",
+  auth(
+    UserRole.ACCOUNTS,
+    UserRole.ADMIN,
+    UserRole.SR,
+    UserRole.MPO,
+    UserRole.RSM,
+  ),
+  ChemistControllers.getAllChemist,
+);
 
 route.get("/:id", ChemistControllers.getChemistById);
 
@@ -39,7 +51,7 @@ route.put(
     }
     req.body = parsedData;
     return ChemistControllers.updateChemistById(req, res, next);
-  }
+  },
 );
 
 route.delete("/:id", ChemistControllers.deleteChemistById);
