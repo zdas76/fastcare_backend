@@ -395,6 +395,17 @@ const getpartyLadgertoBdById = async (params: any) => {
             voucherNo: true,
             employeeId: true,
             voucherType: true,
+            date: true,
+            user: {
+              select: {
+                name: true
+              }
+            },
+            chemist: {
+              select: {
+              pharmacyName: true
+              }
+            }
           },
         },
       },

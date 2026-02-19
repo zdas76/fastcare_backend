@@ -345,8 +345,87 @@ const getAllMpoProgressReport = async ({
   return mpoProgressReport;
 };
 
+const getGiftVoucherReport = async ({
+  startDate,
+  endDate,
+}: {
+  startDate?: string;
+  endDate?: string;
+}) => {
+  let fromDate: Date;
+  let toDate: Date;
+
+  const today = new Date();
+  const firstDayOfMonth = new Date(
+    Date.UTC(today.getFullYear(), today.getMonth(), 1),
+  );
+
+  fromDate = startDate ? new Date(startDate) : firstDayOfMonth;
+  if (endDate) {
+    toDate = new Date(new Date(endDate).setHours(23, 59, 59, 999));
+  } else {
+    toDate = today;
+  }
+
+  const getGiftVoucher = await prisma.transactionInfo.findMany({
+    where: {
+      voucherType: VoucherType.GIFT,
+      date: {
+        gte: fromDate,
+        lte: toDate,
+      },
+    },
+    orderBy: {
+      voucherNo: "desc",
+    },
+    select: {
+      party: {
+        select: {
+          partyName: true,
+          id: true,
+        },
+      },
+      
+      stakeholder: {
+        select: {
+          name: true,
+          stakeId: true,
+        },
+      },
+      user: {
+        select: {
+          name: true,
+          employeeId: true,
+        },
+      },
+      inventory: {
+        select: {
+          product: {
+            select: {
+              name: true,
+            }
+          },
+          quantityLess: true,
+          creditAmount: true,
+          unitPrice: true,
+        },
+      },
+      
+      voucherType: true,
+      voucherNo: true,
+      id: true,
+      date: true,
+      
+    },
+    
+  });
+
+  return getGiftVoucher;
+};
+
 export const ReportManagementService = {
   getAllMpoTransection,
   getMpoReportByEmployeeId,
-  getAllMpoProgressReport
+  getAllMpoProgressReport,
+  getGiftVoucherReport
 };

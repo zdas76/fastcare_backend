@@ -17,4 +17,9 @@ route.get(
   ReportManagementControllers.getMpoReportById,
 );
 
+route.get(
+  "/gift_voucher_report",
+  ReportManagementControllers.getGiftVoucherReport,
+);
+
 export const ReportManagementRouter = route;
