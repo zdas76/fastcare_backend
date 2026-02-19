@@ -44,7 +44,25 @@ const getMpoReportById = catchAsync(async (req, res) => {
   });
 });
 
+const getAllMpoProgressReport = catchAsync(async (req, res) => {
+  const startDate = req.query.startDate as string | undefined;
+  const endDate = req.query.endDate as string | undefined;
+
+  const result = await ReportManagementService.getAllMpoProgressReport(
+
+    { startDate, endDate },
+  );
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "MPO progress report retrieved successfully",
+    data: result,
+  });
+});
+
 export const ReportManagementControllers = {
   geMpoTransectionReport,
   getMpoReportById,
+  getAllMpoProgressReport
 };

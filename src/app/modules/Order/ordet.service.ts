@@ -76,6 +76,8 @@ const getAllOrder = async (
 ) => {
   const where: Prisma.OrderWhereInput = {};
 
+  console.log(status);
+
   if (status) {
     // Convert CSV string to array and filter valid enum values
     const statusArray = status
@@ -100,6 +102,9 @@ const getAllOrder = async (
 
   const result = await prisma.order.findMany({
     where,
+    orderBy: {
+      date: 'desc',
+    },
     include: {
       orderItem: {
         select: {
@@ -122,6 +127,10 @@ const getAllOrder = async (
           dateTime: true,
           comments: true,
         },
+        orderBy: {
+          dateTime: 'desc',
+        },
+        take: 1,
       },
       chemist: {
         select: {
@@ -129,6 +138,7 @@ const getAllOrder = async (
           pharmacyName: true,
           contactPerson: true,
           depoId: true,
+          discountRate: true,
         },
       },
       user: {
@@ -275,10 +285,43 @@ const changeOrderStatus = async (
   return result;
 };
 
+const deleteOrder = async (orderNo: string) => {
+
+  const isOrder = await prisma.orderStatus.findFirst({
+    where: {
+      orderNo: orderNo,
+    },
+  });
+  if (!isOrder) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "Order Not found");
+  }
+
+  const order = await prisma.order.findFirst({
+    where: { orderNo },
+  });
+
+  if (!order) {
+    throw new AppError(StatusCodes.NOT_FOUND, "Order Not Found");
+  }
+
+  const result = await prisma.order.delete({
+    where: {
+      orderNo: order.orderNo,
+      orderStatus: {
+        some: {
+          status: OrdStatus.CANCELLED || OrdStatus.PENDING,
+
+        },
+      },
+    },
+  });
+  return result;
+};
 export const OrderService = {
   createOrder,
   getAllOrder,
   getOrderById,
   UpdateOrder,
   changeOrderStatus,
+  deleteOrder
 };

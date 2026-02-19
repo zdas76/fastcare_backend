@@ -31,4 +31,10 @@ route.put(
   OrderControllers.changeOrderStatusByOrderNo
 );
 
+route.delete(
+  "/:orderNo",
+  auth(UserRole.ADMIN, UserRole.ACCOUNTS, UserRole.MPO),
+  OrderControllers.deleteOrderByOrderNo
+);
+
 export const OrderRouter = route;

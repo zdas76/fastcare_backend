@@ -10,6 +10,15 @@ const createEmployee = z.object({
   workingPlase: z.string(),
   address: z.string(),
   mobile: z.string(),
+  role: z.array(z.nativeEnum(UserRole)).min(1, "Please select at least one role"),
+  photo: z.any().optional(),
+  fatherName: z.string().min(1, "Father's name is required"),
+  motherName: z.string().min(1, "Mother's name is required"),
+  officeContactNo: z.string().min(1, "Office contact number is required"),
+  currentAddress: z.string().min(1, "Current address is required"),
+  permanentAddress: z.string().min(1, "Permanent address is required"),
+  contactNo: z.string().optional(),
+  emergencyContactNo: z.string().optional(),
 });
 
 const updateEmployee = z.object({
@@ -24,7 +33,7 @@ const updateEmployee = z.object({
   email: z.string().email("Invalid email").min(1, "Email is required"),
   nid: z.string().optional(),
   dob: z.string().min(1, "Date of birth is required"),
-  role: z.array(z.string()).min(1, "Please select at least one role"),
+  role: z.array(z.nativeEnum(UserRole)).min(1, "Please select at least one role"),
   photo: z.any().optional(),
 });
 
@@ -37,7 +46,7 @@ export interface User {
   name: string;
   email: string;
   password: string;
-  role: UserRole;
+  role: UserRole[];
   photo?: string | null;
   fatherName: string;
   motherName: string;

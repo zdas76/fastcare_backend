@@ -102,28 +102,48 @@ const getAllVoucher = async ({
       AND: [
         fromDate && toDate
           ? {
-              date: {
-                gte: new Date(fromDate),
-                lte: new Date(new Date(toDate).setHours(23, 59, 59, 999)),
-              },
-            }
+            date: {
+              gte: new Date(fromDate),
+              lte: new Date(new Date(toDate).setHours(23, 59, 59, 999)),
+            },
+          }
           : {},
         voucherType
           ? {
-              voucherType: voucherType as VoucherType,
-            }
+            voucherType: voucherType as VoucherType,
+          }
           : {},
         voucherNo
           ? {
-              voucherNo: {
-                contains: voucherNo,
-              },
-            }
+            voucherNo: {
+              contains: voucherNo,
+            },
+          }
           : {},
       ],
     },
     orderBy: {
       createdAt: "desc",
+    },
+    include: {
+      chemist: {
+        select: {
+          chemistId: true,
+          pharmacyName: true,
+        },
+      },
+      party: {
+        select: {
+          id: true,
+          partyName: true,
+        },
+      },
+      user: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
     },
   });
 
@@ -131,6 +151,8 @@ const getAllVoucher = async ({
 };
 
 const getReportByVoucherNo = async (voucherNo: string) => {
+
+
   if (voucherNo) {
     const result = await prisma.transactionInfo.findFirst({
       where: { voucherNo },
@@ -207,6 +229,21 @@ const getReportByVoucherNo = async (voucherNo: string) => {
       },
     });
 
+    let employee = null;
+    if (result?.voucherType === "SALES") {
+      employee = await prisma.order.findFirst({
+        where: {
+          orderNo: result?.invoiceNo!,
+        },
+        select: {
+          user: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      });
+    }
     // Calculate PreDue for Sales Voucher
     let PreDue;
 
@@ -274,10 +311,16 @@ const getReportByVoucherNo = async (voucherNo: string) => {
             { ledgerHeadId: ledgerHeadId.id },
           ],
         },
+        orderBy: {
+          date: "asc",
+        },
       });
+
+
     }
 
-    return { PreDue, result };
+
+    return { PreDue, result, employee };
   } else {
     return null;
   }
@@ -585,7 +628,7 @@ const getSupplierLedgerById = async (params: any) => {
       isClosing: true,
     },
     orderBy: {
-      date: "desc",
+      date: "asc",
     },
   });
 
@@ -607,7 +650,7 @@ const getSupplierLedgerById = async (params: any) => {
       },
     },
     orderBy: {
-      date: "desc",
+      date: "asc",
     },
     include: {
       transactionInfo: {

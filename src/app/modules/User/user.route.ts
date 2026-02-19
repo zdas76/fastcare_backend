@@ -21,6 +21,8 @@ route.post(
 
 route.get("/", UserControllers.getUser);
 
+route.get("/mpo", UserControllers.getMpoList);
+
 route.get("/:id", UserControllers.getUserById);
 
 route.put(

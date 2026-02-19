@@ -89,7 +89,7 @@ const getAllChemist = async (
     });
   }
 
-  if ((user && user.role.includes("MPO")) || user.role.includes("SR")) {
+  if (user && (user.role.includes("MPO") || user.role.includes("SR"))) {
     const scope = await prisma.scope.findFirst({
       where: { employeeId: user.employeeId },
       include: {
@@ -99,12 +99,12 @@ const getAllChemist = async (
 
     const chemistIds = scope?.chemist.map((c) => c.chemistId) || [];
 
+    if (chemistIds.length === 0) {
+      return [];
+    }
+
     andCondition.push({
-      transactionInfo: {
-        some: {
-          chemistId: { in: chemistIds },
-        },
-      },
+      chemistId: { in: chemistIds },
     });
   }
 
@@ -121,7 +121,7 @@ const getAllChemist = async (
             [paginat.sortBy]: paginat.sortOrder,
           }
         : {
-            pharmacyName: "asc",
+            chemistId: "asc",
           },
   });
 

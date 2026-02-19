@@ -221,7 +221,7 @@ const getMpoReportByEmployeeId = async (
 
       const salesReturn =
         (salseReturn?._sum?.creditAmount ?? 0) -
-          (salseReturn?._sum?.debitAmount ?? 0) || 0;
+        (salseReturn?._sum?.debitAmount ?? 0) || 0;
 
       return {
         chemistId,
@@ -241,7 +241,112 @@ const getMpoReportByEmployeeId = async (
   };
 };
 
+
+const getAllMpoProgressReport = async ({
+  startDate,
+  endDate,
+}: {
+  startDate?: string;
+  endDate?: string;
+}) => {
+  let fromDate: Date;
+  let toDate: Date;
+
+  const today = new Date();
+  const firstDayOfMonth = new Date(
+    Date.UTC(today.getFullYear(), today.getMonth(), 1),
+  );
+
+  fromDate = startDate ? new Date(startDate) : firstDayOfMonth;
+  if (endDate) {
+    toDate = new Date(new Date(endDate).setHours(23, 59, 59, 999));
+  } else {
+    toDate = today;
+  }
+
+
+  const getMPO = await prisma.user.findMany({
+    where: {
+      roles: { array_contains: "MPO" },
+      status: "ACTIVE",
+    },
+    select: {
+      id: true,
+      employeeId: true,
+      name: true,
+      email: true,
+      roles: true,
+      status: true,
+    },
+  });
+
+  const mpoProgressReport = [];
+
+  for (const mpo of getMPO) {
+    const scope = await prisma.scope.findFirst({
+      where: {
+        employeeId: mpo.employeeId,
+      },
+      include: {
+        chemist: { select: { chemistId: true } },
+      },
+    });
+
+    if (!scope) {
+      throw new Error("Scope not found");
+    }
+
+    const target = await prisma.mpoTarget.findFirst({
+      where: {
+        employeeId: mpo.employeeId,
+      },
+    });
+
+    const chemistIds = scope?.chemist.map((c: any) => c.chemistId) || [];
+
+
+
+    // Ledger head
+    const ledgerHead = await prisma.ledgerHead.findFirst({
+      where: {
+        ledgerName: {
+          contains: "accounts receivable",
+        },
+      },
+    });
+
+    if (!ledgerHead) {
+      throw new Error("Ledger head not found");
+    }
+
+    const transections = await prisma.journal.aggregate({
+      _sum: { debitAmount: true, creditAmount: true },
+      where: {
+        transactionInfo: {
+          is: {
+            chemistId: { in: chemistIds },
+          },
+        },
+        ledgerHeadId: ledgerHead.id,
+        date: {
+          gte: fromDate,
+          lte: toDate,
+        },
+      },
+    });
+
+    mpoProgressReport.push({
+      mpo,
+      target,
+      transections,
+    });
+  }
+
+  return mpoProgressReport;
+};
+
 export const ReportManagementService = {
   getAllMpoTransection,
   getMpoReportByEmployeeId,
+  getAllMpoProgressReport
 };

@@ -20,6 +20,7 @@ import { StakeholderRoute } from "../modules/Stakeholder/stakeholder.route";
 import { SubCategoryRouter } from "../modules/SubCategory/subCategory.route";
 import { UnitRoute } from "../modules/unit/unit.route";
 import { UserRoute } from "../modules/User/user.route";
+import { MpoTargetRouter } from "../modules/MpoTarget/target.route";
 
 const router = express.Router();
 
@@ -108,6 +109,10 @@ const moduleroutes = [
     path: "/reportManagement",
     route: ReportManagementRouter,
   },
+  {
+    path: "/mpoTarget",
+    route: MpoTargetRouter,
+  }
 ];
 
 moduleroutes.forEach((route) => router.use(route.path, route.route));

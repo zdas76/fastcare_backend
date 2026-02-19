@@ -54,7 +54,7 @@ const UpdateOrderById = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: "Order retrieved Successfully",
+    message: "Order updated Successfully",
     data: result,
   });
 });
@@ -68,7 +68,22 @@ const changeOrderStatusByOrderNo = catchAsync(
     sendResponse(res, {
       statusCode: StatusCodes.OK,
       success: true,
-      message: "Order retrieved Successfully",
+      message: "Order status changed Successfully",
+      data: result,
+    });
+  }
+);
+
+const deleteOrderByOrderNo = catchAsync(
+  async (req: Request, res: Response) => {
+    const orderNo = req.params.orderNo as string;
+
+    const result = await OrderService.deleteOrder(orderNo);
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "Order deleted Successfully",
       data: result,
     });
   }
@@ -80,4 +95,5 @@ export const OrderControllers = {
   getOrderById,
   UpdateOrderById,
   changeOrderStatusByOrderNo,
+  deleteOrderByOrderNo
 };

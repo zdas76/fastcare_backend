@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import { StatusCodes } from "http-status-codes";
-import { Prisma, UserStatus } from "../../../../generated/prisma/client";
+import { Prisma, UserRole, UserStatus } from "../../../../generated/prisma/client";
 import config from "../../../config";
 import AppError from "../../errors/AppError";
 import { generateId } from "../../helpers/generateId";
@@ -91,11 +91,11 @@ const getAllUser = async (params: any, paginat: IPaginationOptions) => {
     orderBy:
       paginat.sortBy && paginat.sortOrder
         ? {
-            [paginat.sortBy]: paginat.sortOrder,
-          }
+          [paginat.sortBy]: paginat.sortOrder,
+        }
         : {
-            createdAt: "asc",
-          },
+          createdAt: "asc",
+        },
     select: {
       id: true,
       name: true,
@@ -187,10 +187,32 @@ const deleteUserById = async (id: number) => {
   return result;
 };
 
+const getMpoList = async () => {
+  const result = await prisma.user.findMany({
+    where: {
+      roles: {
+        array_contains: "MPO",
+      },
+      status: UserStatus.ACTIVE,
+    },
+    select: {
+      id: true,
+      name: true,
+      employeeId: true,
+      status: true,
+      roles: true,
+
+    },
+  });
+
+  return result;
+};
+
 export const UserService = {
   creatUserToDB,
   getAllUser,
   getUserById,
   updateUserById,
   deleteUserById,
+  getMpoList
 };

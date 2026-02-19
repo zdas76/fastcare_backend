@@ -68,10 +68,22 @@ const deleteUserById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getMpoList = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserService.getMpoList();
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Mpo retrived Successfully",
+    data: result,
+  });
+});
+
 export const UserControllers = {
   getUser,
   getUserById,
   updateUserById,
   createUser,
   deleteUserById,
+  getMpoList
 };
