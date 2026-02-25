@@ -403,7 +403,7 @@ const getpartyLadgertoBdById = async (params: any) => {
             },
             chemist: {
               select: {
-              pharmacyName: true
+                pharmacyName: true
               }
             }
           },

@@ -711,8 +711,9 @@ const createSalesReturnVoucherbySR = async (payload: any, user: any) => {
     });
 
     // 4️⃣ Insert Inventory (quantityLess)
-    if (!payload.productItems?.length)
+    if (!payload.productItems?.length) {
       throw new Error("Invalid data: productItems must be non-empty");
+    }
 
     await Promise.all(
       payload.productItems.map((item: any) =>
@@ -1144,8 +1145,6 @@ const createReceiptVoucher = async (payload: any) => {
       throw new Error("Invalid data: salseItem must be a non-empty array");
     }
 
-    console.log(payload.items);
-
     const journalEntries: any[] = [];
 
     payload.items.forEach((item: any) =>
@@ -1215,7 +1214,6 @@ const createReceiptVoucher = async (payload: any) => {
       );
     }
 
-    console.log(journalEntries);
 
     const createJournal = await tx.journal.createMany({
       data: journalEntries,
@@ -1665,7 +1663,7 @@ const createFixedVoucher = async (payload: any) => {
   return result;
 };
 
-const createQantaVoucher = async () => {};
+const createQantaVoucher = async () => { };
 
 export const JurnalService = {
   createPurchestReceivedIntoDB,

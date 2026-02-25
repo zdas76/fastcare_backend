@@ -76,8 +76,6 @@ const getAllOrder = async (
 ) => {
   const where: Prisma.OrderWhereInput = {};
 
-  console.log(status);
-
   if (status) {
     // Convert CSV string to array and filter valid enum values
     const statusArray = status

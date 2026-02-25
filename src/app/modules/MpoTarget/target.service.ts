@@ -45,17 +45,62 @@ const getMPOTarget = async () => {
         }
     })
 
-    console.log(result);
 
     return result
 }
 
-const updateMPOTarget = async (payload: any) => {
-    return payload
+const updateMPOTarget = async (payload: any, id: number) => {
+
+    const isTargetExist = await prisma.mpoTarget.findFirst({
+        where: {
+            id
+        }
+    })
+    if (!isTargetExist) {
+        throw new Error("Target not found")
+    }
+    const isEmployee = await prisma.user.findUnique({
+        where: {
+            employeeId: isTargetExist.employeeId
+        }
+    })
+    if (!isEmployee) {
+        throw new Error("Employee not found")
+
+    }
+    const result = await prisma.mpoTarget.update({
+        where: {
+            id
+        },
+        data: payload
+    })
+    return result
 }
 
-const deleteMPOTarget = async (payload: any) => {
-    return payload
+const deleteMPOTarget = async (id: number) => {
+    const isTargetExist = await prisma.mpoTarget.findFirst({
+        where: {
+            id
+        }
+    })
+    if (!isTargetExist) {
+        throw new Error("Target not found")
+    }
+    const isEmployee = await prisma.user.findUnique({
+        where: {
+            employeeId: isTargetExist.employeeId
+        }
+    })
+    if (!isEmployee) {
+        throw new Error("Employee not found")
+
+    }
+    const result = await prisma.mpoTarget.delete({
+        where: {
+            id
+        }
+    })
+    return result
 }
 
 export const MpoTargetService = {

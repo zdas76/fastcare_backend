@@ -22,4 +22,12 @@ route.get(
   ReportManagementControllers.getGiftVoucherReport,
 );
 
+route.get(
+  "/dipo_mpo_report",
+  ReportManagementControllers.getDipoMpoReport)
+
+route.get(
+  "/dipo_mpo_report/:employeeId",
+  ReportManagementControllers.getDipoMpoReportById)
+
 export const ReportManagementRouter = route;

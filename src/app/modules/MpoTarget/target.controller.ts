@@ -24,7 +24,10 @@ const getMPOTarget = catchAsync(async (req, res) => {
 })
 
 const updateMPOTarget = catchAsync(async (req, res) => {
-    const result = await MpoTargetService.updateMPOTarget(req.body);
+
+    const id = Number(req.params.id);
+
+    const result = await MpoTargetService.updateMPOTarget(req.body, id);
     sendResponse(res, {
         statusCode: 200,
         success: true,
@@ -34,7 +37,8 @@ const updateMPOTarget = catchAsync(async (req, res) => {
 })
 
 const deleteMPOTarget = catchAsync(async (req, res) => {
-    const result = await MpoTargetService.deleteMPOTarget(req.body);
+    const id = Number(req.params.id);
+    const result = await MpoTargetService.deleteMPOTarget(id);
     sendResponse(res, {
         statusCode: 200,
         success: true,

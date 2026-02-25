@@ -1,6 +1,8 @@
+import { string } from "zod";
 import { VoucherType } from "../../../../generated/prisma";
 import prisma from "../../shared/prisma";
 import { DateRangeFilter } from "./report.controllers";
+import { getDatesInRange } from "../../shared/DateRangeArray";
 
 const getAllMpoTransection = async (payload: {
   startDate: string;
@@ -127,6 +129,10 @@ const getMpoReportByEmployeeId = async (
 
   const fromDate = startDate ? new Date(startDate) : firstDayOfMonth;
   const toDate = endDate ? new Date(endDate) : today;
+
+  if (toDate) {
+    toDate.setHours(23, 59, 59, 999);
+  }
 
   const chemistIds = scope.chemist.map((c) => c.chemistId);
 
@@ -385,7 +391,7 @@ const getGiftVoucherReport = async ({
           id: true,
         },
       },
-      
+
       stakeholder: {
         select: {
           name: true,
@@ -410,22 +416,277 @@ const getGiftVoucherReport = async ({
           unitPrice: true,
         },
       },
-      
+
       voucherType: true,
       voucherNo: true,
       id: true,
       date: true,
-      
+
     },
-    
+
   });
 
   return getGiftVoucher;
+};
+
+const getDipoMpoReport = async ({
+  startDate,
+  endDate,
+}: {
+  startDate?: string;
+  endDate?: string;
+}) => {
+
+
+  const today = new Date();
+  const firstDayOfMonth = new Date(
+    Date.UTC(today.getFullYear(), today.getMonth(), 1),
+  );
+
+  const fromDate = startDate ? new Date(startDate) : firstDayOfMonth;
+  const toDate = endDate
+    ? new Date(new Date(endDate).setHours(23, 59, 59, 999))
+    : today;
+
+  const MPOs = await prisma.user.findMany({
+    where: {
+      roles: { array_contains: "MPO" },
+      status: "ACTIVE",
+    },
+    select: {
+      id: true,
+      employeeId: true,
+      name: true,
+    },
+  });
+
+  const ledgerHead = await prisma.ledgerHead.findFirst({
+    where: {
+      ledgerName: {
+        contains: "accounts receivable",
+      },
+    },
+  });
+
+  if (!ledgerHead) {
+    throw new Error("Ledger head not found");
+  }
+
+  const reports = await Promise.all(
+    MPOs.map(async (mpo) => {
+      const scope = await prisma.scope.findFirst({
+        where: { employeeId: mpo.employeeId },
+        include: {
+          chemist: { select: { chemistId: true } },
+        },
+      });
+
+      const chemistIds = scope?.chemist.map((c) => c.chemistId) || [];
+
+      // Current period transactions
+      const totals = await prisma.journal.aggregate({
+        _sum: { debitAmount: true, creditAmount: true },
+        where: {
+          ledgerHeadId: ledgerHead.id,
+          transactionInfo: { chemistId: { in: chemistIds } },
+          date: { gte: fromDate, lte: toDate },
+        },
+      });
+
+      const officePaybleId = await prisma.ledgerHead.findFirst({
+        where: {
+          ledgerName: {
+            in: ["office payable", "Office Payable",],
+          },
+        },
+      });
+
+      if (!officePaybleId) {
+        throw new Error("Office payble not found");
+      }
+
+      // Dipo Collection
+      const dipoCollection = await prisma.journal.aggregate({
+        _sum: { debitAmount: true, creditAmount: true },
+        where: {
+          ledgerHeadId: officePaybleId.id,
+          transactionInfo: { employeeId: mpo.employeeId },
+          date: { gte: fromDate, lte: toDate },
+        },
+      });
+
+
+      // Sales Return
+      const returnTotals = await prisma.journal.aggregate({
+        _sum: { debitAmount: true, creditAmount: true },
+        where: {
+          ledgerHeadId: ledgerHead.id,
+          transactionInfo: {
+            chemistId: { in: chemistIds },
+            voucherType: VoucherType.SALES_RETURN,
+          },
+          date: { gte: fromDate, lte: toDate },
+        },
+      });
+
+      const collection = dipoCollection._sum.creditAmount ?? 0;
+      const salesReturn =
+        (returnTotals._sum.creditAmount ?? 0) -
+        (returnTotals._sum.debitAmount ?? 0);
+      const dispatched = totals._sum.debitAmount ?? 0;
+
+      const totalDue = (dispatched + salesReturn) - collection;
+
+      return {
+        id: mpo.id,
+        employeeId: mpo.employeeId,
+        name: mpo.name,
+        dispatched,
+        collection,
+        salesReturn,
+        totalDue,
+      };
+    }),
+  );
+
+  return reports;
+};
+
+const getDipoMpoReportById = async (
+  employeeId: string,
+  {
+    startDate,
+    endDate,
+  }: {
+    startDate?: string;
+    endDate?: string;
+  },
+) => {
+  const today = new Date();
+  const firstDayOfMonth = new Date(
+    Date.UTC(today.getFullYear(), today.getMonth(), 1),
+  );
+
+  const fromDate = startDate ? new Date(startDate) : firstDayOfMonth;
+  const toDate = endDate
+    ? new Date(new Date(endDate).setHours(23, 59, 59, 999))
+    : today;
+
+  const mpo = await prisma.user.findFirst({
+    where: { employeeId, status: "ACTIVE" },
+    select: { id: true, employeeId: true, name: true },
+  });
+
+  if (!mpo) {
+    throw new Error("MPO not found");
+  }
+
+  const ledgerHead = await prisma.ledgerHead.findFirst({
+    where: {
+      ledgerName: {
+        contains: "accounts receivable",
+      },
+    },
+  });
+
+  if (!ledgerHead) {
+    throw new Error("Ledger head not found");
+  }
+
+  const officePayableHead = await prisma.ledgerHead.findFirst({
+    where: {
+      ledgerName: {
+        in: ["office payable", "Office Payable",],
+      },
+    },
+  });
+
+  if (!officePayableHead) {
+    throw new Error("Office payable head not found");
+  }
+
+  const scope = await prisma.scope.findFirst({
+    where: { employeeId: mpo.employeeId },
+    include: {
+      chemist: { select: { chemistId: true } },
+    },
+  });
+
+  const chemistIds = scope?.chemist.map((c) => c.chemistId) || [];
+
+  const Dates = getDatesInRange(fromDate.toISOString(), toDate.toISOString());
+
+  let prevDue = 0;
+
+  const prevDueResult = await prisma.journal.aggregate({
+    _sum: { debitAmount: true, creditAmount: true },
+    where: {
+      ledgerHeadId: ledgerHead.id,
+      transactionInfo: { chemistId: { in: chemistIds } },
+      date: { lt: fromDate },
+    },
+  });
+
+  prevDue = (prevDueResult._sum.debitAmount ?? 0) - (prevDueResult._sum.creditAmount ?? 0);
+
+  const result = await Promise.all(
+    Dates.map(async (date) => {
+      const dailyDespatched = await prisma.journal.aggregate({
+        _sum: { debitAmount: true },
+        where: {
+          ledgerHeadId: ledgerHead.id,
+          transactionInfo: { chemistId: { in: chemistIds } },
+          date: new Date(date),
+        },
+      });
+
+      const dailyCollection = await prisma.journal.aggregate({
+        _sum: { debitAmount: true, creditAmount: true },
+        where: {
+          ledgerHeadId: officePayableHead.id,
+          transactionInfo: { employeeId: mpo.employeeId },
+          date: new Date(date),
+        },
+      });
+
+      const dailySalesReturn = await prisma.journal.aggregate({
+        _sum: { debitAmount: true, creditAmount: true },
+        where: {
+          ledgerHeadId: ledgerHead.id,
+          transactionInfo: {
+            chemistId: { in: chemistIds },
+            voucherType: VoucherType.SALES_RETURN,
+          },
+          date: new Date(date),
+        },
+      });
+
+      const dailyTotalDue = (dailyDespatched._sum.debitAmount ?? 0) - (dailyCollection._sum.creditAmount ?? 0) + ((dailySalesReturn._sum.creditAmount ?? 0) - (dailySalesReturn._sum.debitAmount ?? 0));
+
+
+      return {
+        dailyDespatched: dailyDespatched._sum.debitAmount ?? 0,
+        dailyCollection: dailyCollection._sum.creditAmount ?? 0,
+        dailySalesReturn: dailySalesReturn._sum.creditAmount ?? 0,
+        dailyTotalDue,
+        date,
+
+      };
+    })
+  )
+
+  return {
+    mpo,
+    prevDue,
+    result
+  };
 };
 
 export const ReportManagementService = {
   getAllMpoTransection,
   getMpoReportByEmployeeId,
   getAllMpoProgressReport,
-  getGiftVoucherReport
+  getGiftVoucherReport,
+  getDipoMpoReport,
+  getDipoMpoReportById,
 };
