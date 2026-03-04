@@ -720,7 +720,6 @@ const createSalesReturnVoucherbySR = async (payload: any, user: any) => {
         tx.inventory.create({
           data: {
             date: new Date(payload.date),
-            depoId: chemistExists.depoId,
             employeeId: employeeExists.employeeId,
             transactionId: createTransaction.id,
             productId: item.productId,
@@ -749,25 +748,6 @@ const createSalesReturnVoucherbySR = async (payload: any, user: any) => {
       });
     }
 
-    // 6️⃣ Handle Discount (Debit)
-    if (payload.discount && Number(payload.discount) > 0) {
-      const discountLedger = await tx.ledgerHead.findFirst({
-        where: {
-          ledgerName: { contains: "discount" },
-        },
-      });
-
-      if (!discountLedger) throw new Error("Discount Ledger Head Not Found");
-
-      journalEntries.push({
-        transactionId: createTransaction.id,
-        date: new Date(payload.date),
-        depoId: chemistExists.depoId,
-        ledgerHeadId: discountLedger.id,
-        creditAmount: Number(payload.discount),
-        narration: "Get back Discount by salse return",
-      });
-    }
 
     const totalSalseReturntAmount = payload.productItems.reduce(
       (sum: number, p: any) => sum + p.amount,
@@ -849,9 +829,9 @@ const createSalesReturnVoucherByOffice = async (payload: any, user: any) => {
     const createTransaction = await tx.transactionInfo.create({
       data: {
         date: new Date(payload.date),
-        invoiceNo: payload.orderNo || null,
         voucherNo: voucherNo,
         voucherType: VoucherType.SALES_RETURN,
+        invoiceNo: payload.invoiceNo || null,
         employeeId: payload.employeeId,
       },
     });
@@ -876,6 +856,28 @@ const createSalesReturnVoucherByOffice = async (payload: any, user: any) => {
       ),
     );
 
+    await Promise.all(
+      payload.productItems.map(async (item: any) => {
+        const product = await tx.product.findFirst({
+          where: { id: item.productId },
+        });
+        if (!product) {
+          throw new Error(`Invalid productId: ${item.productId}`);
+        }
+        return tx.inventory.create({
+          data: {
+            date: new Date(payload.date),
+            depoId: payload.receverdepoId,
+            transactionId: createTransaction.id,
+            productId: product.id,
+            unitPrice: product.tp,
+            quantityAdd: item.quantity,
+            debitAmount: product.tp * item.quantity,
+          },
+        });
+      }),
+    );
+
     // 5️⃣ Create Payment Journal Entries (Debit)
     if (!payload.paymentItems?.length)
       throw new Error("Invalid data: paymentItems must be non-empty");
@@ -886,7 +888,7 @@ const createSalesReturnVoucherByOffice = async (payload: any, user: any) => {
       journalEntries.push({
         transactionId: createTransaction.id,
         date: new Date(payload.date),
-        depoId: payload.depoId,
+        depoId: payload.receverdepoId,
         ledgerHeadId: payItem.ledgerItemId,
         creditAmount: payItem.amount,
         narration: payItem.narration || "",
@@ -899,19 +901,56 @@ const createSalesReturnVoucherByOffice = async (payload: any, user: any) => {
     });
     if (!inventoryLedger) throw new Error("inventory Ledger Head Not Found");
 
-    const totalSalseReturntAmount = payload.productItems.reduce(
-      (sum: number, p: any) => sum + p.amount,
+    const totalSalseReturntAmount = await payload.productItems.reduce(
+      async (sum: number, p: any) => {
+        const product = await tx.product.findFirst({
+          where: { id: p.productId },
+        });
+        if (!product) {
+          throw new Error(`Invalid productId: ${p.productId}`);
+        }
+        return sum + product.tp * p.quantity;
+      },
+      0,
+    );
+
+    const totalSalseDiscountReversalAmount = await payload.productItems.reduce(
+      async (sum: number, p: any) => {
+        const product = await tx.product.findFirst({
+          where: { id: p.productId },
+        });
+        if (!product) {
+          throw new Error(`Invalid productId: ${p.productId}`);
+        }
+        return sum + (product.tp * p.quantity - p.quantity * p.unitPrice);
+      },
       0,
     );
 
     journalEntries.push({
       transactionId: createTransaction.id,
       date: new Date(payload.date),
-      depoId: payload.depoId,
+      depoId: payload.receverdepoId,
       ledgerHeadId: inventoryLedger.id,
       debitAmount: totalSalseReturntAmount,
       narration: "Sales return transaction",
     });
+
+    const discountLedger = await tx.ledgerHead.findFirst({
+      where: { ledgerName: { contains: "discount" } },
+    });
+    if (!discountLedger) throw new Error("discount Ledger Head Not Found");
+
+    journalEntries.push({
+      transactionId: createTransaction.id,
+      date: new Date(payload.date),
+      depoId: payload.receverdepoId,
+      ledgerHeadId: discountLedger.id,
+      creditAmount: totalSalseDiscountReversalAmount,
+      narration: "Sales return transaction",
+    });
+
+
 
     // 8️⃣ Validate Journal Balance (Debit = Credit)
     const totalDebit = journalEntries.reduce(

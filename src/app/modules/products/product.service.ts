@@ -52,12 +52,26 @@ const createProduct = async (payload: TcreateProduct) => {
 };
 
 //get all product
-const getProduct = async () => {
+const getProduct = async (employeeId?: string) => {
+
+
   const result = await prisma.product.findMany({
     where: {
       status: Status.ACTIVE,
-    },
+      OR: [
+        {
+          inventory: {
+            some: {
+              employeeId: employeeId || undefined,
+              quantityAdd: {
+                gt: 0
+              }
+            }
+          }
+        },
 
+      ]
+    },
     orderBy: {
       name: "asc",
     },

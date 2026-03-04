@@ -6,10 +6,12 @@ import { ReportManagementService } from "./report.service";
 const geMpoTransectionReport = catchAsync(async (req, res) => {
   const startDate = req.query.startDate as string;
   const endDate = req.query.endDate as string;
+  const depoId = req.query.depoId ? Number(req.query.depoId) : undefined;
 
   const result = await ReportManagementService.getAllMpoTransection({
     startDate,
     endDate,
+    depoId,
   });
 
   sendResponse(res, {
@@ -61,30 +63,17 @@ const getGiftVoucherReport = catchAsync(async (req, res) => {
   });
 });
 
-const getAllMpoProgressReport = catchAsync(async (req, res) => {
-  const startDate = req.query.startDate as string | undefined;
-  const endDate = req.query.endDate as string | undefined;
 
-  const result = await ReportManagementService.getAllMpoProgressReport(
-
-    { startDate, endDate },
-  );
-
-  sendResponse(res, {
-    statusCode: StatusCodes.OK,
-    success: true,
-    message: "MPO progress report retrieved successfully",
-    data: result,
-  });
-});
 
 const getDipoMpoReport = catchAsync(async (req, res) => {
   const startDate = req.query.startDate as string | undefined;
   const endDate = req.query.endDate as string | undefined;
+  const depoId = req.query.depoId ? Number(req.query.depoId) : undefined;
 
   const result = await ReportManagementService.getDipoMpoReport({
     startDate,
     endDate,
+    depoId
   });
 
   sendResponse(res, {
@@ -117,7 +106,6 @@ const getDipoMpoReportById = catchAsync(async (req, res) => {
 export const ReportManagementControllers = {
   geMpoTransectionReport,
   getMpoReportById,
-  getAllMpoProgressReport,
   getGiftVoucherReport,
   getDipoMpoReport,
   getDipoMpoReportById,

@@ -180,6 +180,21 @@ const getInventoryByVoucherNo = async (voucherNo: string) => {
   return result;
 };
 
+const inventoryProduct = async (employeeId: string, depoId: number) => {
+  const result = await prisma.product.findMany({
+    where: {
+      inventory: {
+        some: {
+          employeeId: employeeId || undefined,
+          depoId: depoId || undefined
+        }
+      }
+    },
+
+  })
+  return result
+}
+
 export const InventoryService = {
   getInventory,
   getInventoryById,
@@ -188,6 +203,7 @@ export const InventoryService = {
   getInventoryByVoucherNo,
   updateInventory,
   deleteInventory,
+  inventoryProduct
 };
 
 async function productIsExist(data: object) {

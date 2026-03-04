@@ -99,6 +99,9 @@ const getInventoryByVoucherNo = catchAsync(
   },
 );
 
+
+
+
 export const InventoryControllers = {
   getInventory,
   getInventoryById,
@@ -106,4 +109,5 @@ export const InventoryControllers = {
   deleteInventory,
   getInventoryTotal,
   getInventoryByVoucherNo,
+
 };

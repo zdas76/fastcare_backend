@@ -16,7 +16,9 @@ const createProduct = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllProduct = catchAsync(async (req: Request, res: Response) => {
-  const result = await ProductService.getProduct();
+  const employeeId = req.query.employeeId as string;
+
+  const result = await ProductService.getProduct(employeeId);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
