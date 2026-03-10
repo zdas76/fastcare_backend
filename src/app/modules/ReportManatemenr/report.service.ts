@@ -19,7 +19,7 @@ const getAllMpoTransection = async (payload: {
     where: {
       roles: { array_contains: "MPO" },
       status: "ACTIVE",
-      scope: { depo: { some: { id: payload.depoId } } },
+      ...(payload.depoId && payload.depoId > 0 ? { scope: { depo: { some: { id: payload.depoId } } } } : {}),
     },
     select: {
       id: true,
@@ -37,7 +37,7 @@ const getAllMpoTransection = async (payload: {
     const scop = await prisma.scope.findFirst({
       where: {
         employeeId: mpo.employeeId,
-        depo: { some: { id: payload.depoId } },
+        ...(payload.depoId && payload.depoId > 0 ? { depo: { some: { id: payload.depoId } } } : {}),
       },
       include: {
         chemist: { select: { chemistId: true } },
@@ -357,9 +357,9 @@ const getDipoMpoReport = async ({
 
   const MPOs = await prisma.user.findMany({
     where: {
-      roles: { array_contains: "MPO" },
+      roles: { array_contains: "SR" },
       status: "ACTIVE",
-      scope: { depo: { some: { id: depoId } } },
+      ...(depoId && depoId > 0 ? { scope: { depo: { some: { id: depoId } } } } : {}),
     },
     select: {
       id: true,
@@ -367,6 +367,7 @@ const getDipoMpoReport = async ({
       name: true,
     },
   });
+
 
   const ledgerHead = await prisma.ledgerHead.findFirst({
     where: {

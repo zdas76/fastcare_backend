@@ -21,6 +21,7 @@ import { SubCategoryRouter } from "../modules/SubCategory/subCategory.route";
 import { UnitRoute } from "../modules/unit/unit.route";
 import { UserRoute } from "../modules/User/user.route";
 import { MpoTargetRouter } from "../modules/MpoTarget/target.route";
+import { InventoryProgressRoute } from "../modules/InventoryProgress/inventoryProgress.route";
 
 const router = express.Router();
 
@@ -112,6 +113,10 @@ const moduleroutes = [
   {
     path: "/mpoTarget",
     route: MpoTargetRouter,
+  },
+  {
+    path: "/inventoryProgress",
+    route: InventoryProgressRoute,
   }
 ];
 

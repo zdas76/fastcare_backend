@@ -1143,11 +1143,13 @@ const createReceiptVoucher = async (payload: any) => {
       receivDepoId = ExistsDepo.id;
     }
 
+    const voucherNo = await generateVoucherNumber("RV");
+
     // step 1. create transaction entries
     const createTransaction: TransactionInfo = await tx.transactionInfo.create({
       data: {
         date: new Date(payload.date),
-        voucherNo: payload.voucherNo,
+        voucherNo: voucherNo,
         partyId: partyId || null,
         employeeId: employeeId || null,
         chemistId: chemistId || null,
