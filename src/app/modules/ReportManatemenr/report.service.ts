@@ -368,7 +368,6 @@ const getDipoMpoReport = async ({
     },
   });
 
-
   const ledgerHead = await prisma.ledgerHead.findFirst({
     where: {
       ledgerName: {

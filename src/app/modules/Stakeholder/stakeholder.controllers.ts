@@ -39,7 +39,7 @@ const getStakholderById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteStakholderById = catchAsync(async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id ?? "0");
+  const id = Number(req.params.id);
 
   const result = await StakeholderService.deleteStakeholderbyId(id);
 

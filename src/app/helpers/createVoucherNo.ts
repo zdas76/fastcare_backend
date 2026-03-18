@@ -20,7 +20,7 @@ export const generateVoucherNumber = async (type: string) => {
     const VoucherNo = await prisma.transactionInfo.findFirst({
       where: {
         voucherNo: {
-          contains: "MRV",
+          startsWith: "MRV",
         },
       },
       orderBy: {
@@ -38,7 +38,7 @@ export const generateVoucherNumber = async (type: string) => {
     const VoucherNo = await prisma.transactionInfo.findFirst({
       where: {
         voucherNo: {
-          contains: "SRV",
+          startsWith: "SRV",
         },
       },
       orderBy: {
@@ -56,7 +56,7 @@ export const generateVoucherNumber = async (type: string) => {
     const VoucherNo = await prisma.transactionInfo.findFirst({
       where: {
         voucherNo: {
-          contains: "GFT",
+          startsWith: "GFT",
         },
       },
       orderBy: {
@@ -74,7 +74,7 @@ export const generateVoucherNumber = async (type: string) => {
     const VoucherNo = await prisma.transactionInfo.findFirst({
       where: {
         voucherNo: {
-          contains: "PV",
+          startsWith: "PV",
         },
       },
       orderBy: {
@@ -92,8 +92,9 @@ export const generateVoucherNumber = async (type: string) => {
     const VoucherNo = await prisma.transactionInfo.findFirst({
       where: {
         voucherNo: {
-          contains: "RV",
+          startsWith: "RV",
         },
+
       },
       orderBy: {
         id: "desc",
@@ -110,7 +111,7 @@ export const generateVoucherNumber = async (type: string) => {
     const VoucherNo = await prisma.transactionInfo.findFirst({
       where: {
         voucherNo: {
-          contains: "WSV",
+          startsWith: "WSV",
         },
       },
       orderBy: {
@@ -128,7 +129,7 @@ export const generateVoucherNumber = async (type: string) => {
     const VoucherNo = await prisma.transactionInfo.findFirst({
       where: {
         voucherNo: {
-          contains: "ALV",
+          startsWith: "ALV",
         },
       },
       orderBy: {

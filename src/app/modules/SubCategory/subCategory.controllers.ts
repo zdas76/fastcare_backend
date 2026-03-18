@@ -50,7 +50,7 @@ const updateSubCategory = catchAsync(async (req: Request, res: Response) => {
 
 const deleteSubCategoryById = catchAsync(
   async (req: Request, res: Response) => {
-    const id = parseInt(req.params.id!);
+    const id = Number(req.params.id);
 
     const result = await SubCagetoryService.deleteSubCategorybyId(id);
 

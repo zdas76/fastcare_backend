@@ -27,7 +27,7 @@ const getAllBankAccount = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getBankAccountById = catchAsync(async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id!);
+  const id = Number(req.params.id);
   const result = await BankAccountService.getBankAccountById(id);
 
   sendResponse(res, {
@@ -40,7 +40,7 @@ const getBankAccountById = catchAsync(async (req: Request, res: Response) => {
 
 const updateBankAccountById = catchAsync(
   async (req: Request, res: Response) => {
-    const id = parseInt(req.params.id!);
+    const id = Number(req.params.id);
     const result = await BankAccountService.updateAccountInfo(id, req.body);
 
     sendResponse(res, {

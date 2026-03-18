@@ -1157,6 +1157,8 @@ const createReceiptVoucher = async (payload: any) => {
       },
     });
 
+    console.log(createTransaction);
+
     // 2. create bank transaction
     const BankTXData: {
       transactionId: number;
@@ -1261,6 +1263,9 @@ const createReceiptVoucher = async (payload: any) => {
     });
     return createJournal;
   });
+
+  console.log(createVoucher);
+
   return createVoucher;
 };
 
@@ -1464,6 +1469,7 @@ const createJournalVoucher = async (payload: any) => {
   return Journal;
 };
 
+
 const creategiftedVoucher = async (payload: any) => {
   //check customer
   let customerId: number | null = null;
@@ -1603,106 +1609,6 @@ const creategiftedVoucher = async (payload: any) => {
   return result;
 };
 
-const createFixedVoucher = async (payload: any) => {
-  const createFixedVoucher = await prisma.$transaction(async (tx: any) => {
-    //check party
-    if (payload.chemistId) {
-      const partyExists = await tx.chemist.findFirst({
-        where: { chemistId: payload.chemistId },
-      });
-
-      if (!partyExists) {
-        throw new Error(`Invalid chemistId: ${payload.chemistId} `);
-      }
-    }
-
-    // step 1. create transaction entries
-    const createFixedJournal: TransactionInfo = await tx.fixedJournal.create({
-      data: {
-        date: payload?.date,
-        voucherNo: payload.voucherNo,
-        chemistId: payload.chemistId,
-        depoId: payload.depoId,
-        ledgerHeadId: payload.paymentOption.ledgerHeadId,
-        debitAmount: payload.paymentOption.amount,
-        narration: payload.paymentOption.narration,
-      },
-    });
-
-    if (
-      !Array.isArray(payload.productItems) ||
-      payload.productItems.length === 0
-    ) {
-      throw new Error("Invalid data: salseItem must be a non-empty array");
-    }
-
-    const isExistedDepo = await prisma.depo.findFirst({
-      where: {
-        id: payload.depoId,
-      },
-    });
-
-    //Step 2: Insert Inventory Records
-
-    await Promise.all(
-      payload.productItems.map((item: any) =>
-        tx.inventory.create({
-          data: {
-            date: new Date(payload.date),
-            depoId: isExistedDepo?.id,
-            fixedJournalId: createFixedJournal.id,
-            productId: item.productId,
-            unitPrice: item.unitPrice,
-            quantityLess: item.quantity,
-            creditAmount: item.amount,
-            isFixted: true,
-          },
-        }),
-      ),
-    );
-
-    if (payload.discount && payload.discount > 0) {
-      const discountItem: LedgerHead | any = await tx.ledgerHead.findFirst({
-        where: {
-          ledgerName: {
-            contains: "discount",
-          },
-        },
-      });
-
-      if (!discountItem) {
-        throw new AppError(
-          StatusCodes.NOT_FOUND,
-          "Discount Ledger Head Not Found",
-        );
-      }
-
-      await tx.fixedJournal.create({
-        data: {
-          date: payload.date,
-          voucherNo: payload.voucherNo,
-          chemistId: payload.chemistId,
-          depoId: payload.depoId,
-          ledgerHeadId: discountItem.id,
-          debitAmount: payload.discount,
-          narration: "Discount",
-        },
-      });
-    }
-
-    return createFixedJournal.id;
-  });
-
-  const result = await prisma.fixedJournal.findFirst({
-    where: {
-      id: createFixedVoucher,
-    },
-    include: {
-      inventory: true,
-    },
-  });
-  return result;
-};
 
 const createQantaVoucher = async () => { };
 
@@ -1717,7 +1623,6 @@ export const JurnalService = {
   createJournalVoucher,
   createQantaVoucher,
   createMoneyReceivedVoucher,
-  createFixedVoucher,
-  creategiftedVoucher,
   createSalesReturnVoucherByOffice,
+  creategiftedVoucher
 };

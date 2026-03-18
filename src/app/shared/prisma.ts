@@ -33,4 +33,8 @@ const prisma = new PrismaClient({
   ],
 });
 
+prisma.$on("error", (e) => {
+  console.log(e);
+});
+
 export default prisma;

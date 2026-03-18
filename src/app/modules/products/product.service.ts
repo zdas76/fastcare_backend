@@ -28,24 +28,28 @@ const createProduct = async (payload: TcreateProduct) => {
         mrp: payload.mrp || 0,
         tp: payload.tp || 0,
         size: payload.size || "",
-        balance: payload.initialStock.amount,
-        quantity: payload.initialStock.quantity,
-        unitPrice: payload.initialStock.unitPrice,
+        balance: payload.initialStock.amount || 0,
+        quantity: payload.initialStock.quantity || 0,
+        unitPrice: payload.initialStock.unitPrice || 0,
         date: new Date(payload.initialStock.date),
       },
     });
 
-    await tx.inventory.create({
-      data: {
-        productId: newProduct?.id,
-        depoId: payload.initialStock.depoId,
-        unitPrice: payload.initialStock.unitPrice,
-        date: new Date(payload.initialStock.date),
-        quantityAdd: payload.initialStock.quantity,
-        debitAmount: payload.initialStock.amount,
-        isClosing: true,
-      },
-    });
+    if (payload.initialStock.quantity) {
+
+      await tx.inventory.create({
+        data: {
+          productId: newProduct?.id,
+          depoId: payload.initialStock.depoId,
+          unitPrice: payload.initialStock.unitPrice,
+          date: new Date(payload.initialStock.date),
+          quantityAdd: payload.initialStock.quantity,
+          debitAmount: payload.initialStock.amount,
+          isClosing: true,
+        },
+      });
+    }
+
   });
 
   return result;
@@ -63,9 +67,7 @@ const getProduct = async (employeeId?: string) => {
           inventory: {
             some: {
               employeeId: employeeId || undefined,
-              quantityAdd: {
-                gt: 0
-              }
+              ...(employeeId && { quantityAdd: { gt: 0 } })
             }
           }
         },

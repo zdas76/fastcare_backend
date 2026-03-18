@@ -69,6 +69,7 @@ const getInventoryById = async (
     where: {
       productId,
       depoId,
+      employeeId: null,
       date: {
         gte: new Date(newStartDate),
         lte: new Date(newEndDate),

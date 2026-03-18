@@ -149,10 +149,20 @@ export type TransactionInfo = $Result.DefaultSelection<Prisma.$TransactionInfoPa
  */
 export type Journal = $Result.DefaultSelection<Prisma.$JournalPayload>
 /**
- * Model FixedJournal
+ * Model DepoTransaction
  * 
  */
-export type FixedJournal = $Result.DefaultSelection<Prisma.$FixedJournalPayload>
+export type DepoTransaction = $Result.DefaultSelection<Prisma.$DepoTransactionPayload>
+/**
+ * Model DepoJournal
+ * 
+ */
+export type DepoJournal = $Result.DefaultSelection<Prisma.$DepoJournalPayload>
+/**
+ * Model DepoInventory
+ * 
+ */
+export type DepoInventory = $Result.DefaultSelection<Prisma.$DepoInventoryPayload>
 /**
  * Model Order
  * 
@@ -242,15 +252,6 @@ export const Status: {
 export type Status = (typeof Status)[keyof typeof Status]
 
 
-export const PaymentType: {
-  PAID: 'PAID',
-  DUE: 'DUE',
-  PARTIAL: 'PARTIAL'
-};
-
-export type PaymentType = (typeof PaymentType)[keyof typeof PaymentType]
-
-
 export const VoucherType: {
   SALES: 'SALES',
   PURCHASE: 'PURCHASE',
@@ -320,10 +321,6 @@ export type Status = $Enums.Status
 
 export const Status: typeof $Enums.Status
 
-export type PaymentType = $Enums.PaymentType
-
-export const PaymentType: typeof $Enums.PaymentType
-
 export type VoucherType = $Enums.VoucherType
 
 export const VoucherType: typeof $Enums.VoucherType
@@ -346,7 +343,9 @@ export const UserRole: typeof $Enums.UserRole
  * Type-safe database client for TypeScript & Node.js
  * @example
  * ```
- * const prisma = new PrismaClient()
+ * const prisma = new PrismaClient({
+ *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+ * })
  * // Fetch zero or more Users
  * const users = await prisma.user.findMany()
  * ```
@@ -367,7 +366,9 @@ export class PrismaClient<
    * Type-safe database client for TypeScript & Node.js
    * @example
    * ```
-   * const prisma = new PrismaClient()
+   * const prisma = new PrismaClient({
+   *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+   * })
    * // Fetch zero or more Users
    * const users = await prisma.user.findMany()
    * ```
@@ -447,7 +448,7 @@ export class PrismaClient<
    * ])
    * ```
    * 
-   * Read more in our [docs](https://www.prisma.io/docs/concepts/components/prisma-client/transactions).
+   * Read more in our [docs](https://www.prisma.io/docs/orm/prisma-client/queries/transactions).
    */
   $transaction<P extends Prisma.PrismaPromise<any>[]>(arg: [...P], options?: { isolationLevel?: Prisma.TransactionIsolationLevel }): $Utils.JsPromise<runtime.Types.Utils.UnwrapTuple<P>>
 
@@ -728,14 +729,34 @@ export class PrismaClient<
   get journal(): Prisma.JournalDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.fixedJournal`: Exposes CRUD operations for the **FixedJournal** model.
+   * `prisma.depoTransaction`: Exposes CRUD operations for the **DepoTransaction** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more FixedJournals
-    * const fixedJournals = await prisma.fixedJournal.findMany()
+    * // Fetch zero or more DepoTransactions
+    * const depoTransactions = await prisma.depoTransaction.findMany()
     * ```
     */
-  get fixedJournal(): Prisma.FixedJournalDelegate<ExtArgs, ClientOptions>;
+  get depoTransaction(): Prisma.DepoTransactionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.depoJournal`: Exposes CRUD operations for the **DepoJournal** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DepoJournals
+    * const depoJournals = await prisma.depoJournal.findMany()
+    * ```
+    */
+  get depoJournal(): Prisma.DepoJournalDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.depoInventory`: Exposes CRUD operations for the **DepoInventory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DepoInventories
+    * const depoInventories = await prisma.depoInventory.findMany()
+    * ```
+    */
+  get depoInventory(): Prisma.DepoInventoryDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.order`: Exposes CRUD operations for the **Order** model.
@@ -886,8 +907,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 7.2.0
-   * Query Engine version: 0c8ef2ce45c83248ab3df073180d5eda9e8be7a3
+   * Prisma Client JS version: 7.5.0
+   * Query Engine version: 280c870be64f457428992c43c1f6d557fab6e29e
    */
   export type PrismaVersion = {
     client: string
@@ -1297,7 +1318,9 @@ export namespace Prisma {
     Inventory: 'Inventory',
     TransactionInfo: 'TransactionInfo',
     Journal: 'Journal',
-    FixedJournal: 'FixedJournal',
+    DepoTransaction: 'DepoTransaction',
+    DepoJournal: 'DepoJournal',
+    DepoInventory: 'DepoInventory',
     Order: 'Order',
     OrderItem: 'OrderItem',
     OrderStatus: 'OrderStatus',
@@ -1323,7 +1346,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "employeeProfile" | "jobPost" | "chemist" | "depo" | "party" | "stakeholder" | "stakeholderDeisgnation" | "stakeholderDegree" | "stakeholderChember" | "stakeholderOcation" | "customers" | "scope" | "mpoTarget" | "productWiseTarget" | "targetProductBatch" | "category" | "subCategory" | "unit" | "accountHead" | "ledgerHead" | "product" | "bankAccount" | "bankTransaction" | "inventory" | "transactionInfo" | "journal" | "fixedJournal" | "order" | "orderItem" | "orderStatus" | "attendance" | "overtime" | "leaveType" | "leves" | "employeeBankDetails" | "salaryInfo" | "payroll"
+      modelProps: "user" | "employeeProfile" | "jobPost" | "chemist" | "depo" | "party" | "stakeholder" | "stakeholderDeisgnation" | "stakeholderDegree" | "stakeholderChember" | "stakeholderOcation" | "customers" | "scope" | "mpoTarget" | "productWiseTarget" | "targetProductBatch" | "category" | "subCategory" | "unit" | "accountHead" | "ledgerHead" | "product" | "bankAccount" | "bankTransaction" | "inventory" | "transactionInfo" | "journal" | "depoTransaction" | "depoJournal" | "depoInventory" | "order" | "orderItem" | "orderStatus" | "attendance" | "overtime" | "leaveType" | "leves" | "employeeBankDetails" | "salaryInfo" | "payroll"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3109,69 +3132,201 @@ export namespace Prisma {
           }
         }
       }
-      FixedJournal: {
-        payload: Prisma.$FixedJournalPayload<ExtArgs>
-        fields: Prisma.FixedJournalFieldRefs
+      DepoTransaction: {
+        payload: Prisma.$DepoTransactionPayload<ExtArgs>
+        fields: Prisma.DepoTransactionFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.FixedJournalFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FixedJournalPayload> | null
+            args: Prisma.DepoTransactionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoTransactionPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.FixedJournalFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FixedJournalPayload>
+            args: Prisma.DepoTransactionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoTransactionPayload>
           }
           findFirst: {
-            args: Prisma.FixedJournalFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FixedJournalPayload> | null
+            args: Prisma.DepoTransactionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoTransactionPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.FixedJournalFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FixedJournalPayload>
+            args: Prisma.DepoTransactionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoTransactionPayload>
           }
           findMany: {
-            args: Prisma.FixedJournalFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FixedJournalPayload>[]
+            args: Prisma.DepoTransactionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoTransactionPayload>[]
           }
           create: {
-            args: Prisma.FixedJournalCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FixedJournalPayload>
+            args: Prisma.DepoTransactionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoTransactionPayload>
           }
           createMany: {
-            args: Prisma.FixedJournalCreateManyArgs<ExtArgs>
+            args: Prisma.DepoTransactionCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           delete: {
-            args: Prisma.FixedJournalDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FixedJournalPayload>
+            args: Prisma.DepoTransactionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoTransactionPayload>
           }
           update: {
-            args: Prisma.FixedJournalUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FixedJournalPayload>
+            args: Prisma.DepoTransactionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoTransactionPayload>
           }
           deleteMany: {
-            args: Prisma.FixedJournalDeleteManyArgs<ExtArgs>
+            args: Prisma.DepoTransactionDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.FixedJournalUpdateManyArgs<ExtArgs>
+            args: Prisma.DepoTransactionUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           upsert: {
-            args: Prisma.FixedJournalUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$FixedJournalPayload>
+            args: Prisma.DepoTransactionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoTransactionPayload>
           }
           aggregate: {
-            args: Prisma.FixedJournalAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateFixedJournal>
+            args: Prisma.DepoTransactionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDepoTransaction>
           }
           groupBy: {
-            args: Prisma.FixedJournalGroupByArgs<ExtArgs>
-            result: $Utils.Optional<FixedJournalGroupByOutputType>[]
+            args: Prisma.DepoTransactionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DepoTransactionGroupByOutputType>[]
           }
           count: {
-            args: Prisma.FixedJournalCountArgs<ExtArgs>
-            result: $Utils.Optional<FixedJournalCountAggregateOutputType> | number
+            args: Prisma.DepoTransactionCountArgs<ExtArgs>
+            result: $Utils.Optional<DepoTransactionCountAggregateOutputType> | number
+          }
+        }
+      }
+      DepoJournal: {
+        payload: Prisma.$DepoJournalPayload<ExtArgs>
+        fields: Prisma.DepoJournalFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DepoJournalFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoJournalPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DepoJournalFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoJournalPayload>
+          }
+          findFirst: {
+            args: Prisma.DepoJournalFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoJournalPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DepoJournalFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoJournalPayload>
+          }
+          findMany: {
+            args: Prisma.DepoJournalFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoJournalPayload>[]
+          }
+          create: {
+            args: Prisma.DepoJournalCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoJournalPayload>
+          }
+          createMany: {
+            args: Prisma.DepoJournalCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.DepoJournalDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoJournalPayload>
+          }
+          update: {
+            args: Prisma.DepoJournalUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoJournalPayload>
+          }
+          deleteMany: {
+            args: Prisma.DepoJournalDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DepoJournalUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.DepoJournalUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoJournalPayload>
+          }
+          aggregate: {
+            args: Prisma.DepoJournalAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDepoJournal>
+          }
+          groupBy: {
+            args: Prisma.DepoJournalGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DepoJournalGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DepoJournalCountArgs<ExtArgs>
+            result: $Utils.Optional<DepoJournalCountAggregateOutputType> | number
+          }
+        }
+      }
+      DepoInventory: {
+        payload: Prisma.$DepoInventoryPayload<ExtArgs>
+        fields: Prisma.DepoInventoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DepoInventoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoInventoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DepoInventoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoInventoryPayload>
+          }
+          findFirst: {
+            args: Prisma.DepoInventoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoInventoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DepoInventoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoInventoryPayload>
+          }
+          findMany: {
+            args: Prisma.DepoInventoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoInventoryPayload>[]
+          }
+          create: {
+            args: Prisma.DepoInventoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoInventoryPayload>
+          }
+          createMany: {
+            args: Prisma.DepoInventoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.DepoInventoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoInventoryPayload>
+          }
+          update: {
+            args: Prisma.DepoInventoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoInventoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.DepoInventoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DepoInventoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.DepoInventoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DepoInventoryPayload>
+          }
+          aggregate: {
+            args: Prisma.DepoInventoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDepoInventory>
+          }
+          groupBy: {
+            args: Prisma.DepoInventoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DepoInventoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DepoInventoryCountArgs<ExtArgs>
+            result: $Utils.Optional<DepoInventoryCountAggregateOutputType> | number
           }
         }
       }
@@ -3970,7 +4125,9 @@ export namespace Prisma {
     inventory?: InventoryOmit
     transactionInfo?: TransactionInfoOmit
     journal?: JournalOmit
-    fixedJournal?: FixedJournalOmit
+    depoTransaction?: DepoTransactionOmit
+    depoJournal?: DepoJournalOmit
+    depoInventory?: DepoInventoryOmit
     order?: OrderOmit
     orderItem?: OrderItemOmit
     orderStatus?: OrderStatusOmit
@@ -4187,14 +4344,12 @@ export namespace Prisma {
 
   export type ChemistCountOutputType = {
     scopes: number
-    FixedJournal: number
     order: number
     transactionInfo: number
   }
 
   export type ChemistCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     scopes?: boolean | ChemistCountOutputTypeCountScopesArgs
-    FixedJournal?: boolean | ChemistCountOutputTypeCountFixedJournalArgs
     order?: boolean | ChemistCountOutputTypeCountOrderArgs
     transactionInfo?: boolean | ChemistCountOutputTypeCountTransactionInfoArgs
   }
@@ -4220,13 +4375,6 @@ export namespace Prisma {
   /**
    * ChemistCountOutputType without action
    */
-  export type ChemistCountOutputTypeCountFixedJournalArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: FixedJournalWhereInput
-  }
-
-  /**
-   * ChemistCountOutputType without action
-   */
   export type ChemistCountOutputTypeCountOrderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderWhereInput
   }
@@ -4245,20 +4393,22 @@ export namespace Prisma {
 
   export type DepoCountOutputType = {
     chemist: number
-    FixedJournal: number
     inventory: number
     jobPost: number
     journal: number
     scopes: number
+    providerTransactions: number
+    receiverTransactions: number
   }
 
   export type DepoCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chemist?: boolean | DepoCountOutputTypeCountChemistArgs
-    FixedJournal?: boolean | DepoCountOutputTypeCountFixedJournalArgs
     inventory?: boolean | DepoCountOutputTypeCountInventoryArgs
     jobPost?: boolean | DepoCountOutputTypeCountJobPostArgs
     journal?: boolean | DepoCountOutputTypeCountJournalArgs
     scopes?: boolean | DepoCountOutputTypeCountScopesArgs
+    providerTransactions?: boolean | DepoCountOutputTypeCountProviderTransactionsArgs
+    receiverTransactions?: boolean | DepoCountOutputTypeCountReceiverTransactionsArgs
   }
 
   // Custom InputTypes
@@ -4277,13 +4427,6 @@ export namespace Prisma {
    */
   export type DepoCountOutputTypeCountChemistArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ChemistWhereInput
-  }
-
-  /**
-   * DepoCountOutputType without action
-   */
-  export type DepoCountOutputTypeCountFixedJournalArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: FixedJournalWhereInput
   }
 
   /**
@@ -4312,6 +4455,20 @@ export namespace Prisma {
    */
   export type DepoCountOutputTypeCountScopesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ScopeWhereInput
+  }
+
+  /**
+   * DepoCountOutputType without action
+   */
+  export type DepoCountOutputTypeCountProviderTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepoTransactionWhereInput
+  }
+
+  /**
+   * DepoCountOutputType without action
+   */
+  export type DepoCountOutputTypeCountReceiverTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepoTransactionWhereInput
   }
 
 
@@ -4715,13 +4872,13 @@ export namespace Prisma {
    */
 
   export type LedgerHeadCountOutputType = {
-    fixedJournal: number
     journal: number
+    depoJournals: number
   }
 
   export type LedgerHeadCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    fixedJournal?: boolean | LedgerHeadCountOutputTypeCountFixedJournalArgs
     journal?: boolean | LedgerHeadCountOutputTypeCountJournalArgs
+    depoJournals?: boolean | LedgerHeadCountOutputTypeCountDepoJournalsArgs
   }
 
   // Custom InputTypes
@@ -4738,15 +4895,15 @@ export namespace Prisma {
   /**
    * LedgerHeadCountOutputType without action
    */
-  export type LedgerHeadCountOutputTypeCountFixedJournalArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: FixedJournalWhereInput
+  export type LedgerHeadCountOutputTypeCountJournalArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: JournalWhereInput
   }
 
   /**
    * LedgerHeadCountOutputType without action
    */
-  export type LedgerHeadCountOutputTypeCountJournalArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: JournalWhereInput
+  export type LedgerHeadCountOutputTypeCountDepoJournalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepoJournalWhereInput
   }
 
 
@@ -4758,12 +4915,14 @@ export namespace Prisma {
     targetProductBatch: number
     inventory: number
     orderItem: number
+    depoInventories: number
   }
 
   export type ProductCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     targetProductBatch?: boolean | ProductCountOutputTypeCountTargetProductBatchArgs
     inventory?: boolean | ProductCountOutputTypeCountInventoryArgs
     orderItem?: boolean | ProductCountOutputTypeCountOrderItemArgs
+    depoInventories?: boolean | ProductCountOutputTypeCountDepoInventoriesArgs
   }
 
   // Custom InputTypes
@@ -4796,6 +4955,13 @@ export namespace Prisma {
    */
   export type ProductCountOutputTypeCountOrderItemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderItemWhereInput
+  }
+
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountDepoInventoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepoInventoryWhereInput
   }
 
 
@@ -4902,33 +5068,33 @@ export namespace Prisma {
 
 
   /**
-   * Count Type FixedJournalCountOutputType
+   * Count Type DepoTransactionCountOutputType
    */
 
-  export type FixedJournalCountOutputType = {
-    inventory: number
+  export type DepoTransactionCountOutputType = {
+    depoInventories: number
   }
 
-  export type FixedJournalCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    inventory?: boolean | FixedJournalCountOutputTypeCountInventoryArgs
+  export type DepoTransactionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    depoInventories?: boolean | DepoTransactionCountOutputTypeCountDepoInventoriesArgs
   }
 
   // Custom InputTypes
   /**
-   * FixedJournalCountOutputType without action
+   * DepoTransactionCountOutputType without action
    */
-  export type FixedJournalCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type DepoTransactionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the FixedJournalCountOutputType
+     * Select specific fields to fetch from the DepoTransactionCountOutputType
      */
-    select?: FixedJournalCountOutputTypeSelect<ExtArgs> | null
+    select?: DepoTransactionCountOutputTypeSelect<ExtArgs> | null
   }
 
   /**
-   * FixedJournalCountOutputType without action
+   * DepoTransactionCountOutputType without action
    */
-  export type FixedJournalCountOutputTypeCountInventoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: InventoryWhereInput
+  export type DepoTransactionCountOutputTypeCountDepoInventoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepoInventoryWhereInput
   }
 
 
@@ -5902,6 +6068,11 @@ export namespace Prisma {
      * Skip the first `n` Users.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Users.
+     */
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
   }
 
@@ -7221,6 +7392,11 @@ export namespace Prisma {
      * Skip the first `n` EmployeeProfiles.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EmployeeProfiles.
+     */
     distinct?: EmployeeProfileScalarFieldEnum | EmployeeProfileScalarFieldEnum[]
   }
 
@@ -8227,6 +8403,11 @@ export namespace Prisma {
      * Skip the first `n` JobPosts.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of JobPosts.
+     */
     distinct?: JobPostScalarFieldEnum | JobPostScalarFieldEnum[]
   }
 
@@ -8700,7 +8881,6 @@ export namespace Prisma {
     updatedAt?: boolean
     depo?: boolean | DepoDefaultArgs<ExtArgs>
     scopes?: boolean | Chemist$scopesArgs<ExtArgs>
-    FixedJournal?: boolean | Chemist$FixedJournalArgs<ExtArgs>
     order?: boolean | Chemist$orderArgs<ExtArgs>
     transactionInfo?: boolean | Chemist$transactionInfoArgs<ExtArgs>
     _count?: boolean | ChemistCountOutputTypeDefaultArgs<ExtArgs>
@@ -8729,7 +8909,6 @@ export namespace Prisma {
   export type ChemistInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     depo?: boolean | DepoDefaultArgs<ExtArgs>
     scopes?: boolean | Chemist$scopesArgs<ExtArgs>
-    FixedJournal?: boolean | Chemist$FixedJournalArgs<ExtArgs>
     order?: boolean | Chemist$orderArgs<ExtArgs>
     transactionInfo?: boolean | Chemist$transactionInfoArgs<ExtArgs>
     _count?: boolean | ChemistCountOutputTypeDefaultArgs<ExtArgs>
@@ -8740,7 +8919,6 @@ export namespace Prisma {
     objects: {
       depo: Prisma.$DepoPayload<ExtArgs>
       scopes: Prisma.$ScopePayload<ExtArgs>[]
-      FixedJournal: Prisma.$FixedJournalPayload<ExtArgs>[]
       order: Prisma.$OrderPayload<ExtArgs>[]
       transactionInfo: Prisma.$TransactionInfoPayload<ExtArgs>[]
     }
@@ -9101,7 +9279,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     depo<T extends DepoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DepoDefaultArgs<ExtArgs>>): Prisma__DepoClient<$Result.GetResult<Prisma.$DepoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     scopes<T extends Chemist$scopesArgs<ExtArgs> = {}>(args?: Subset<T, Chemist$scopesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScopePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    FixedJournal<T extends Chemist$FixedJournalArgs<ExtArgs> = {}>(args?: Subset<T, Chemist$FixedJournalArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FixedJournalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     order<T extends Chemist$orderArgs<ExtArgs> = {}>(args?: Subset<T, Chemist$orderArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     transactionInfo<T extends Chemist$transactionInfoArgs<ExtArgs> = {}>(args?: Subset<T, Chemist$transactionInfoArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionInfoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -9343,6 +9520,11 @@ export namespace Prisma {
      * Skip the first `n` Chemists.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Chemists.
+     */
     distinct?: ChemistScalarFieldEnum | ChemistScalarFieldEnum[]
   }
 
@@ -9511,30 +9693,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ScopeScalarFieldEnum | ScopeScalarFieldEnum[]
-  }
-
-  /**
-   * Chemist.FixedJournal
-   */
-  export type Chemist$FixedJournalArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FixedJournal
-     */
-    select?: FixedJournalSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the FixedJournal
-     */
-    omit?: FixedJournalOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FixedJournalInclude<ExtArgs> | null
-    where?: FixedJournalWhereInput
-    orderBy?: FixedJournalOrderByWithRelationInput | FixedJournalOrderByWithRelationInput[]
-    cursor?: FixedJournalWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: FixedJournalScalarFieldEnum | FixedJournalScalarFieldEnum[]
   }
 
   /**
@@ -9823,11 +9981,12 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     chemist?: boolean | Depo$chemistArgs<ExtArgs>
-    FixedJournal?: boolean | Depo$FixedJournalArgs<ExtArgs>
     inventory?: boolean | Depo$inventoryArgs<ExtArgs>
     jobPost?: boolean | Depo$jobPostArgs<ExtArgs>
     journal?: boolean | Depo$journalArgs<ExtArgs>
     scopes?: boolean | Depo$scopesArgs<ExtArgs>
+    providerTransactions?: boolean | Depo$providerTransactionsArgs<ExtArgs>
+    receiverTransactions?: boolean | Depo$receiverTransactionsArgs<ExtArgs>
     _count?: boolean | DepoCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["depo"]>
 
@@ -9846,11 +10005,12 @@ export namespace Prisma {
   export type DepoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "depoName" | "location" | "scopeId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["depo"]>
   export type DepoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chemist?: boolean | Depo$chemistArgs<ExtArgs>
-    FixedJournal?: boolean | Depo$FixedJournalArgs<ExtArgs>
     inventory?: boolean | Depo$inventoryArgs<ExtArgs>
     jobPost?: boolean | Depo$jobPostArgs<ExtArgs>
     journal?: boolean | Depo$journalArgs<ExtArgs>
     scopes?: boolean | Depo$scopesArgs<ExtArgs>
+    providerTransactions?: boolean | Depo$providerTransactionsArgs<ExtArgs>
+    receiverTransactions?: boolean | Depo$receiverTransactionsArgs<ExtArgs>
     _count?: boolean | DepoCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -9858,11 +10018,12 @@ export namespace Prisma {
     name: "Depo"
     objects: {
       chemist: Prisma.$ChemistPayload<ExtArgs>[]
-      FixedJournal: Prisma.$FixedJournalPayload<ExtArgs>[]
       inventory: Prisma.$InventoryPayload<ExtArgs>[]
       jobPost: Prisma.$JobPostPayload<ExtArgs>[]
       journal: Prisma.$JournalPayload<ExtArgs>[]
       scopes: Prisma.$ScopePayload<ExtArgs>[]
+      providerTransactions: Prisma.$DepoTransactionPayload<ExtArgs>[]
+      receiverTransactions: Prisma.$DepoTransactionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -10213,11 +10374,12 @@ export namespace Prisma {
   export interface Prisma__DepoClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     chemist<T extends Depo$chemistArgs<ExtArgs> = {}>(args?: Subset<T, Depo$chemistArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChemistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    FixedJournal<T extends Depo$FixedJournalArgs<ExtArgs> = {}>(args?: Subset<T, Depo$FixedJournalArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FixedJournalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     inventory<T extends Depo$inventoryArgs<ExtArgs> = {}>(args?: Subset<T, Depo$inventoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     jobPost<T extends Depo$jobPostArgs<ExtArgs> = {}>(args?: Subset<T, Depo$jobPostArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobPostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     journal<T extends Depo$journalArgs<ExtArgs> = {}>(args?: Subset<T, Depo$journalArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JournalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     scopes<T extends Depo$scopesArgs<ExtArgs> = {}>(args?: Subset<T, Depo$scopesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScopePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    providerTransactions<T extends Depo$providerTransactionsArgs<ExtArgs> = {}>(args?: Subset<T, Depo$providerTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepoTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    receiverTransactions<T extends Depo$receiverTransactionsArgs<ExtArgs> = {}>(args?: Subset<T, Depo$receiverTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepoTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10450,6 +10612,11 @@ export namespace Prisma {
      * Skip the first `n` Depos.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Depos.
+     */
     distinct?: DepoScalarFieldEnum | DepoScalarFieldEnum[]
   }
 
@@ -10621,30 +10788,6 @@ export namespace Prisma {
   }
 
   /**
-   * Depo.FixedJournal
-   */
-  export type Depo$FixedJournalArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FixedJournal
-     */
-    select?: FixedJournalSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the FixedJournal
-     */
-    omit?: FixedJournalOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FixedJournalInclude<ExtArgs> | null
-    where?: FixedJournalWhereInput
-    orderBy?: FixedJournalOrderByWithRelationInput | FixedJournalOrderByWithRelationInput[]
-    cursor?: FixedJournalWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: FixedJournalScalarFieldEnum | FixedJournalScalarFieldEnum[]
-  }
-
-  /**
    * Depo.inventory
    */
   export type Depo$inventoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10738,6 +10881,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ScopeScalarFieldEnum | ScopeScalarFieldEnum[]
+  }
+
+  /**
+   * Depo.providerTransactions
+   */
+  export type Depo$providerTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoTransaction
+     */
+    select?: DepoTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoTransaction
+     */
+    omit?: DepoTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoTransactionInclude<ExtArgs> | null
+    where?: DepoTransactionWhereInput
+    orderBy?: DepoTransactionOrderByWithRelationInput | DepoTransactionOrderByWithRelationInput[]
+    cursor?: DepoTransactionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DepoTransactionScalarFieldEnum | DepoTransactionScalarFieldEnum[]
+  }
+
+  /**
+   * Depo.receiverTransactions
+   */
+  export type Depo$receiverTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoTransaction
+     */
+    select?: DepoTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoTransaction
+     */
+    omit?: DepoTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoTransactionInclude<ExtArgs> | null
+    where?: DepoTransactionWhereInput
+    orderBy?: DepoTransactionOrderByWithRelationInput | DepoTransactionOrderByWithRelationInput[]
+    cursor?: DepoTransactionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DepoTransactionScalarFieldEnum | DepoTransactionScalarFieldEnum[]
   }
 
   /**
@@ -11618,6 +11809,11 @@ export namespace Prisma {
      * Skip the first `n` Parties.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Parties.
+     */
     distinct?: PartyScalarFieldEnum | PartyScalarFieldEnum[]
   }
 
@@ -12750,6 +12946,11 @@ export namespace Prisma {
      * Skip the first `n` Stakeholders.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Stakeholders.
+     */
     distinct?: StakeholderScalarFieldEnum | StakeholderScalarFieldEnum[]
   }
 
@@ -13846,6 +14047,11 @@ export namespace Prisma {
      * Skip the first `n` StakeholderDeisgnations.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StakeholderDeisgnations.
+     */
     distinct?: StakeholderDeisgnationScalarFieldEnum | StakeholderDeisgnationScalarFieldEnum[]
   }
 
@@ -14846,6 +15052,11 @@ export namespace Prisma {
      * Skip the first `n` StakeholderDegrees.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StakeholderDegrees.
+     */
     distinct?: StakeholderDegreeScalarFieldEnum | StakeholderDegreeScalarFieldEnum[]
   }
 
@@ -15877,6 +16088,11 @@ export namespace Prisma {
      * Skip the first `n` stakeholderChembers.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of stakeholderChembers.
+     */
     distinct?: StakeholderChemberScalarFieldEnum | StakeholderChemberScalarFieldEnum[]
   }
 
@@ -16881,6 +17097,11 @@ export namespace Prisma {
      * Skip the first `n` StakeholderOcations.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StakeholderOcations.
+     */
     distinct?: StakeholderOcationScalarFieldEnum | StakeholderOcationScalarFieldEnum[]
   }
 
@@ -17857,6 +18078,11 @@ export namespace Prisma {
      * Skip the first `n` Customers.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Customers.
+     */
     distinct?: CustomersScalarFieldEnum | CustomersScalarFieldEnum[]
   }
 
@@ -18866,6 +19092,11 @@ export namespace Prisma {
      * Skip the first `n` Scopes.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Scopes.
+     */
     distinct?: ScopeScalarFieldEnum | ScopeScalarFieldEnum[]
   }
 
@@ -19916,6 +20147,11 @@ export namespace Prisma {
      * Skip the first `n` MpoTargets.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MpoTargets.
+     */
     distinct?: MpoTargetScalarFieldEnum | MpoTargetScalarFieldEnum[]
   }
 
@@ -20907,6 +21143,11 @@ export namespace Prisma {
      * Skip the first `n` ProductWiseTargets.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProductWiseTargets.
+     */
     distinct?: ProductWiseTargetScalarFieldEnum | ProductWiseTargetScalarFieldEnum[]
   }
 
@@ -21936,6 +22177,11 @@ export namespace Prisma {
      * Skip the first `n` TargetProductBatches.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TargetProductBatches.
+     */
     distinct?: TargetProductBatchScalarFieldEnum | TargetProductBatchScalarFieldEnum[]
   }
 
@@ -22890,6 +23136,11 @@ export namespace Prisma {
      * Skip the first `n` Categories.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Categories.
+     */
     distinct?: CategoryScalarFieldEnum | CategoryScalarFieldEnum[]
   }
 
@@ -23887,6 +24138,11 @@ export namespace Prisma {
      * Skip the first `n` SubCategories.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SubCategories.
+     */
     distinct?: SubCategoryScalarFieldEnum | SubCategoryScalarFieldEnum[]
   }
 
@@ -24865,6 +25121,11 @@ export namespace Prisma {
      * Skip the first `n` Units.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Units.
+     */
     distinct?: UnitScalarFieldEnum | UnitScalarFieldEnum[]
   }
 
@@ -25854,6 +26115,11 @@ export namespace Prisma {
      * Skip the first `n` AccountHeads.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AccountHeads.
+     */
     distinct?: AccountHeadScalarFieldEnum | AccountHeadScalarFieldEnum[]
   }
 
@@ -26253,9 +26519,9 @@ export namespace Prisma {
     headCodeId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    fixedJournal?: boolean | LedgerHead$fixedJournalArgs<ExtArgs>
-    journal?: boolean | LedgerHead$journalArgs<ExtArgs>
     accountHead?: boolean | AccountHeadDefaultArgs<ExtArgs>
+    journal?: boolean | LedgerHead$journalArgs<ExtArgs>
+    depoJournals?: boolean | LedgerHead$depoJournalsArgs<ExtArgs>
     _count?: boolean | LedgerHeadCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["ledgerHead"]>
 
@@ -26272,18 +26538,18 @@ export namespace Prisma {
 
   export type LedgerHeadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ledgerName" | "ledgerCode" | "headCodeId" | "createdAt" | "updatedAt", ExtArgs["result"]["ledgerHead"]>
   export type LedgerHeadInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    fixedJournal?: boolean | LedgerHead$fixedJournalArgs<ExtArgs>
-    journal?: boolean | LedgerHead$journalArgs<ExtArgs>
     accountHead?: boolean | AccountHeadDefaultArgs<ExtArgs>
+    journal?: boolean | LedgerHead$journalArgs<ExtArgs>
+    depoJournals?: boolean | LedgerHead$depoJournalsArgs<ExtArgs>
     _count?: boolean | LedgerHeadCountOutputTypeDefaultArgs<ExtArgs>
   }
 
   export type $LedgerHeadPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "LedgerHead"
     objects: {
-      fixedJournal: Prisma.$FixedJournalPayload<ExtArgs>[]
-      journal: Prisma.$JournalPayload<ExtArgs>[]
       accountHead: Prisma.$AccountHeadPayload<ExtArgs>
+      journal: Prisma.$JournalPayload<ExtArgs>[]
+      depoJournals: Prisma.$DepoJournalPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -26632,9 +26898,9 @@ export namespace Prisma {
    */
   export interface Prisma__LedgerHeadClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    fixedJournal<T extends LedgerHead$fixedJournalArgs<ExtArgs> = {}>(args?: Subset<T, LedgerHead$fixedJournalArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FixedJournalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    journal<T extends LedgerHead$journalArgs<ExtArgs> = {}>(args?: Subset<T, LedgerHead$journalArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JournalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     accountHead<T extends AccountHeadDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AccountHeadDefaultArgs<ExtArgs>>): Prisma__AccountHeadClient<$Result.GetResult<Prisma.$AccountHeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    journal<T extends LedgerHead$journalArgs<ExtArgs> = {}>(args?: Subset<T, LedgerHead$journalArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JournalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    depoJournals<T extends LedgerHead$depoJournalsArgs<ExtArgs> = {}>(args?: Subset<T, LedgerHead$depoJournalsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepoJournalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -26866,6 +27132,11 @@ export namespace Prisma {
      * Skip the first `n` LedgerHeads.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LedgerHeads.
+     */
     distinct?: LedgerHeadScalarFieldEnum | LedgerHeadScalarFieldEnum[]
   }
 
@@ -27013,30 +27284,6 @@ export namespace Prisma {
   }
 
   /**
-   * LedgerHead.fixedJournal
-   */
-  export type LedgerHead$fixedJournalArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FixedJournal
-     */
-    select?: FixedJournalSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the FixedJournal
-     */
-    omit?: FixedJournalOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FixedJournalInclude<ExtArgs> | null
-    where?: FixedJournalWhereInput
-    orderBy?: FixedJournalOrderByWithRelationInput | FixedJournalOrderByWithRelationInput[]
-    cursor?: FixedJournalWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: FixedJournalScalarFieldEnum | FixedJournalScalarFieldEnum[]
-  }
-
-  /**
    * LedgerHead.journal
    */
   export type LedgerHead$journalArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -27058,6 +27305,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: JournalScalarFieldEnum | JournalScalarFieldEnum[]
+  }
+
+  /**
+   * LedgerHead.depoJournals
+   */
+  export type LedgerHead$depoJournalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoJournal
+     */
+    select?: DepoJournalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoJournal
+     */
+    omit?: DepoJournalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoJournalInclude<ExtArgs> | null
+    where?: DepoJournalWhereInput
+    orderBy?: DepoJournalOrderByWithRelationInput | DepoJournalOrderByWithRelationInput[]
+    cursor?: DepoJournalWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DepoJournalScalarFieldEnum | DepoJournalScalarFieldEnum[]
   }
 
   /**
@@ -27403,6 +27674,7 @@ export namespace Prisma {
     Stakeholder?: boolean | Product$StakeholderArgs<ExtArgs>
     subCategory?: boolean | SubCategoryDefaultArgs<ExtArgs>
     unit?: boolean | UnitDefaultArgs<ExtArgs>
+    depoInventories?: boolean | Product$depoInventoriesArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -27435,6 +27707,7 @@ export namespace Prisma {
     Stakeholder?: boolean | Product$StakeholderArgs<ExtArgs>
     subCategory?: boolean | SubCategoryDefaultArgs<ExtArgs>
     unit?: boolean | UnitDefaultArgs<ExtArgs>
+    depoInventories?: boolean | Product$depoInventoriesArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -27447,6 +27720,7 @@ export namespace Prisma {
       Stakeholder: Prisma.$StakeholderPayload<ExtArgs> | null
       subCategory: Prisma.$SubCategoryPayload<ExtArgs>
       unit: Prisma.$UnitPayload<ExtArgs>
+      depoInventories: Prisma.$DepoInventoryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -27811,6 +28085,7 @@ export namespace Prisma {
     Stakeholder<T extends Product$StakeholderArgs<ExtArgs> = {}>(args?: Subset<T, Product$StakeholderArgs<ExtArgs>>): Prisma__StakeholderClient<$Result.GetResult<Prisma.$StakeholderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     subCategory<T extends SubCategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SubCategoryDefaultArgs<ExtArgs>>): Prisma__SubCategoryClient<$Result.GetResult<Prisma.$SubCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     unit<T extends UnitDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UnitDefaultArgs<ExtArgs>>): Prisma__UnitClient<$Result.GetResult<Prisma.$UnitPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    depoInventories<T extends Product$depoInventoriesArgs<ExtArgs> = {}>(args?: Subset<T, Product$depoInventoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepoInventoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -28052,6 +28327,11 @@ export namespace Prisma {
      * Skip the first `n` Products.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Products.
+     */
     distinct?: ProductScalarFieldEnum | ProductScalarFieldEnum[]
   }
 
@@ -28287,6 +28567,30 @@ export namespace Prisma {
      */
     include?: StakeholderInclude<ExtArgs> | null
     where?: StakeholderWhereInput
+  }
+
+  /**
+   * Product.depoInventories
+   */
+  export type Product$depoInventoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoInventory
+     */
+    select?: DepoInventorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoInventory
+     */
+    omit?: DepoInventoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoInventoryInclude<ExtArgs> | null
+    where?: DepoInventoryWhereInput
+    orderBy?: DepoInventoryOrderByWithRelationInput | DepoInventoryOrderByWithRelationInput[]
+    cursor?: DepoInventoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DepoInventoryScalarFieldEnum | DepoInventoryScalarFieldEnum[]
   }
 
   /**
@@ -29130,6 +29434,11 @@ export namespace Prisma {
      * Skip the first `n` BankAccounts.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BankAccounts.
+     */
     distinct?: BankAccountScalarFieldEnum | BankAccountScalarFieldEnum[]
   }
 
@@ -30181,6 +30490,11 @@ export namespace Prisma {
      * Skip the first `n` BankTransactions.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BankTransactions.
+     */
     distinct?: BankTransactionScalarFieldEnum | BankTransactionScalarFieldEnum[]
   }
 
@@ -30382,7 +30696,6 @@ export namespace Prisma {
     productId: number | null
     depoId: number | null
     transactionId: number | null
-    fixedJournalId: number | null
     unitPrice: number | null
     quantityAdd: number | null
     quantityLess: number | null
@@ -30395,7 +30708,6 @@ export namespace Prisma {
     productId: number | null
     depoId: number | null
     transactionId: number | null
-    fixedJournalId: number | null
     unitPrice: number | null
     quantityAdd: number | null
     quantityLess: number | null
@@ -30410,7 +30722,6 @@ export namespace Prisma {
     depoId: number | null
     employeeId: string | null
     transactionId: number | null
-    fixedJournalId: number | null
     unitPrice: number | null
     quantityAdd: number | null
     quantityLess: number | null
@@ -30419,7 +30730,6 @@ export namespace Prisma {
     isClosing: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
-    isFixted: boolean | null
   }
 
   export type InventoryMaxAggregateOutputType = {
@@ -30429,7 +30739,6 @@ export namespace Prisma {
     depoId: number | null
     employeeId: string | null
     transactionId: number | null
-    fixedJournalId: number | null
     unitPrice: number | null
     quantityAdd: number | null
     quantityLess: number | null
@@ -30438,7 +30747,6 @@ export namespace Prisma {
     isClosing: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
-    isFixted: boolean | null
   }
 
   export type InventoryCountAggregateOutputType = {
@@ -30448,7 +30756,6 @@ export namespace Prisma {
     depoId: number
     employeeId: number
     transactionId: number
-    fixedJournalId: number
     unitPrice: number
     quantityAdd: number
     quantityLess: number
@@ -30457,7 +30764,6 @@ export namespace Prisma {
     isClosing: number
     createdAt: number
     updatedAt: number
-    isFixted: number
     _all: number
   }
 
@@ -30467,7 +30773,6 @@ export namespace Prisma {
     productId?: true
     depoId?: true
     transactionId?: true
-    fixedJournalId?: true
     unitPrice?: true
     quantityAdd?: true
     quantityLess?: true
@@ -30480,7 +30785,6 @@ export namespace Prisma {
     productId?: true
     depoId?: true
     transactionId?: true
-    fixedJournalId?: true
     unitPrice?: true
     quantityAdd?: true
     quantityLess?: true
@@ -30495,7 +30799,6 @@ export namespace Prisma {
     depoId?: true
     employeeId?: true
     transactionId?: true
-    fixedJournalId?: true
     unitPrice?: true
     quantityAdd?: true
     quantityLess?: true
@@ -30504,7 +30807,6 @@ export namespace Prisma {
     isClosing?: true
     createdAt?: true
     updatedAt?: true
-    isFixted?: true
   }
 
   export type InventoryMaxAggregateInputType = {
@@ -30514,7 +30816,6 @@ export namespace Prisma {
     depoId?: true
     employeeId?: true
     transactionId?: true
-    fixedJournalId?: true
     unitPrice?: true
     quantityAdd?: true
     quantityLess?: true
@@ -30523,7 +30824,6 @@ export namespace Prisma {
     isClosing?: true
     createdAt?: true
     updatedAt?: true
-    isFixted?: true
   }
 
   export type InventoryCountAggregateInputType = {
@@ -30533,7 +30833,6 @@ export namespace Prisma {
     depoId?: true
     employeeId?: true
     transactionId?: true
-    fixedJournalId?: true
     unitPrice?: true
     quantityAdd?: true
     quantityLess?: true
@@ -30542,7 +30841,6 @@ export namespace Prisma {
     isClosing?: true
     createdAt?: true
     updatedAt?: true
-    isFixted?: true
     _all?: true
   }
 
@@ -30639,7 +30937,6 @@ export namespace Prisma {
     depoId: number | null
     employeeId: string | null
     transactionId: number | null
-    fixedJournalId: number | null
     unitPrice: number
     quantityAdd: number | null
     quantityLess: number | null
@@ -30648,7 +30945,6 @@ export namespace Prisma {
     isClosing: boolean
     createdAt: Date
     updatedAt: Date
-    isFixted: boolean
     _count: InventoryCountAggregateOutputType | null
     _avg: InventoryAvgAggregateOutputType | null
     _sum: InventorySumAggregateOutputType | null
@@ -30677,7 +30973,6 @@ export namespace Prisma {
     depoId?: boolean
     employeeId?: boolean
     transactionId?: boolean
-    fixedJournalId?: boolean
     unitPrice?: boolean
     quantityAdd?: boolean
     quantityLess?: boolean
@@ -30686,9 +30981,7 @@ export namespace Prisma {
     isClosing?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    isFixted?: boolean
     depo?: boolean | Inventory$depoArgs<ExtArgs>
-    fixedJournal?: boolean | Inventory$fixedJournalArgs<ExtArgs>
     product?: boolean | ProductDefaultArgs<ExtArgs>
     transactionInfo?: boolean | Inventory$transactionInfoArgs<ExtArgs>
     user?: boolean | Inventory$userArgs<ExtArgs>
@@ -30703,7 +30996,6 @@ export namespace Prisma {
     depoId?: boolean
     employeeId?: boolean
     transactionId?: boolean
-    fixedJournalId?: boolean
     unitPrice?: boolean
     quantityAdd?: boolean
     quantityLess?: boolean
@@ -30712,13 +31004,11 @@ export namespace Prisma {
     isClosing?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    isFixted?: boolean
   }
 
-  export type InventoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "productId" | "depoId" | "employeeId" | "transactionId" | "fixedJournalId" | "unitPrice" | "quantityAdd" | "quantityLess" | "debitAmount" | "creditAmount" | "isClosing" | "createdAt" | "updatedAt" | "isFixted", ExtArgs["result"]["inventory"]>
+  export type InventoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "productId" | "depoId" | "employeeId" | "transactionId" | "unitPrice" | "quantityAdd" | "quantityLess" | "debitAmount" | "creditAmount" | "isClosing" | "createdAt" | "updatedAt", ExtArgs["result"]["inventory"]>
   export type InventoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     depo?: boolean | Inventory$depoArgs<ExtArgs>
-    fixedJournal?: boolean | Inventory$fixedJournalArgs<ExtArgs>
     product?: boolean | ProductDefaultArgs<ExtArgs>
     transactionInfo?: boolean | Inventory$transactionInfoArgs<ExtArgs>
     user?: boolean | Inventory$userArgs<ExtArgs>
@@ -30728,7 +31018,6 @@ export namespace Prisma {
     name: "Inventory"
     objects: {
       depo: Prisma.$DepoPayload<ExtArgs> | null
-      fixedJournal: Prisma.$FixedJournalPayload<ExtArgs> | null
       product: Prisma.$ProductPayload<ExtArgs>
       transactionInfo: Prisma.$TransactionInfoPayload<ExtArgs> | null
       user: Prisma.$UserPayload<ExtArgs> | null
@@ -30740,7 +31029,6 @@ export namespace Prisma {
       depoId: number | null
       employeeId: string | null
       transactionId: number | null
-      fixedJournalId: number | null
       unitPrice: number
       quantityAdd: number | null
       quantityLess: number | null
@@ -30749,7 +31037,6 @@ export namespace Prisma {
       isClosing: boolean
       createdAt: Date
       updatedAt: Date
-      isFixted: boolean
     }, ExtArgs["result"]["inventory"]>
     composites: {}
   }
@@ -31091,7 +31378,6 @@ export namespace Prisma {
   export interface Prisma__InventoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     depo<T extends Inventory$depoArgs<ExtArgs> = {}>(args?: Subset<T, Inventory$depoArgs<ExtArgs>>): Prisma__DepoClient<$Result.GetResult<Prisma.$DepoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    fixedJournal<T extends Inventory$fixedJournalArgs<ExtArgs> = {}>(args?: Subset<T, Inventory$fixedJournalArgs<ExtArgs>>): Prisma__FixedJournalClient<$Result.GetResult<Prisma.$FixedJournalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     transactionInfo<T extends Inventory$transactionInfoArgs<ExtArgs> = {}>(args?: Subset<T, Inventory$transactionInfoArgs<ExtArgs>>): Prisma__TransactionInfoClient<$Result.GetResult<Prisma.$TransactionInfoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     user<T extends Inventory$userArgs<ExtArgs> = {}>(args?: Subset<T, Inventory$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -31130,7 +31416,6 @@ export namespace Prisma {
     readonly depoId: FieldRef<"Inventory", 'Int'>
     readonly employeeId: FieldRef<"Inventory", 'String'>
     readonly transactionId: FieldRef<"Inventory", 'Int'>
-    readonly fixedJournalId: FieldRef<"Inventory", 'Int'>
     readonly unitPrice: FieldRef<"Inventory", 'Float'>
     readonly quantityAdd: FieldRef<"Inventory", 'Float'>
     readonly quantityLess: FieldRef<"Inventory", 'Float'>
@@ -31139,7 +31424,6 @@ export namespace Prisma {
     readonly isClosing: FieldRef<"Inventory", 'Boolean'>
     readonly createdAt: FieldRef<"Inventory", 'DateTime'>
     readonly updatedAt: FieldRef<"Inventory", 'DateTime'>
-    readonly isFixted: FieldRef<"Inventory", 'Boolean'>
   }
     
 
@@ -31336,6 +31620,11 @@ export namespace Prisma {
      * Skip the first `n` Inventories.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Inventories.
+     */
     distinct?: InventoryScalarFieldEnum | InventoryScalarFieldEnum[]
   }
 
@@ -31502,25 +31791,6 @@ export namespace Prisma {
   }
 
   /**
-   * Inventory.fixedJournal
-   */
-  export type Inventory$fixedJournalArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the FixedJournal
-     */
-    select?: FixedJournalSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the FixedJournal
-     */
-    omit?: FixedJournalOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FixedJournalInclude<ExtArgs> | null
-    where?: FixedJournalWhereInput
-  }
-
-  /**
    * Inventory.transactionInfo
    */
   export type Inventory$transactionInfoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -31612,7 +31882,6 @@ export namespace Prisma {
     employeeId: string | null
     partyId: number | null
     voucherType: $Enums.VoucherType | null
-    paymentType: $Enums.PaymentType | null
     status: $Enums.Status | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -31629,7 +31898,6 @@ export namespace Prisma {
     employeeId: string | null
     partyId: number | null
     voucherType: $Enums.VoucherType | null
-    paymentType: $Enums.PaymentType | null
     status: $Enums.Status | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -31646,7 +31914,6 @@ export namespace Prisma {
     employeeId: number
     partyId: number
     voucherType: number
-    paymentType: number
     status: number
     createdAt: number
     updatedAt: number
@@ -31677,7 +31944,6 @@ export namespace Prisma {
     employeeId?: true
     partyId?: true
     voucherType?: true
-    paymentType?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -31694,7 +31960,6 @@ export namespace Prisma {
     employeeId?: true
     partyId?: true
     voucherType?: true
-    paymentType?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -31711,7 +31976,6 @@ export namespace Prisma {
     employeeId?: true
     partyId?: true
     voucherType?: true
-    paymentType?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -31815,7 +32079,6 @@ export namespace Prisma {
     employeeId: string | null
     partyId: number | null
     voucherType: $Enums.VoucherType
-    paymentType: $Enums.PaymentType | null
     status: $Enums.Status
     createdAt: Date
     updatedAt: Date
@@ -31851,7 +32114,6 @@ export namespace Prisma {
     employeeId?: boolean
     partyId?: boolean
     voucherType?: boolean
-    paymentType?: boolean
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -31878,13 +32140,12 @@ export namespace Prisma {
     employeeId?: boolean
     partyId?: boolean
     voucherType?: boolean
-    paymentType?: boolean
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type TransactionInfoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "voucherNo" | "invoiceNo" | "chemistId" | "customerId" | "stakeholderId" | "employeeId" | "partyId" | "voucherType" | "paymentType" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["transactionInfo"]>
+  export type TransactionInfoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "voucherNo" | "invoiceNo" | "chemistId" | "customerId" | "stakeholderId" | "employeeId" | "partyId" | "voucherType" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["transactionInfo"]>
   export type TransactionInfoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     inventory?: boolean | TransactionInfo$inventoryArgs<ExtArgs>
     journal?: boolean | TransactionInfo$journalArgs<ExtArgs>
@@ -31918,7 +32179,6 @@ export namespace Prisma {
       employeeId: string | null
       partyId: number | null
       voucherType: $Enums.VoucherType
-      paymentType: $Enums.PaymentType | null
       status: $Enums.Status
       createdAt: Date
       updatedAt: Date
@@ -32308,7 +32568,6 @@ export namespace Prisma {
     readonly employeeId: FieldRef<"TransactionInfo", 'String'>
     readonly partyId: FieldRef<"TransactionInfo", 'Int'>
     readonly voucherType: FieldRef<"TransactionInfo", 'VoucherType'>
-    readonly paymentType: FieldRef<"TransactionInfo", 'PaymentType'>
     readonly status: FieldRef<"TransactionInfo", 'Status'>
     readonly createdAt: FieldRef<"TransactionInfo", 'DateTime'>
     readonly updatedAt: FieldRef<"TransactionInfo", 'DateTime'>
@@ -32508,6 +32767,11 @@ export namespace Prisma {
      * Skip the first `n` TransactionInfos.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TransactionInfos.
+     */
     distinct?: TransactionInfoScalarFieldEnum | TransactionInfoScalarFieldEnum[]
   }
 
@@ -33714,6 +33978,11 @@ export namespace Prisma {
      * Skip the first `n` Journals.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Journals.
+     */
     distinct?: JournalScalarFieldEnum | JournalScalarFieldEnum[]
   }
 
@@ -33961,466 +34230,415 @@ export namespace Prisma {
 
 
   /**
-   * Model FixedJournal
+   * Model DepoTransaction
    */
 
-  export type AggregateFixedJournal = {
-    _count: FixedJournalCountAggregateOutputType | null
-    _avg: FixedJournalAvgAggregateOutputType | null
-    _sum: FixedJournalSumAggregateOutputType | null
-    _min: FixedJournalMinAggregateOutputType | null
-    _max: FixedJournalMaxAggregateOutputType | null
+  export type AggregateDepoTransaction = {
+    _count: DepoTransactionCountAggregateOutputType | null
+    _avg: DepoTransactionAvgAggregateOutputType | null
+    _sum: DepoTransactionSumAggregateOutputType | null
+    _min: DepoTransactionMinAggregateOutputType | null
+    _max: DepoTransactionMaxAggregateOutputType | null
   }
 
-  export type FixedJournalAvgAggregateOutputType = {
+  export type DepoTransactionAvgAggregateOutputType = {
     id: number | null
-    ledgerHeadId: number | null
-    depoId: number | null
-    creditAmount: number | null
-    debitAmount: number | null
+    providerdepoId: number | null
+    receverdepoId: number | null
   }
 
-  export type FixedJournalSumAggregateOutputType = {
+  export type DepoTransactionSumAggregateOutputType = {
     id: number | null
-    ledgerHeadId: number | null
-    depoId: number | null
-    creditAmount: number | null
-    debitAmount: number | null
+    providerdepoId: number | null
+    receverdepoId: number | null
   }
 
-  export type FixedJournalMinAggregateOutputType = {
+  export type DepoTransactionMinAggregateOutputType = {
     id: number | null
     date: Date | null
+    providerdepoId: number | null
+    receverdepoId: number | null
     voucherNo: string | null
-    chemistId: string | null
-    ledgerHeadId: number | null
-    depoId: number | null
-    creditAmount: number | null
-    debitAmount: number | null
-    narration: string | null
-    isClosing: boolean | null
+    status: $Enums.OrdStatus | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
-  export type FixedJournalMaxAggregateOutputType = {
+  export type DepoTransactionMaxAggregateOutputType = {
     id: number | null
     date: Date | null
+    providerdepoId: number | null
+    receverdepoId: number | null
     voucherNo: string | null
-    chemistId: string | null
-    ledgerHeadId: number | null
-    depoId: number | null
-    creditAmount: number | null
-    debitAmount: number | null
-    narration: string | null
-    isClosing: boolean | null
+    status: $Enums.OrdStatus | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
-  export type FixedJournalCountAggregateOutputType = {
+  export type DepoTransactionCountAggregateOutputType = {
     id: number
     date: number
+    providerdepoId: number
+    receverdepoId: number
     voucherNo: number
-    chemistId: number
-    ledgerHeadId: number
-    depoId: number
-    creditAmount: number
-    debitAmount: number
-    narration: number
-    isClosing: number
+    status: number
     createdAt: number
     updatedAt: number
     _all: number
   }
 
 
-  export type FixedJournalAvgAggregateInputType = {
+  export type DepoTransactionAvgAggregateInputType = {
     id?: true
-    ledgerHeadId?: true
-    depoId?: true
-    creditAmount?: true
-    debitAmount?: true
+    providerdepoId?: true
+    receverdepoId?: true
   }
 
-  export type FixedJournalSumAggregateInputType = {
+  export type DepoTransactionSumAggregateInputType = {
     id?: true
-    ledgerHeadId?: true
-    depoId?: true
-    creditAmount?: true
-    debitAmount?: true
+    providerdepoId?: true
+    receverdepoId?: true
   }
 
-  export type FixedJournalMinAggregateInputType = {
+  export type DepoTransactionMinAggregateInputType = {
     id?: true
     date?: true
+    providerdepoId?: true
+    receverdepoId?: true
     voucherNo?: true
-    chemistId?: true
-    ledgerHeadId?: true
-    depoId?: true
-    creditAmount?: true
-    debitAmount?: true
-    narration?: true
-    isClosing?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
   }
 
-  export type FixedJournalMaxAggregateInputType = {
+  export type DepoTransactionMaxAggregateInputType = {
     id?: true
     date?: true
+    providerdepoId?: true
+    receverdepoId?: true
     voucherNo?: true
-    chemistId?: true
-    ledgerHeadId?: true
-    depoId?: true
-    creditAmount?: true
-    debitAmount?: true
-    narration?: true
-    isClosing?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
   }
 
-  export type FixedJournalCountAggregateInputType = {
+  export type DepoTransactionCountAggregateInputType = {
     id?: true
     date?: true
+    providerdepoId?: true
+    receverdepoId?: true
     voucherNo?: true
-    chemistId?: true
-    ledgerHeadId?: true
-    depoId?: true
-    creditAmount?: true
-    debitAmount?: true
-    narration?: true
-    isClosing?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
   }
 
-  export type FixedJournalAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type DepoTransactionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which FixedJournal to aggregate.
+     * Filter which DepoTransaction to aggregate.
      */
-    where?: FixedJournalWhereInput
+    where?: DepoTransactionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of FixedJournals to fetch.
+     * Determine the order of DepoTransactions to fetch.
      */
-    orderBy?: FixedJournalOrderByWithRelationInput | FixedJournalOrderByWithRelationInput[]
+    orderBy?: DepoTransactionOrderByWithRelationInput | DepoTransactionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: FixedJournalWhereUniqueInput
+    cursor?: DepoTransactionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` FixedJournals from the position of the cursor.
+     * Take `±n` DepoTransactions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` FixedJournals.
+     * Skip the first `n` DepoTransactions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned FixedJournals
+     * Count returned DepoTransactions
     **/
-    _count?: true | FixedJournalCountAggregateInputType
+    _count?: true | DepoTransactionCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to average
     **/
-    _avg?: FixedJournalAvgAggregateInputType
+    _avg?: DepoTransactionAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to sum
     **/
-    _sum?: FixedJournalSumAggregateInputType
+    _sum?: DepoTransactionSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: FixedJournalMinAggregateInputType
+    _min?: DepoTransactionMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: FixedJournalMaxAggregateInputType
+    _max?: DepoTransactionMaxAggregateInputType
   }
 
-  export type GetFixedJournalAggregateType<T extends FixedJournalAggregateArgs> = {
-        [P in keyof T & keyof AggregateFixedJournal]: P extends '_count' | 'count'
+  export type GetDepoTransactionAggregateType<T extends DepoTransactionAggregateArgs> = {
+        [P in keyof T & keyof AggregateDepoTransaction]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateFixedJournal[P]>
-      : GetScalarType<T[P], AggregateFixedJournal[P]>
+        : GetScalarType<T[P], AggregateDepoTransaction[P]>
+      : GetScalarType<T[P], AggregateDepoTransaction[P]>
   }
 
 
 
 
-  export type FixedJournalGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: FixedJournalWhereInput
-    orderBy?: FixedJournalOrderByWithAggregationInput | FixedJournalOrderByWithAggregationInput[]
-    by: FixedJournalScalarFieldEnum[] | FixedJournalScalarFieldEnum
-    having?: FixedJournalScalarWhereWithAggregatesInput
+  export type DepoTransactionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepoTransactionWhereInput
+    orderBy?: DepoTransactionOrderByWithAggregationInput | DepoTransactionOrderByWithAggregationInput[]
+    by: DepoTransactionScalarFieldEnum[] | DepoTransactionScalarFieldEnum
+    having?: DepoTransactionScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: FixedJournalCountAggregateInputType | true
-    _avg?: FixedJournalAvgAggregateInputType
-    _sum?: FixedJournalSumAggregateInputType
-    _min?: FixedJournalMinAggregateInputType
-    _max?: FixedJournalMaxAggregateInputType
+    _count?: DepoTransactionCountAggregateInputType | true
+    _avg?: DepoTransactionAvgAggregateInputType
+    _sum?: DepoTransactionSumAggregateInputType
+    _min?: DepoTransactionMinAggregateInputType
+    _max?: DepoTransactionMaxAggregateInputType
   }
 
-  export type FixedJournalGroupByOutputType = {
+  export type DepoTransactionGroupByOutputType = {
     id: number
     date: Date
+    providerdepoId: number
+    receverdepoId: number
     voucherNo: string
-    chemistId: string
-    ledgerHeadId: number
-    depoId: number
-    creditAmount: number | null
-    debitAmount: number | null
-    narration: string | null
-    isClosing: boolean
+    status: $Enums.OrdStatus
     createdAt: Date
     updatedAt: Date
-    _count: FixedJournalCountAggregateOutputType | null
-    _avg: FixedJournalAvgAggregateOutputType | null
-    _sum: FixedJournalSumAggregateOutputType | null
-    _min: FixedJournalMinAggregateOutputType | null
-    _max: FixedJournalMaxAggregateOutputType | null
+    _count: DepoTransactionCountAggregateOutputType | null
+    _avg: DepoTransactionAvgAggregateOutputType | null
+    _sum: DepoTransactionSumAggregateOutputType | null
+    _min: DepoTransactionMinAggregateOutputType | null
+    _max: DepoTransactionMaxAggregateOutputType | null
   }
 
-  type GetFixedJournalGroupByPayload<T extends FixedJournalGroupByArgs> = Prisma.PrismaPromise<
+  type GetDepoTransactionGroupByPayload<T extends DepoTransactionGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<FixedJournalGroupByOutputType, T['by']> &
+      PickEnumerable<DepoTransactionGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof FixedJournalGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof DepoTransactionGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], FixedJournalGroupByOutputType[P]>
-            : GetScalarType<T[P], FixedJournalGroupByOutputType[P]>
+              : GetScalarType<T[P], DepoTransactionGroupByOutputType[P]>
+            : GetScalarType<T[P], DepoTransactionGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type FixedJournalSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type DepoTransactionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     date?: boolean
+    providerdepoId?: boolean
+    receverdepoId?: boolean
     voucherNo?: boolean
-    chemistId?: boolean
-    ledgerHeadId?: boolean
-    depoId?: boolean
-    creditAmount?: boolean
-    debitAmount?: boolean
-    narration?: boolean
-    isClosing?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    chemist?: boolean | ChemistDefaultArgs<ExtArgs>
-    depo?: boolean | DepoDefaultArgs<ExtArgs>
-    ledgerHead?: boolean | LedgerHeadDefaultArgs<ExtArgs>
-    inventory?: boolean | FixedJournal$inventoryArgs<ExtArgs>
-    _count?: boolean | FixedJournalCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["fixedJournal"]>
+    providerdepo?: boolean | DepoDefaultArgs<ExtArgs>
+    receverdepo?: boolean | DepoDefaultArgs<ExtArgs>
+    depoInventories?: boolean | DepoTransaction$depoInventoriesArgs<ExtArgs>
+    _count?: boolean | DepoTransactionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["depoTransaction"]>
 
 
 
-  export type FixedJournalSelectScalar = {
+  export type DepoTransactionSelectScalar = {
     id?: boolean
     date?: boolean
+    providerdepoId?: boolean
+    receverdepoId?: boolean
     voucherNo?: boolean
-    chemistId?: boolean
-    ledgerHeadId?: boolean
-    depoId?: boolean
-    creditAmount?: boolean
-    debitAmount?: boolean
-    narration?: boolean
-    isClosing?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type FixedJournalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "voucherNo" | "chemistId" | "ledgerHeadId" | "depoId" | "creditAmount" | "debitAmount" | "narration" | "isClosing" | "createdAt" | "updatedAt", ExtArgs["result"]["fixedJournal"]>
-  export type FixedJournalInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    chemist?: boolean | ChemistDefaultArgs<ExtArgs>
-    depo?: boolean | DepoDefaultArgs<ExtArgs>
-    ledgerHead?: boolean | LedgerHeadDefaultArgs<ExtArgs>
-    inventory?: boolean | FixedJournal$inventoryArgs<ExtArgs>
-    _count?: boolean | FixedJournalCountOutputTypeDefaultArgs<ExtArgs>
+  export type DepoTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "providerdepoId" | "receverdepoId" | "voucherNo" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["depoTransaction"]>
+  export type DepoTransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    providerdepo?: boolean | DepoDefaultArgs<ExtArgs>
+    receverdepo?: boolean | DepoDefaultArgs<ExtArgs>
+    depoInventories?: boolean | DepoTransaction$depoInventoriesArgs<ExtArgs>
+    _count?: boolean | DepoTransactionCountOutputTypeDefaultArgs<ExtArgs>
   }
 
-  export type $FixedJournalPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "FixedJournal"
+  export type $DepoTransactionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DepoTransaction"
     objects: {
-      chemist: Prisma.$ChemistPayload<ExtArgs>
-      depo: Prisma.$DepoPayload<ExtArgs>
-      ledgerHead: Prisma.$LedgerHeadPayload<ExtArgs>
-      inventory: Prisma.$InventoryPayload<ExtArgs>[]
+      providerdepo: Prisma.$DepoPayload<ExtArgs>
+      receverdepo: Prisma.$DepoPayload<ExtArgs>
+      depoInventories: Prisma.$DepoInventoryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       date: Date
+      providerdepoId: number
+      receverdepoId: number
       voucherNo: string
-      chemistId: string
-      ledgerHeadId: number
-      depoId: number
-      creditAmount: number | null
-      debitAmount: number | null
-      narration: string | null
-      isClosing: boolean
+      status: $Enums.OrdStatus
       createdAt: Date
       updatedAt: Date
-    }, ExtArgs["result"]["fixedJournal"]>
+    }, ExtArgs["result"]["depoTransaction"]>
     composites: {}
   }
 
-  type FixedJournalGetPayload<S extends boolean | null | undefined | FixedJournalDefaultArgs> = $Result.GetResult<Prisma.$FixedJournalPayload, S>
+  type DepoTransactionGetPayload<S extends boolean | null | undefined | DepoTransactionDefaultArgs> = $Result.GetResult<Prisma.$DepoTransactionPayload, S>
 
-  type FixedJournalCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<FixedJournalFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: FixedJournalCountAggregateInputType | true
+  type DepoTransactionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DepoTransactionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DepoTransactionCountAggregateInputType | true
     }
 
-  export interface FixedJournalDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FixedJournal'], meta: { name: 'FixedJournal' } }
+  export interface DepoTransactionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DepoTransaction'], meta: { name: 'DepoTransaction' } }
     /**
-     * Find zero or one FixedJournal that matches the filter.
-     * @param {FixedJournalFindUniqueArgs} args - Arguments to find a FixedJournal
+     * Find zero or one DepoTransaction that matches the filter.
+     * @param {DepoTransactionFindUniqueArgs} args - Arguments to find a DepoTransaction
      * @example
-     * // Get one FixedJournal
-     * const fixedJournal = await prisma.fixedJournal.findUnique({
+     * // Get one DepoTransaction
+     * const depoTransaction = await prisma.depoTransaction.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends FixedJournalFindUniqueArgs>(args: SelectSubset<T, FixedJournalFindUniqueArgs<ExtArgs>>): Prisma__FixedJournalClient<$Result.GetResult<Prisma.$FixedJournalPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends DepoTransactionFindUniqueArgs>(args: SelectSubset<T, DepoTransactionFindUniqueArgs<ExtArgs>>): Prisma__DepoTransactionClient<$Result.GetResult<Prisma.$DepoTransactionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one FixedJournal that matches the filter or throw an error with `error.code='P2025'`
+     * Find one DepoTransaction that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {FixedJournalFindUniqueOrThrowArgs} args - Arguments to find a FixedJournal
+     * @param {DepoTransactionFindUniqueOrThrowArgs} args - Arguments to find a DepoTransaction
      * @example
-     * // Get one FixedJournal
-     * const fixedJournal = await prisma.fixedJournal.findUniqueOrThrow({
+     * // Get one DepoTransaction
+     * const depoTransaction = await prisma.depoTransaction.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends FixedJournalFindUniqueOrThrowArgs>(args: SelectSubset<T, FixedJournalFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FixedJournalClient<$Result.GetResult<Prisma.$FixedJournalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends DepoTransactionFindUniqueOrThrowArgs>(args: SelectSubset<T, DepoTransactionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DepoTransactionClient<$Result.GetResult<Prisma.$DepoTransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first FixedJournal that matches the filter.
+     * Find the first DepoTransaction that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {FixedJournalFindFirstArgs} args - Arguments to find a FixedJournal
+     * @param {DepoTransactionFindFirstArgs} args - Arguments to find a DepoTransaction
      * @example
-     * // Get one FixedJournal
-     * const fixedJournal = await prisma.fixedJournal.findFirst({
+     * // Get one DepoTransaction
+     * const depoTransaction = await prisma.depoTransaction.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends FixedJournalFindFirstArgs>(args?: SelectSubset<T, FixedJournalFindFirstArgs<ExtArgs>>): Prisma__FixedJournalClient<$Result.GetResult<Prisma.$FixedJournalPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends DepoTransactionFindFirstArgs>(args?: SelectSubset<T, DepoTransactionFindFirstArgs<ExtArgs>>): Prisma__DepoTransactionClient<$Result.GetResult<Prisma.$DepoTransactionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first FixedJournal that matches the filter or
+     * Find the first DepoTransaction that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {FixedJournalFindFirstOrThrowArgs} args - Arguments to find a FixedJournal
+     * @param {DepoTransactionFindFirstOrThrowArgs} args - Arguments to find a DepoTransaction
      * @example
-     * // Get one FixedJournal
-     * const fixedJournal = await prisma.fixedJournal.findFirstOrThrow({
+     * // Get one DepoTransaction
+     * const depoTransaction = await prisma.depoTransaction.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends FixedJournalFindFirstOrThrowArgs>(args?: SelectSubset<T, FixedJournalFindFirstOrThrowArgs<ExtArgs>>): Prisma__FixedJournalClient<$Result.GetResult<Prisma.$FixedJournalPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends DepoTransactionFindFirstOrThrowArgs>(args?: SelectSubset<T, DepoTransactionFindFirstOrThrowArgs<ExtArgs>>): Prisma__DepoTransactionClient<$Result.GetResult<Prisma.$DepoTransactionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more FixedJournals that matches the filter.
+     * Find zero or more DepoTransactions that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {FixedJournalFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {DepoTransactionFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all FixedJournals
-     * const fixedJournals = await prisma.fixedJournal.findMany()
+     * // Get all DepoTransactions
+     * const depoTransactions = await prisma.depoTransaction.findMany()
      * 
-     * // Get first 10 FixedJournals
-     * const fixedJournals = await prisma.fixedJournal.findMany({ take: 10 })
+     * // Get first 10 DepoTransactions
+     * const depoTransactions = await prisma.depoTransaction.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const fixedJournalWithIdOnly = await prisma.fixedJournal.findMany({ select: { id: true } })
+     * const depoTransactionWithIdOnly = await prisma.depoTransaction.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends FixedJournalFindManyArgs>(args?: SelectSubset<T, FixedJournalFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FixedJournalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends DepoTransactionFindManyArgs>(args?: SelectSubset<T, DepoTransactionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepoTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a FixedJournal.
-     * @param {FixedJournalCreateArgs} args - Arguments to create a FixedJournal.
+     * Create a DepoTransaction.
+     * @param {DepoTransactionCreateArgs} args - Arguments to create a DepoTransaction.
      * @example
-     * // Create one FixedJournal
-     * const FixedJournal = await prisma.fixedJournal.create({
+     * // Create one DepoTransaction
+     * const DepoTransaction = await prisma.depoTransaction.create({
      *   data: {
-     *     // ... data to create a FixedJournal
+     *     // ... data to create a DepoTransaction
      *   }
      * })
      * 
      */
-    create<T extends FixedJournalCreateArgs>(args: SelectSubset<T, FixedJournalCreateArgs<ExtArgs>>): Prisma__FixedJournalClient<$Result.GetResult<Prisma.$FixedJournalPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends DepoTransactionCreateArgs>(args: SelectSubset<T, DepoTransactionCreateArgs<ExtArgs>>): Prisma__DepoTransactionClient<$Result.GetResult<Prisma.$DepoTransactionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many FixedJournals.
-     * @param {FixedJournalCreateManyArgs} args - Arguments to create many FixedJournals.
+     * Create many DepoTransactions.
+     * @param {DepoTransactionCreateManyArgs} args - Arguments to create many DepoTransactions.
      * @example
-     * // Create many FixedJournals
-     * const fixedJournal = await prisma.fixedJournal.createMany({
+     * // Create many DepoTransactions
+     * const depoTransaction = await prisma.depoTransaction.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends FixedJournalCreateManyArgs>(args?: SelectSubset<T, FixedJournalCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends DepoTransactionCreateManyArgs>(args?: SelectSubset<T, DepoTransactionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Delete a FixedJournal.
-     * @param {FixedJournalDeleteArgs} args - Arguments to delete one FixedJournal.
+     * Delete a DepoTransaction.
+     * @param {DepoTransactionDeleteArgs} args - Arguments to delete one DepoTransaction.
      * @example
-     * // Delete one FixedJournal
-     * const FixedJournal = await prisma.fixedJournal.delete({
+     * // Delete one DepoTransaction
+     * const DepoTransaction = await prisma.depoTransaction.delete({
      *   where: {
-     *     // ... filter to delete one FixedJournal
+     *     // ... filter to delete one DepoTransaction
      *   }
      * })
      * 
      */
-    delete<T extends FixedJournalDeleteArgs>(args: SelectSubset<T, FixedJournalDeleteArgs<ExtArgs>>): Prisma__FixedJournalClient<$Result.GetResult<Prisma.$FixedJournalPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends DepoTransactionDeleteArgs>(args: SelectSubset<T, DepoTransactionDeleteArgs<ExtArgs>>): Prisma__DepoTransactionClient<$Result.GetResult<Prisma.$DepoTransactionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one FixedJournal.
-     * @param {FixedJournalUpdateArgs} args - Arguments to update one FixedJournal.
+     * Update one DepoTransaction.
+     * @param {DepoTransactionUpdateArgs} args - Arguments to update one DepoTransaction.
      * @example
-     * // Update one FixedJournal
-     * const fixedJournal = await prisma.fixedJournal.update({
+     * // Update one DepoTransaction
+     * const depoTransaction = await prisma.depoTransaction.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -34430,30 +34648,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends FixedJournalUpdateArgs>(args: SelectSubset<T, FixedJournalUpdateArgs<ExtArgs>>): Prisma__FixedJournalClient<$Result.GetResult<Prisma.$FixedJournalPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends DepoTransactionUpdateArgs>(args: SelectSubset<T, DepoTransactionUpdateArgs<ExtArgs>>): Prisma__DepoTransactionClient<$Result.GetResult<Prisma.$DepoTransactionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more FixedJournals.
-     * @param {FixedJournalDeleteManyArgs} args - Arguments to filter FixedJournals to delete.
+     * Delete zero or more DepoTransactions.
+     * @param {DepoTransactionDeleteManyArgs} args - Arguments to filter DepoTransactions to delete.
      * @example
-     * // Delete a few FixedJournals
-     * const { count } = await prisma.fixedJournal.deleteMany({
+     * // Delete a few DepoTransactions
+     * const { count } = await prisma.depoTransaction.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends FixedJournalDeleteManyArgs>(args?: SelectSubset<T, FixedJournalDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends DepoTransactionDeleteManyArgs>(args?: SelectSubset<T, DepoTransactionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more FixedJournals.
+     * Update zero or more DepoTransactions.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {FixedJournalUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {DepoTransactionUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many FixedJournals
-     * const fixedJournal = await prisma.fixedJournal.updateMany({
+     * // Update many DepoTransactions
+     * const depoTransaction = await prisma.depoTransaction.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -34463,56 +34681,56 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends FixedJournalUpdateManyArgs>(args: SelectSubset<T, FixedJournalUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends DepoTransactionUpdateManyArgs>(args: SelectSubset<T, DepoTransactionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create or update one FixedJournal.
-     * @param {FixedJournalUpsertArgs} args - Arguments to update or create a FixedJournal.
+     * Create or update one DepoTransaction.
+     * @param {DepoTransactionUpsertArgs} args - Arguments to update or create a DepoTransaction.
      * @example
-     * // Update or create a FixedJournal
-     * const fixedJournal = await prisma.fixedJournal.upsert({
+     * // Update or create a DepoTransaction
+     * const depoTransaction = await prisma.depoTransaction.upsert({
      *   create: {
-     *     // ... data to create a FixedJournal
+     *     // ... data to create a DepoTransaction
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the FixedJournal we want to update
+     *     // ... the filter for the DepoTransaction we want to update
      *   }
      * })
      */
-    upsert<T extends FixedJournalUpsertArgs>(args: SelectSubset<T, FixedJournalUpsertArgs<ExtArgs>>): Prisma__FixedJournalClient<$Result.GetResult<Prisma.$FixedJournalPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends DepoTransactionUpsertArgs>(args: SelectSubset<T, DepoTransactionUpsertArgs<ExtArgs>>): Prisma__DepoTransactionClient<$Result.GetResult<Prisma.$DepoTransactionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of FixedJournals.
+     * Count the number of DepoTransactions.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {FixedJournalCountArgs} args - Arguments to filter FixedJournals to count.
+     * @param {DepoTransactionCountArgs} args - Arguments to filter DepoTransactions to count.
      * @example
-     * // Count the number of FixedJournals
-     * const count = await prisma.fixedJournal.count({
+     * // Count the number of DepoTransactions
+     * const count = await prisma.depoTransaction.count({
      *   where: {
-     *     // ... the filter for the FixedJournals we want to count
+     *     // ... the filter for the DepoTransactions we want to count
      *   }
      * })
     **/
-    count<T extends FixedJournalCountArgs>(
-      args?: Subset<T, FixedJournalCountArgs>,
+    count<T extends DepoTransactionCountArgs>(
+      args?: Subset<T, DepoTransactionCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], FixedJournalCountAggregateOutputType>
+          : GetScalarType<T['select'], DepoTransactionCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a FixedJournal.
+     * Allows you to perform aggregations operations on a DepoTransaction.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {FixedJournalAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {DepoTransactionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -34532,13 +34750,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends FixedJournalAggregateArgs>(args: Subset<T, FixedJournalAggregateArgs>): Prisma.PrismaPromise<GetFixedJournalAggregateType<T>>
+    aggregate<T extends DepoTransactionAggregateArgs>(args: Subset<T, DepoTransactionAggregateArgs>): Prisma.PrismaPromise<GetDepoTransactionAggregateType<T>>
 
     /**
-     * Group by FixedJournal.
+     * Group by DepoTransaction.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {FixedJournalGroupByArgs} args - Group by arguments.
+     * @param {DepoTransactionGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -34553,14 +34771,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends FixedJournalGroupByArgs,
+      T extends DepoTransactionGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: FixedJournalGroupByArgs['orderBy'] }
-        : { orderBy?: FixedJournalGroupByArgs['orderBy'] },
+        ? { orderBy: DepoTransactionGroupByArgs['orderBy'] }
+        : { orderBy?: DepoTransactionGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -34609,25 +34827,24 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, FixedJournalGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFixedJournalGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, DepoTransactionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDepoTransactionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the FixedJournal model
+   * Fields of the DepoTransaction model
    */
-  readonly fields: FixedJournalFieldRefs;
+  readonly fields: DepoTransactionFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for FixedJournal.
+   * The delegate class that acts as a "Promise-like" for DepoTransaction.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__FixedJournalClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__DepoTransactionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    chemist<T extends ChemistDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ChemistDefaultArgs<ExtArgs>>): Prisma__ChemistClient<$Result.GetResult<Prisma.$ChemistPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    depo<T extends DepoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DepoDefaultArgs<ExtArgs>>): Prisma__DepoClient<$Result.GetResult<Prisma.$DepoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    ledgerHead<T extends LedgerHeadDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LedgerHeadDefaultArgs<ExtArgs>>): Prisma__LedgerHeadClient<$Result.GetResult<Prisma.$LedgerHeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    inventory<T extends FixedJournal$inventoryArgs<ExtArgs> = {}>(args?: Subset<T, FixedJournal$inventoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    providerdepo<T extends DepoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DepoDefaultArgs<ExtArgs>>): Prisma__DepoClient<$Result.GetResult<Prisma.$DepoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    receverdepo<T extends DepoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DepoDefaultArgs<ExtArgs>>): Prisma__DepoClient<$Result.GetResult<Prisma.$DepoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    depoInventories<T extends DepoTransaction$depoInventoriesArgs<ExtArgs> = {}>(args?: Subset<T, DepoTransaction$depoInventoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepoInventoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -34654,403 +34871,2484 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the FixedJournal model
+   * Fields of the DepoTransaction model
    */
-  interface FixedJournalFieldRefs {
-    readonly id: FieldRef<"FixedJournal", 'Int'>
-    readonly date: FieldRef<"FixedJournal", 'DateTime'>
-    readonly voucherNo: FieldRef<"FixedJournal", 'String'>
-    readonly chemistId: FieldRef<"FixedJournal", 'String'>
-    readonly ledgerHeadId: FieldRef<"FixedJournal", 'Int'>
-    readonly depoId: FieldRef<"FixedJournal", 'Int'>
-    readonly creditAmount: FieldRef<"FixedJournal", 'Float'>
-    readonly debitAmount: FieldRef<"FixedJournal", 'Float'>
-    readonly narration: FieldRef<"FixedJournal", 'String'>
-    readonly isClosing: FieldRef<"FixedJournal", 'Boolean'>
-    readonly createdAt: FieldRef<"FixedJournal", 'DateTime'>
-    readonly updatedAt: FieldRef<"FixedJournal", 'DateTime'>
+  interface DepoTransactionFieldRefs {
+    readonly id: FieldRef<"DepoTransaction", 'Int'>
+    readonly date: FieldRef<"DepoTransaction", 'DateTime'>
+    readonly providerdepoId: FieldRef<"DepoTransaction", 'Int'>
+    readonly receverdepoId: FieldRef<"DepoTransaction", 'Int'>
+    readonly voucherNo: FieldRef<"DepoTransaction", 'String'>
+    readonly status: FieldRef<"DepoTransaction", 'OrdStatus'>
+    readonly createdAt: FieldRef<"DepoTransaction", 'DateTime'>
+    readonly updatedAt: FieldRef<"DepoTransaction", 'DateTime'>
   }
     
 
   // Custom InputTypes
   /**
-   * FixedJournal findUnique
+   * DepoTransaction findUnique
    */
-  export type FixedJournalFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type DepoTransactionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the FixedJournal
+     * Select specific fields to fetch from the DepoTransaction
      */
-    select?: FixedJournalSelect<ExtArgs> | null
+    select?: DepoTransactionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the FixedJournal
+     * Omit specific fields from the DepoTransaction
      */
-    omit?: FixedJournalOmit<ExtArgs> | null
+    omit?: DepoTransactionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FixedJournalInclude<ExtArgs> | null
+    include?: DepoTransactionInclude<ExtArgs> | null
     /**
-     * Filter, which FixedJournal to fetch.
+     * Filter, which DepoTransaction to fetch.
      */
-    where: FixedJournalWhereUniqueInput
+    where: DepoTransactionWhereUniqueInput
   }
 
   /**
-   * FixedJournal findUniqueOrThrow
+   * DepoTransaction findUniqueOrThrow
    */
-  export type FixedJournalFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type DepoTransactionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the FixedJournal
+     * Select specific fields to fetch from the DepoTransaction
      */
-    select?: FixedJournalSelect<ExtArgs> | null
+    select?: DepoTransactionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the FixedJournal
+     * Omit specific fields from the DepoTransaction
      */
-    omit?: FixedJournalOmit<ExtArgs> | null
+    omit?: DepoTransactionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FixedJournalInclude<ExtArgs> | null
+    include?: DepoTransactionInclude<ExtArgs> | null
     /**
-     * Filter, which FixedJournal to fetch.
+     * Filter, which DepoTransaction to fetch.
      */
-    where: FixedJournalWhereUniqueInput
+    where: DepoTransactionWhereUniqueInput
   }
 
   /**
-   * FixedJournal findFirst
+   * DepoTransaction findFirst
    */
-  export type FixedJournalFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type DepoTransactionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the FixedJournal
+     * Select specific fields to fetch from the DepoTransaction
      */
-    select?: FixedJournalSelect<ExtArgs> | null
+    select?: DepoTransactionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the FixedJournal
+     * Omit specific fields from the DepoTransaction
      */
-    omit?: FixedJournalOmit<ExtArgs> | null
+    omit?: DepoTransactionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FixedJournalInclude<ExtArgs> | null
+    include?: DepoTransactionInclude<ExtArgs> | null
     /**
-     * Filter, which FixedJournal to fetch.
+     * Filter, which DepoTransaction to fetch.
      */
-    where?: FixedJournalWhereInput
+    where?: DepoTransactionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of FixedJournals to fetch.
+     * Determine the order of DepoTransactions to fetch.
      */
-    orderBy?: FixedJournalOrderByWithRelationInput | FixedJournalOrderByWithRelationInput[]
+    orderBy?: DepoTransactionOrderByWithRelationInput | DepoTransactionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for FixedJournals.
+     * Sets the position for searching for DepoTransactions.
      */
-    cursor?: FixedJournalWhereUniqueInput
+    cursor?: DepoTransactionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` FixedJournals from the position of the cursor.
+     * Take `±n` DepoTransactions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` FixedJournals.
+     * Skip the first `n` DepoTransactions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of FixedJournals.
+     * Filter by unique combinations of DepoTransactions.
      */
-    distinct?: FixedJournalScalarFieldEnum | FixedJournalScalarFieldEnum[]
+    distinct?: DepoTransactionScalarFieldEnum | DepoTransactionScalarFieldEnum[]
   }
 
   /**
-   * FixedJournal findFirstOrThrow
+   * DepoTransaction findFirstOrThrow
    */
-  export type FixedJournalFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type DepoTransactionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the FixedJournal
+     * Select specific fields to fetch from the DepoTransaction
      */
-    select?: FixedJournalSelect<ExtArgs> | null
+    select?: DepoTransactionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the FixedJournal
+     * Omit specific fields from the DepoTransaction
      */
-    omit?: FixedJournalOmit<ExtArgs> | null
+    omit?: DepoTransactionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FixedJournalInclude<ExtArgs> | null
+    include?: DepoTransactionInclude<ExtArgs> | null
     /**
-     * Filter, which FixedJournal to fetch.
+     * Filter, which DepoTransaction to fetch.
      */
-    where?: FixedJournalWhereInput
+    where?: DepoTransactionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of FixedJournals to fetch.
+     * Determine the order of DepoTransactions to fetch.
      */
-    orderBy?: FixedJournalOrderByWithRelationInput | FixedJournalOrderByWithRelationInput[]
+    orderBy?: DepoTransactionOrderByWithRelationInput | DepoTransactionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for FixedJournals.
+     * Sets the position for searching for DepoTransactions.
      */
-    cursor?: FixedJournalWhereUniqueInput
+    cursor?: DepoTransactionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` FixedJournals from the position of the cursor.
+     * Take `±n` DepoTransactions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` FixedJournals.
+     * Skip the first `n` DepoTransactions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of FixedJournals.
+     * Filter by unique combinations of DepoTransactions.
      */
-    distinct?: FixedJournalScalarFieldEnum | FixedJournalScalarFieldEnum[]
+    distinct?: DepoTransactionScalarFieldEnum | DepoTransactionScalarFieldEnum[]
   }
 
   /**
-   * FixedJournal findMany
+   * DepoTransaction findMany
    */
-  export type FixedJournalFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type DepoTransactionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the FixedJournal
+     * Select specific fields to fetch from the DepoTransaction
      */
-    select?: FixedJournalSelect<ExtArgs> | null
+    select?: DepoTransactionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the FixedJournal
+     * Omit specific fields from the DepoTransaction
      */
-    omit?: FixedJournalOmit<ExtArgs> | null
+    omit?: DepoTransactionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FixedJournalInclude<ExtArgs> | null
+    include?: DepoTransactionInclude<ExtArgs> | null
     /**
-     * Filter, which FixedJournals to fetch.
+     * Filter, which DepoTransactions to fetch.
      */
-    where?: FixedJournalWhereInput
+    where?: DepoTransactionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of FixedJournals to fetch.
+     * Determine the order of DepoTransactions to fetch.
      */
-    orderBy?: FixedJournalOrderByWithRelationInput | FixedJournalOrderByWithRelationInput[]
+    orderBy?: DepoTransactionOrderByWithRelationInput | DepoTransactionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing FixedJournals.
+     * Sets the position for listing DepoTransactions.
      */
-    cursor?: FixedJournalWhereUniqueInput
+    cursor?: DepoTransactionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` FixedJournals from the position of the cursor.
+     * Take `±n` DepoTransactions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` FixedJournals.
+     * Skip the first `n` DepoTransactions.
      */
     skip?: number
-    distinct?: FixedJournalScalarFieldEnum | FixedJournalScalarFieldEnum[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DepoTransactions.
+     */
+    distinct?: DepoTransactionScalarFieldEnum | DepoTransactionScalarFieldEnum[]
   }
 
   /**
-   * FixedJournal create
+   * DepoTransaction create
    */
-  export type FixedJournalCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type DepoTransactionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the FixedJournal
+     * Select specific fields to fetch from the DepoTransaction
      */
-    select?: FixedJournalSelect<ExtArgs> | null
+    select?: DepoTransactionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the FixedJournal
+     * Omit specific fields from the DepoTransaction
      */
-    omit?: FixedJournalOmit<ExtArgs> | null
+    omit?: DepoTransactionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FixedJournalInclude<ExtArgs> | null
+    include?: DepoTransactionInclude<ExtArgs> | null
     /**
-     * The data needed to create a FixedJournal.
+     * The data needed to create a DepoTransaction.
      */
-    data: XOR<FixedJournalCreateInput, FixedJournalUncheckedCreateInput>
+    data: XOR<DepoTransactionCreateInput, DepoTransactionUncheckedCreateInput>
   }
 
   /**
-   * FixedJournal createMany
+   * DepoTransaction createMany
    */
-  export type FixedJournalCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type DepoTransactionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many FixedJournals.
+     * The data used to create many DepoTransactions.
      */
-    data: FixedJournalCreateManyInput | FixedJournalCreateManyInput[]
+    data: DepoTransactionCreateManyInput | DepoTransactionCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * FixedJournal update
+   * DepoTransaction update
    */
-  export type FixedJournalUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type DepoTransactionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the FixedJournal
+     * Select specific fields to fetch from the DepoTransaction
      */
-    select?: FixedJournalSelect<ExtArgs> | null
+    select?: DepoTransactionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the FixedJournal
+     * Omit specific fields from the DepoTransaction
      */
-    omit?: FixedJournalOmit<ExtArgs> | null
+    omit?: DepoTransactionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FixedJournalInclude<ExtArgs> | null
+    include?: DepoTransactionInclude<ExtArgs> | null
     /**
-     * The data needed to update a FixedJournal.
+     * The data needed to update a DepoTransaction.
      */
-    data: XOR<FixedJournalUpdateInput, FixedJournalUncheckedUpdateInput>
+    data: XOR<DepoTransactionUpdateInput, DepoTransactionUncheckedUpdateInput>
     /**
-     * Choose, which FixedJournal to update.
+     * Choose, which DepoTransaction to update.
      */
-    where: FixedJournalWhereUniqueInput
+    where: DepoTransactionWhereUniqueInput
   }
 
   /**
-   * FixedJournal updateMany
+   * DepoTransaction updateMany
    */
-  export type FixedJournalUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type DepoTransactionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update FixedJournals.
+     * The data used to update DepoTransactions.
      */
-    data: XOR<FixedJournalUpdateManyMutationInput, FixedJournalUncheckedUpdateManyInput>
+    data: XOR<DepoTransactionUpdateManyMutationInput, DepoTransactionUncheckedUpdateManyInput>
     /**
-     * Filter which FixedJournals to update
+     * Filter which DepoTransactions to update
      */
-    where?: FixedJournalWhereInput
+    where?: DepoTransactionWhereInput
     /**
-     * Limit how many FixedJournals to update.
+     * Limit how many DepoTransactions to update.
      */
     limit?: number
   }
 
   /**
-   * FixedJournal upsert
+   * DepoTransaction upsert
    */
-  export type FixedJournalUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type DepoTransactionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the FixedJournal
+     * Select specific fields to fetch from the DepoTransaction
      */
-    select?: FixedJournalSelect<ExtArgs> | null
+    select?: DepoTransactionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the FixedJournal
+     * Omit specific fields from the DepoTransaction
      */
-    omit?: FixedJournalOmit<ExtArgs> | null
+    omit?: DepoTransactionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FixedJournalInclude<ExtArgs> | null
+    include?: DepoTransactionInclude<ExtArgs> | null
     /**
-     * The filter to search for the FixedJournal to update in case it exists.
+     * The filter to search for the DepoTransaction to update in case it exists.
      */
-    where: FixedJournalWhereUniqueInput
+    where: DepoTransactionWhereUniqueInput
     /**
-     * In case the FixedJournal found by the `where` argument doesn't exist, create a new FixedJournal with this data.
+     * In case the DepoTransaction found by the `where` argument doesn't exist, create a new DepoTransaction with this data.
      */
-    create: XOR<FixedJournalCreateInput, FixedJournalUncheckedCreateInput>
+    create: XOR<DepoTransactionCreateInput, DepoTransactionUncheckedCreateInput>
     /**
-     * In case the FixedJournal was found with the provided `where` argument, update it with this data.
+     * In case the DepoTransaction was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<FixedJournalUpdateInput, FixedJournalUncheckedUpdateInput>
+    update: XOR<DepoTransactionUpdateInput, DepoTransactionUncheckedUpdateInput>
   }
 
   /**
-   * FixedJournal delete
+   * DepoTransaction delete
    */
-  export type FixedJournalDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type DepoTransactionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the FixedJournal
+     * Select specific fields to fetch from the DepoTransaction
      */
-    select?: FixedJournalSelect<ExtArgs> | null
+    select?: DepoTransactionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the FixedJournal
+     * Omit specific fields from the DepoTransaction
      */
-    omit?: FixedJournalOmit<ExtArgs> | null
+    omit?: DepoTransactionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FixedJournalInclude<ExtArgs> | null
+    include?: DepoTransactionInclude<ExtArgs> | null
     /**
-     * Filter which FixedJournal to delete.
+     * Filter which DepoTransaction to delete.
      */
-    where: FixedJournalWhereUniqueInput
+    where: DepoTransactionWhereUniqueInput
   }
 
   /**
-   * FixedJournal deleteMany
+   * DepoTransaction deleteMany
    */
-  export type FixedJournalDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type DepoTransactionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which FixedJournals to delete
+     * Filter which DepoTransactions to delete
      */
-    where?: FixedJournalWhereInput
+    where?: DepoTransactionWhereInput
     /**
-     * Limit how many FixedJournals to delete.
+     * Limit how many DepoTransactions to delete.
      */
     limit?: number
   }
 
   /**
-   * FixedJournal.inventory
+   * DepoTransaction.depoInventories
    */
-  export type FixedJournal$inventoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type DepoTransaction$depoInventoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Inventory
+     * Select specific fields to fetch from the DepoInventory
      */
-    select?: InventorySelect<ExtArgs> | null
+    select?: DepoInventorySelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Inventory
+     * Omit specific fields from the DepoInventory
      */
-    omit?: InventoryOmit<ExtArgs> | null
+    omit?: DepoInventoryOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: InventoryInclude<ExtArgs> | null
-    where?: InventoryWhereInput
-    orderBy?: InventoryOrderByWithRelationInput | InventoryOrderByWithRelationInput[]
-    cursor?: InventoryWhereUniqueInput
+    include?: DepoInventoryInclude<ExtArgs> | null
+    where?: DepoInventoryWhereInput
+    orderBy?: DepoInventoryOrderByWithRelationInput | DepoInventoryOrderByWithRelationInput[]
+    cursor?: DepoInventoryWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: InventoryScalarFieldEnum | InventoryScalarFieldEnum[]
+    distinct?: DepoInventoryScalarFieldEnum | DepoInventoryScalarFieldEnum[]
   }
 
   /**
-   * FixedJournal without action
+   * DepoTransaction without action
    */
-  export type FixedJournalDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type DepoTransactionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the FixedJournal
+     * Select specific fields to fetch from the DepoTransaction
      */
-    select?: FixedJournalSelect<ExtArgs> | null
+    select?: DepoTransactionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the FixedJournal
+     * Omit specific fields from the DepoTransaction
      */
-    omit?: FixedJournalOmit<ExtArgs> | null
+    omit?: DepoTransactionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: FixedJournalInclude<ExtArgs> | null
+    include?: DepoTransactionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DepoJournal
+   */
+
+  export type AggregateDepoJournal = {
+    _count: DepoJournalCountAggregateOutputType | null
+    _avg: DepoJournalAvgAggregateOutputType | null
+    _sum: DepoJournalSumAggregateOutputType | null
+    _min: DepoJournalMinAggregateOutputType | null
+    _max: DepoJournalMaxAggregateOutputType | null
+  }
+
+  export type DepoJournalAvgAggregateOutputType = {
+    id: number | null
+    depoId: number | null
+    ledgerHeadId: number | null
+    amount: number | null
+  }
+
+  export type DepoJournalSumAggregateOutputType = {
+    id: number | null
+    depoId: number | null
+    ledgerHeadId: number | null
+    amount: number | null
+  }
+
+  export type DepoJournalMinAggregateOutputType = {
+    id: number | null
+    date: Date | null
+    depoId: number | null
+    ledgerHeadId: number | null
+    amount: number | null
+    narration: string | null
+  }
+
+  export type DepoJournalMaxAggregateOutputType = {
+    id: number | null
+    date: Date | null
+    depoId: number | null
+    ledgerHeadId: number | null
+    amount: number | null
+    narration: string | null
+  }
+
+  export type DepoJournalCountAggregateOutputType = {
+    id: number
+    date: number
+    depoId: number
+    ledgerHeadId: number
+    amount: number
+    narration: number
+    _all: number
+  }
+
+
+  export type DepoJournalAvgAggregateInputType = {
+    id?: true
+    depoId?: true
+    ledgerHeadId?: true
+    amount?: true
+  }
+
+  export type DepoJournalSumAggregateInputType = {
+    id?: true
+    depoId?: true
+    ledgerHeadId?: true
+    amount?: true
+  }
+
+  export type DepoJournalMinAggregateInputType = {
+    id?: true
+    date?: true
+    depoId?: true
+    ledgerHeadId?: true
+    amount?: true
+    narration?: true
+  }
+
+  export type DepoJournalMaxAggregateInputType = {
+    id?: true
+    date?: true
+    depoId?: true
+    ledgerHeadId?: true
+    amount?: true
+    narration?: true
+  }
+
+  export type DepoJournalCountAggregateInputType = {
+    id?: true
+    date?: true
+    depoId?: true
+    ledgerHeadId?: true
+    amount?: true
+    narration?: true
+    _all?: true
+  }
+
+  export type DepoJournalAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DepoJournal to aggregate.
+     */
+    where?: DepoJournalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepoJournals to fetch.
+     */
+    orderBy?: DepoJournalOrderByWithRelationInput | DepoJournalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DepoJournalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepoJournals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepoJournals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DepoJournals
+    **/
+    _count?: true | DepoJournalCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DepoJournalAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DepoJournalSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DepoJournalMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DepoJournalMaxAggregateInputType
+  }
+
+  export type GetDepoJournalAggregateType<T extends DepoJournalAggregateArgs> = {
+        [P in keyof T & keyof AggregateDepoJournal]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDepoJournal[P]>
+      : GetScalarType<T[P], AggregateDepoJournal[P]>
+  }
+
+
+
+
+  export type DepoJournalGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepoJournalWhereInput
+    orderBy?: DepoJournalOrderByWithAggregationInput | DepoJournalOrderByWithAggregationInput[]
+    by: DepoJournalScalarFieldEnum[] | DepoJournalScalarFieldEnum
+    having?: DepoJournalScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DepoJournalCountAggregateInputType | true
+    _avg?: DepoJournalAvgAggregateInputType
+    _sum?: DepoJournalSumAggregateInputType
+    _min?: DepoJournalMinAggregateInputType
+    _max?: DepoJournalMaxAggregateInputType
+  }
+
+  export type DepoJournalGroupByOutputType = {
+    id: number
+    date: Date
+    depoId: number
+    ledgerHeadId: number | null
+    amount: number | null
+    narration: string | null
+    _count: DepoJournalCountAggregateOutputType | null
+    _avg: DepoJournalAvgAggregateOutputType | null
+    _sum: DepoJournalSumAggregateOutputType | null
+    _min: DepoJournalMinAggregateOutputType | null
+    _max: DepoJournalMaxAggregateOutputType | null
+  }
+
+  type GetDepoJournalGroupByPayload<T extends DepoJournalGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DepoJournalGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DepoJournalGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DepoJournalGroupByOutputType[P]>
+            : GetScalarType<T[P], DepoJournalGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DepoJournalSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    date?: boolean
+    depoId?: boolean
+    ledgerHeadId?: boolean
+    amount?: boolean
+    narration?: boolean
+    ledgerHead?: boolean | DepoJournal$ledgerHeadArgs<ExtArgs>
+  }, ExtArgs["result"]["depoJournal"]>
+
+
+
+  export type DepoJournalSelectScalar = {
+    id?: boolean
+    date?: boolean
+    depoId?: boolean
+    ledgerHeadId?: boolean
+    amount?: boolean
+    narration?: boolean
+  }
+
+  export type DepoJournalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "depoId" | "ledgerHeadId" | "amount" | "narration", ExtArgs["result"]["depoJournal"]>
+  export type DepoJournalInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    ledgerHead?: boolean | DepoJournal$ledgerHeadArgs<ExtArgs>
+  }
+
+  export type $DepoJournalPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DepoJournal"
+    objects: {
+      ledgerHead: Prisma.$LedgerHeadPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      date: Date
+      depoId: number
+      ledgerHeadId: number | null
+      amount: number | null
+      narration: string | null
+    }, ExtArgs["result"]["depoJournal"]>
+    composites: {}
+  }
+
+  type DepoJournalGetPayload<S extends boolean | null | undefined | DepoJournalDefaultArgs> = $Result.GetResult<Prisma.$DepoJournalPayload, S>
+
+  type DepoJournalCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DepoJournalFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DepoJournalCountAggregateInputType | true
+    }
+
+  export interface DepoJournalDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DepoJournal'], meta: { name: 'DepoJournal' } }
+    /**
+     * Find zero or one DepoJournal that matches the filter.
+     * @param {DepoJournalFindUniqueArgs} args - Arguments to find a DepoJournal
+     * @example
+     * // Get one DepoJournal
+     * const depoJournal = await prisma.depoJournal.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DepoJournalFindUniqueArgs>(args: SelectSubset<T, DepoJournalFindUniqueArgs<ExtArgs>>): Prisma__DepoJournalClient<$Result.GetResult<Prisma.$DepoJournalPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DepoJournal that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DepoJournalFindUniqueOrThrowArgs} args - Arguments to find a DepoJournal
+     * @example
+     * // Get one DepoJournal
+     * const depoJournal = await prisma.depoJournal.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DepoJournalFindUniqueOrThrowArgs>(args: SelectSubset<T, DepoJournalFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DepoJournalClient<$Result.GetResult<Prisma.$DepoJournalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DepoJournal that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepoJournalFindFirstArgs} args - Arguments to find a DepoJournal
+     * @example
+     * // Get one DepoJournal
+     * const depoJournal = await prisma.depoJournal.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DepoJournalFindFirstArgs>(args?: SelectSubset<T, DepoJournalFindFirstArgs<ExtArgs>>): Prisma__DepoJournalClient<$Result.GetResult<Prisma.$DepoJournalPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DepoJournal that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepoJournalFindFirstOrThrowArgs} args - Arguments to find a DepoJournal
+     * @example
+     * // Get one DepoJournal
+     * const depoJournal = await prisma.depoJournal.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DepoJournalFindFirstOrThrowArgs>(args?: SelectSubset<T, DepoJournalFindFirstOrThrowArgs<ExtArgs>>): Prisma__DepoJournalClient<$Result.GetResult<Prisma.$DepoJournalPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DepoJournals that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepoJournalFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DepoJournals
+     * const depoJournals = await prisma.depoJournal.findMany()
+     * 
+     * // Get first 10 DepoJournals
+     * const depoJournals = await prisma.depoJournal.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const depoJournalWithIdOnly = await prisma.depoJournal.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DepoJournalFindManyArgs>(args?: SelectSubset<T, DepoJournalFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepoJournalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DepoJournal.
+     * @param {DepoJournalCreateArgs} args - Arguments to create a DepoJournal.
+     * @example
+     * // Create one DepoJournal
+     * const DepoJournal = await prisma.depoJournal.create({
+     *   data: {
+     *     // ... data to create a DepoJournal
+     *   }
+     * })
+     * 
+     */
+    create<T extends DepoJournalCreateArgs>(args: SelectSubset<T, DepoJournalCreateArgs<ExtArgs>>): Prisma__DepoJournalClient<$Result.GetResult<Prisma.$DepoJournalPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DepoJournals.
+     * @param {DepoJournalCreateManyArgs} args - Arguments to create many DepoJournals.
+     * @example
+     * // Create many DepoJournals
+     * const depoJournal = await prisma.depoJournal.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DepoJournalCreateManyArgs>(args?: SelectSubset<T, DepoJournalCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a DepoJournal.
+     * @param {DepoJournalDeleteArgs} args - Arguments to delete one DepoJournal.
+     * @example
+     * // Delete one DepoJournal
+     * const DepoJournal = await prisma.depoJournal.delete({
+     *   where: {
+     *     // ... filter to delete one DepoJournal
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DepoJournalDeleteArgs>(args: SelectSubset<T, DepoJournalDeleteArgs<ExtArgs>>): Prisma__DepoJournalClient<$Result.GetResult<Prisma.$DepoJournalPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DepoJournal.
+     * @param {DepoJournalUpdateArgs} args - Arguments to update one DepoJournal.
+     * @example
+     * // Update one DepoJournal
+     * const depoJournal = await prisma.depoJournal.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DepoJournalUpdateArgs>(args: SelectSubset<T, DepoJournalUpdateArgs<ExtArgs>>): Prisma__DepoJournalClient<$Result.GetResult<Prisma.$DepoJournalPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DepoJournals.
+     * @param {DepoJournalDeleteManyArgs} args - Arguments to filter DepoJournals to delete.
+     * @example
+     * // Delete a few DepoJournals
+     * const { count } = await prisma.depoJournal.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DepoJournalDeleteManyArgs>(args?: SelectSubset<T, DepoJournalDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DepoJournals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepoJournalUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DepoJournals
+     * const depoJournal = await prisma.depoJournal.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DepoJournalUpdateManyArgs>(args: SelectSubset<T, DepoJournalUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one DepoJournal.
+     * @param {DepoJournalUpsertArgs} args - Arguments to update or create a DepoJournal.
+     * @example
+     * // Update or create a DepoJournal
+     * const depoJournal = await prisma.depoJournal.upsert({
+     *   create: {
+     *     // ... data to create a DepoJournal
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DepoJournal we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DepoJournalUpsertArgs>(args: SelectSubset<T, DepoJournalUpsertArgs<ExtArgs>>): Prisma__DepoJournalClient<$Result.GetResult<Prisma.$DepoJournalPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DepoJournals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepoJournalCountArgs} args - Arguments to filter DepoJournals to count.
+     * @example
+     * // Count the number of DepoJournals
+     * const count = await prisma.depoJournal.count({
+     *   where: {
+     *     // ... the filter for the DepoJournals we want to count
+     *   }
+     * })
+    **/
+    count<T extends DepoJournalCountArgs>(
+      args?: Subset<T, DepoJournalCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DepoJournalCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DepoJournal.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepoJournalAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DepoJournalAggregateArgs>(args: Subset<T, DepoJournalAggregateArgs>): Prisma.PrismaPromise<GetDepoJournalAggregateType<T>>
+
+    /**
+     * Group by DepoJournal.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepoJournalGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DepoJournalGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DepoJournalGroupByArgs['orderBy'] }
+        : { orderBy?: DepoJournalGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DepoJournalGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDepoJournalGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DepoJournal model
+   */
+  readonly fields: DepoJournalFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DepoJournal.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DepoJournalClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    ledgerHead<T extends DepoJournal$ledgerHeadArgs<ExtArgs> = {}>(args?: Subset<T, DepoJournal$ledgerHeadArgs<ExtArgs>>): Prisma__LedgerHeadClient<$Result.GetResult<Prisma.$LedgerHeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DepoJournal model
+   */
+  interface DepoJournalFieldRefs {
+    readonly id: FieldRef<"DepoJournal", 'Int'>
+    readonly date: FieldRef<"DepoJournal", 'DateTime'>
+    readonly depoId: FieldRef<"DepoJournal", 'Int'>
+    readonly ledgerHeadId: FieldRef<"DepoJournal", 'Int'>
+    readonly amount: FieldRef<"DepoJournal", 'Float'>
+    readonly narration: FieldRef<"DepoJournal", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DepoJournal findUnique
+   */
+  export type DepoJournalFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoJournal
+     */
+    select?: DepoJournalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoJournal
+     */
+    omit?: DepoJournalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoJournalInclude<ExtArgs> | null
+    /**
+     * Filter, which DepoJournal to fetch.
+     */
+    where: DepoJournalWhereUniqueInput
+  }
+
+  /**
+   * DepoJournal findUniqueOrThrow
+   */
+  export type DepoJournalFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoJournal
+     */
+    select?: DepoJournalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoJournal
+     */
+    omit?: DepoJournalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoJournalInclude<ExtArgs> | null
+    /**
+     * Filter, which DepoJournal to fetch.
+     */
+    where: DepoJournalWhereUniqueInput
+  }
+
+  /**
+   * DepoJournal findFirst
+   */
+  export type DepoJournalFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoJournal
+     */
+    select?: DepoJournalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoJournal
+     */
+    omit?: DepoJournalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoJournalInclude<ExtArgs> | null
+    /**
+     * Filter, which DepoJournal to fetch.
+     */
+    where?: DepoJournalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepoJournals to fetch.
+     */
+    orderBy?: DepoJournalOrderByWithRelationInput | DepoJournalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DepoJournals.
+     */
+    cursor?: DepoJournalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepoJournals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepoJournals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DepoJournals.
+     */
+    distinct?: DepoJournalScalarFieldEnum | DepoJournalScalarFieldEnum[]
+  }
+
+  /**
+   * DepoJournal findFirstOrThrow
+   */
+  export type DepoJournalFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoJournal
+     */
+    select?: DepoJournalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoJournal
+     */
+    omit?: DepoJournalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoJournalInclude<ExtArgs> | null
+    /**
+     * Filter, which DepoJournal to fetch.
+     */
+    where?: DepoJournalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepoJournals to fetch.
+     */
+    orderBy?: DepoJournalOrderByWithRelationInput | DepoJournalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DepoJournals.
+     */
+    cursor?: DepoJournalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepoJournals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepoJournals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DepoJournals.
+     */
+    distinct?: DepoJournalScalarFieldEnum | DepoJournalScalarFieldEnum[]
+  }
+
+  /**
+   * DepoJournal findMany
+   */
+  export type DepoJournalFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoJournal
+     */
+    select?: DepoJournalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoJournal
+     */
+    omit?: DepoJournalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoJournalInclude<ExtArgs> | null
+    /**
+     * Filter, which DepoJournals to fetch.
+     */
+    where?: DepoJournalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepoJournals to fetch.
+     */
+    orderBy?: DepoJournalOrderByWithRelationInput | DepoJournalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DepoJournals.
+     */
+    cursor?: DepoJournalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepoJournals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepoJournals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DepoJournals.
+     */
+    distinct?: DepoJournalScalarFieldEnum | DepoJournalScalarFieldEnum[]
+  }
+
+  /**
+   * DepoJournal create
+   */
+  export type DepoJournalCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoJournal
+     */
+    select?: DepoJournalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoJournal
+     */
+    omit?: DepoJournalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoJournalInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DepoJournal.
+     */
+    data: XOR<DepoJournalCreateInput, DepoJournalUncheckedCreateInput>
+  }
+
+  /**
+   * DepoJournal createMany
+   */
+  export type DepoJournalCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DepoJournals.
+     */
+    data: DepoJournalCreateManyInput | DepoJournalCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DepoJournal update
+   */
+  export type DepoJournalUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoJournal
+     */
+    select?: DepoJournalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoJournal
+     */
+    omit?: DepoJournalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoJournalInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DepoJournal.
+     */
+    data: XOR<DepoJournalUpdateInput, DepoJournalUncheckedUpdateInput>
+    /**
+     * Choose, which DepoJournal to update.
+     */
+    where: DepoJournalWhereUniqueInput
+  }
+
+  /**
+   * DepoJournal updateMany
+   */
+  export type DepoJournalUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DepoJournals.
+     */
+    data: XOR<DepoJournalUpdateManyMutationInput, DepoJournalUncheckedUpdateManyInput>
+    /**
+     * Filter which DepoJournals to update
+     */
+    where?: DepoJournalWhereInput
+    /**
+     * Limit how many DepoJournals to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DepoJournal upsert
+   */
+  export type DepoJournalUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoJournal
+     */
+    select?: DepoJournalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoJournal
+     */
+    omit?: DepoJournalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoJournalInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DepoJournal to update in case it exists.
+     */
+    where: DepoJournalWhereUniqueInput
+    /**
+     * In case the DepoJournal found by the `where` argument doesn't exist, create a new DepoJournal with this data.
+     */
+    create: XOR<DepoJournalCreateInput, DepoJournalUncheckedCreateInput>
+    /**
+     * In case the DepoJournal was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DepoJournalUpdateInput, DepoJournalUncheckedUpdateInput>
+  }
+
+  /**
+   * DepoJournal delete
+   */
+  export type DepoJournalDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoJournal
+     */
+    select?: DepoJournalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoJournal
+     */
+    omit?: DepoJournalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoJournalInclude<ExtArgs> | null
+    /**
+     * Filter which DepoJournal to delete.
+     */
+    where: DepoJournalWhereUniqueInput
+  }
+
+  /**
+   * DepoJournal deleteMany
+   */
+  export type DepoJournalDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DepoJournals to delete
+     */
+    where?: DepoJournalWhereInput
+    /**
+     * Limit how many DepoJournals to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DepoJournal.ledgerHead
+   */
+  export type DepoJournal$ledgerHeadArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LedgerHead
+     */
+    select?: LedgerHeadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LedgerHead
+     */
+    omit?: LedgerHeadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LedgerHeadInclude<ExtArgs> | null
+    where?: LedgerHeadWhereInput
+  }
+
+  /**
+   * DepoJournal without action
+   */
+  export type DepoJournalDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoJournal
+     */
+    select?: DepoJournalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoJournal
+     */
+    omit?: DepoJournalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoJournalInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DepoInventory
+   */
+
+  export type AggregateDepoInventory = {
+    _count: DepoInventoryCountAggregateOutputType | null
+    _avg: DepoInventoryAvgAggregateOutputType | null
+    _sum: DepoInventorySumAggregateOutputType | null
+    _min: DepoInventoryMinAggregateOutputType | null
+    _max: DepoInventoryMaxAggregateOutputType | null
+  }
+
+  export type DepoInventoryAvgAggregateOutputType = {
+    id: number | null
+    depoTransactionId: number | null
+    productId: number | null
+    reqQuantity: number | null
+    acceptedQuantity: number | null
+    unitePrice: number | null
+    amount: number | null
+  }
+
+  export type DepoInventorySumAggregateOutputType = {
+    id: number | null
+    depoTransactionId: number | null
+    productId: number | null
+    reqQuantity: number | null
+    acceptedQuantity: number | null
+    unitePrice: number | null
+    amount: number | null
+  }
+
+  export type DepoInventoryMinAggregateOutputType = {
+    id: number | null
+    depoTransactionId: number | null
+    date: Date | null
+    productId: number | null
+    reqQuantity: number | null
+    acceptedQuantity: number | null
+    unitePrice: number | null
+    amount: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DepoInventoryMaxAggregateOutputType = {
+    id: number | null
+    depoTransactionId: number | null
+    date: Date | null
+    productId: number | null
+    reqQuantity: number | null
+    acceptedQuantity: number | null
+    unitePrice: number | null
+    amount: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DepoInventoryCountAggregateOutputType = {
+    id: number
+    depoTransactionId: number
+    date: number
+    productId: number
+    reqQuantity: number
+    acceptedQuantity: number
+    unitePrice: number
+    amount: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DepoInventoryAvgAggregateInputType = {
+    id?: true
+    depoTransactionId?: true
+    productId?: true
+    reqQuantity?: true
+    acceptedQuantity?: true
+    unitePrice?: true
+    amount?: true
+  }
+
+  export type DepoInventorySumAggregateInputType = {
+    id?: true
+    depoTransactionId?: true
+    productId?: true
+    reqQuantity?: true
+    acceptedQuantity?: true
+    unitePrice?: true
+    amount?: true
+  }
+
+  export type DepoInventoryMinAggregateInputType = {
+    id?: true
+    depoTransactionId?: true
+    date?: true
+    productId?: true
+    reqQuantity?: true
+    acceptedQuantity?: true
+    unitePrice?: true
+    amount?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DepoInventoryMaxAggregateInputType = {
+    id?: true
+    depoTransactionId?: true
+    date?: true
+    productId?: true
+    reqQuantity?: true
+    acceptedQuantity?: true
+    unitePrice?: true
+    amount?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DepoInventoryCountAggregateInputType = {
+    id?: true
+    depoTransactionId?: true
+    date?: true
+    productId?: true
+    reqQuantity?: true
+    acceptedQuantity?: true
+    unitePrice?: true
+    amount?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DepoInventoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DepoInventory to aggregate.
+     */
+    where?: DepoInventoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepoInventories to fetch.
+     */
+    orderBy?: DepoInventoryOrderByWithRelationInput | DepoInventoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DepoInventoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepoInventories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepoInventories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DepoInventories
+    **/
+    _count?: true | DepoInventoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DepoInventoryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DepoInventorySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DepoInventoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DepoInventoryMaxAggregateInputType
+  }
+
+  export type GetDepoInventoryAggregateType<T extends DepoInventoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateDepoInventory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDepoInventory[P]>
+      : GetScalarType<T[P], AggregateDepoInventory[P]>
+  }
+
+
+
+
+  export type DepoInventoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepoInventoryWhereInput
+    orderBy?: DepoInventoryOrderByWithAggregationInput | DepoInventoryOrderByWithAggregationInput[]
+    by: DepoInventoryScalarFieldEnum[] | DepoInventoryScalarFieldEnum
+    having?: DepoInventoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DepoInventoryCountAggregateInputType | true
+    _avg?: DepoInventoryAvgAggregateInputType
+    _sum?: DepoInventorySumAggregateInputType
+    _min?: DepoInventoryMinAggregateInputType
+    _max?: DepoInventoryMaxAggregateInputType
+  }
+
+  export type DepoInventoryGroupByOutputType = {
+    id: number
+    depoTransactionId: number | null
+    date: Date
+    productId: number
+    reqQuantity: number | null
+    acceptedQuantity: number | null
+    unitePrice: number | null
+    amount: number | null
+    createdAt: Date
+    updatedAt: Date
+    _count: DepoInventoryCountAggregateOutputType | null
+    _avg: DepoInventoryAvgAggregateOutputType | null
+    _sum: DepoInventorySumAggregateOutputType | null
+    _min: DepoInventoryMinAggregateOutputType | null
+    _max: DepoInventoryMaxAggregateOutputType | null
+  }
+
+  type GetDepoInventoryGroupByPayload<T extends DepoInventoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DepoInventoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DepoInventoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DepoInventoryGroupByOutputType[P]>
+            : GetScalarType<T[P], DepoInventoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DepoInventorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    depoTransactionId?: boolean
+    date?: boolean
+    productId?: boolean
+    reqQuantity?: boolean
+    acceptedQuantity?: boolean
+    unitePrice?: boolean
+    amount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    depoTransaction?: boolean | DepoInventory$depoTransactionArgs<ExtArgs>
+  }, ExtArgs["result"]["depoInventory"]>
+
+
+
+  export type DepoInventorySelectScalar = {
+    id?: boolean
+    depoTransactionId?: boolean
+    date?: boolean
+    productId?: boolean
+    reqQuantity?: boolean
+    acceptedQuantity?: boolean
+    unitePrice?: boolean
+    amount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DepoInventoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "depoTransactionId" | "date" | "productId" | "reqQuantity" | "acceptedQuantity" | "unitePrice" | "amount" | "createdAt" | "updatedAt", ExtArgs["result"]["depoInventory"]>
+  export type DepoInventoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    product?: boolean | ProductDefaultArgs<ExtArgs>
+    depoTransaction?: boolean | DepoInventory$depoTransactionArgs<ExtArgs>
+  }
+
+  export type $DepoInventoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DepoInventory"
+    objects: {
+      product: Prisma.$ProductPayload<ExtArgs>
+      depoTransaction: Prisma.$DepoTransactionPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      depoTransactionId: number | null
+      date: Date
+      productId: number
+      reqQuantity: number | null
+      acceptedQuantity: number | null
+      unitePrice: number | null
+      amount: number | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["depoInventory"]>
+    composites: {}
+  }
+
+  type DepoInventoryGetPayload<S extends boolean | null | undefined | DepoInventoryDefaultArgs> = $Result.GetResult<Prisma.$DepoInventoryPayload, S>
+
+  type DepoInventoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DepoInventoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DepoInventoryCountAggregateInputType | true
+    }
+
+  export interface DepoInventoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DepoInventory'], meta: { name: 'DepoInventory' } }
+    /**
+     * Find zero or one DepoInventory that matches the filter.
+     * @param {DepoInventoryFindUniqueArgs} args - Arguments to find a DepoInventory
+     * @example
+     * // Get one DepoInventory
+     * const depoInventory = await prisma.depoInventory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DepoInventoryFindUniqueArgs>(args: SelectSubset<T, DepoInventoryFindUniqueArgs<ExtArgs>>): Prisma__DepoInventoryClient<$Result.GetResult<Prisma.$DepoInventoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DepoInventory that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DepoInventoryFindUniqueOrThrowArgs} args - Arguments to find a DepoInventory
+     * @example
+     * // Get one DepoInventory
+     * const depoInventory = await prisma.depoInventory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DepoInventoryFindUniqueOrThrowArgs>(args: SelectSubset<T, DepoInventoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DepoInventoryClient<$Result.GetResult<Prisma.$DepoInventoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DepoInventory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepoInventoryFindFirstArgs} args - Arguments to find a DepoInventory
+     * @example
+     * // Get one DepoInventory
+     * const depoInventory = await prisma.depoInventory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DepoInventoryFindFirstArgs>(args?: SelectSubset<T, DepoInventoryFindFirstArgs<ExtArgs>>): Prisma__DepoInventoryClient<$Result.GetResult<Prisma.$DepoInventoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DepoInventory that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepoInventoryFindFirstOrThrowArgs} args - Arguments to find a DepoInventory
+     * @example
+     * // Get one DepoInventory
+     * const depoInventory = await prisma.depoInventory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DepoInventoryFindFirstOrThrowArgs>(args?: SelectSubset<T, DepoInventoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__DepoInventoryClient<$Result.GetResult<Prisma.$DepoInventoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DepoInventories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepoInventoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DepoInventories
+     * const depoInventories = await prisma.depoInventory.findMany()
+     * 
+     * // Get first 10 DepoInventories
+     * const depoInventories = await prisma.depoInventory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const depoInventoryWithIdOnly = await prisma.depoInventory.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DepoInventoryFindManyArgs>(args?: SelectSubset<T, DepoInventoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepoInventoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DepoInventory.
+     * @param {DepoInventoryCreateArgs} args - Arguments to create a DepoInventory.
+     * @example
+     * // Create one DepoInventory
+     * const DepoInventory = await prisma.depoInventory.create({
+     *   data: {
+     *     // ... data to create a DepoInventory
+     *   }
+     * })
+     * 
+     */
+    create<T extends DepoInventoryCreateArgs>(args: SelectSubset<T, DepoInventoryCreateArgs<ExtArgs>>): Prisma__DepoInventoryClient<$Result.GetResult<Prisma.$DepoInventoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DepoInventories.
+     * @param {DepoInventoryCreateManyArgs} args - Arguments to create many DepoInventories.
+     * @example
+     * // Create many DepoInventories
+     * const depoInventory = await prisma.depoInventory.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DepoInventoryCreateManyArgs>(args?: SelectSubset<T, DepoInventoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a DepoInventory.
+     * @param {DepoInventoryDeleteArgs} args - Arguments to delete one DepoInventory.
+     * @example
+     * // Delete one DepoInventory
+     * const DepoInventory = await prisma.depoInventory.delete({
+     *   where: {
+     *     // ... filter to delete one DepoInventory
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DepoInventoryDeleteArgs>(args: SelectSubset<T, DepoInventoryDeleteArgs<ExtArgs>>): Prisma__DepoInventoryClient<$Result.GetResult<Prisma.$DepoInventoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DepoInventory.
+     * @param {DepoInventoryUpdateArgs} args - Arguments to update one DepoInventory.
+     * @example
+     * // Update one DepoInventory
+     * const depoInventory = await prisma.depoInventory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DepoInventoryUpdateArgs>(args: SelectSubset<T, DepoInventoryUpdateArgs<ExtArgs>>): Prisma__DepoInventoryClient<$Result.GetResult<Prisma.$DepoInventoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DepoInventories.
+     * @param {DepoInventoryDeleteManyArgs} args - Arguments to filter DepoInventories to delete.
+     * @example
+     * // Delete a few DepoInventories
+     * const { count } = await prisma.depoInventory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DepoInventoryDeleteManyArgs>(args?: SelectSubset<T, DepoInventoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DepoInventories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepoInventoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DepoInventories
+     * const depoInventory = await prisma.depoInventory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DepoInventoryUpdateManyArgs>(args: SelectSubset<T, DepoInventoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one DepoInventory.
+     * @param {DepoInventoryUpsertArgs} args - Arguments to update or create a DepoInventory.
+     * @example
+     * // Update or create a DepoInventory
+     * const depoInventory = await prisma.depoInventory.upsert({
+     *   create: {
+     *     // ... data to create a DepoInventory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DepoInventory we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DepoInventoryUpsertArgs>(args: SelectSubset<T, DepoInventoryUpsertArgs<ExtArgs>>): Prisma__DepoInventoryClient<$Result.GetResult<Prisma.$DepoInventoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DepoInventories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepoInventoryCountArgs} args - Arguments to filter DepoInventories to count.
+     * @example
+     * // Count the number of DepoInventories
+     * const count = await prisma.depoInventory.count({
+     *   where: {
+     *     // ... the filter for the DepoInventories we want to count
+     *   }
+     * })
+    **/
+    count<T extends DepoInventoryCountArgs>(
+      args?: Subset<T, DepoInventoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DepoInventoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DepoInventory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepoInventoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DepoInventoryAggregateArgs>(args: Subset<T, DepoInventoryAggregateArgs>): Prisma.PrismaPromise<GetDepoInventoryAggregateType<T>>
+
+    /**
+     * Group by DepoInventory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DepoInventoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DepoInventoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DepoInventoryGroupByArgs['orderBy'] }
+        : { orderBy?: DepoInventoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DepoInventoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDepoInventoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DepoInventory model
+   */
+  readonly fields: DepoInventoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DepoInventory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DepoInventoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    product<T extends ProductDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProductDefaultArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    depoTransaction<T extends DepoInventory$depoTransactionArgs<ExtArgs> = {}>(args?: Subset<T, DepoInventory$depoTransactionArgs<ExtArgs>>): Prisma__DepoTransactionClient<$Result.GetResult<Prisma.$DepoTransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DepoInventory model
+   */
+  interface DepoInventoryFieldRefs {
+    readonly id: FieldRef<"DepoInventory", 'Int'>
+    readonly depoTransactionId: FieldRef<"DepoInventory", 'Int'>
+    readonly date: FieldRef<"DepoInventory", 'DateTime'>
+    readonly productId: FieldRef<"DepoInventory", 'Int'>
+    readonly reqQuantity: FieldRef<"DepoInventory", 'Int'>
+    readonly acceptedQuantity: FieldRef<"DepoInventory", 'Int'>
+    readonly unitePrice: FieldRef<"DepoInventory", 'Float'>
+    readonly amount: FieldRef<"DepoInventory", 'Float'>
+    readonly createdAt: FieldRef<"DepoInventory", 'DateTime'>
+    readonly updatedAt: FieldRef<"DepoInventory", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DepoInventory findUnique
+   */
+  export type DepoInventoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoInventory
+     */
+    select?: DepoInventorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoInventory
+     */
+    omit?: DepoInventoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoInventoryInclude<ExtArgs> | null
+    /**
+     * Filter, which DepoInventory to fetch.
+     */
+    where: DepoInventoryWhereUniqueInput
+  }
+
+  /**
+   * DepoInventory findUniqueOrThrow
+   */
+  export type DepoInventoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoInventory
+     */
+    select?: DepoInventorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoInventory
+     */
+    omit?: DepoInventoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoInventoryInclude<ExtArgs> | null
+    /**
+     * Filter, which DepoInventory to fetch.
+     */
+    where: DepoInventoryWhereUniqueInput
+  }
+
+  /**
+   * DepoInventory findFirst
+   */
+  export type DepoInventoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoInventory
+     */
+    select?: DepoInventorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoInventory
+     */
+    omit?: DepoInventoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoInventoryInclude<ExtArgs> | null
+    /**
+     * Filter, which DepoInventory to fetch.
+     */
+    where?: DepoInventoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepoInventories to fetch.
+     */
+    orderBy?: DepoInventoryOrderByWithRelationInput | DepoInventoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DepoInventories.
+     */
+    cursor?: DepoInventoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepoInventories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepoInventories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DepoInventories.
+     */
+    distinct?: DepoInventoryScalarFieldEnum | DepoInventoryScalarFieldEnum[]
+  }
+
+  /**
+   * DepoInventory findFirstOrThrow
+   */
+  export type DepoInventoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoInventory
+     */
+    select?: DepoInventorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoInventory
+     */
+    omit?: DepoInventoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoInventoryInclude<ExtArgs> | null
+    /**
+     * Filter, which DepoInventory to fetch.
+     */
+    where?: DepoInventoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepoInventories to fetch.
+     */
+    orderBy?: DepoInventoryOrderByWithRelationInput | DepoInventoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DepoInventories.
+     */
+    cursor?: DepoInventoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepoInventories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepoInventories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DepoInventories.
+     */
+    distinct?: DepoInventoryScalarFieldEnum | DepoInventoryScalarFieldEnum[]
+  }
+
+  /**
+   * DepoInventory findMany
+   */
+  export type DepoInventoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoInventory
+     */
+    select?: DepoInventorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoInventory
+     */
+    omit?: DepoInventoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoInventoryInclude<ExtArgs> | null
+    /**
+     * Filter, which DepoInventories to fetch.
+     */
+    where?: DepoInventoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DepoInventories to fetch.
+     */
+    orderBy?: DepoInventoryOrderByWithRelationInput | DepoInventoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DepoInventories.
+     */
+    cursor?: DepoInventoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DepoInventories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DepoInventories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DepoInventories.
+     */
+    distinct?: DepoInventoryScalarFieldEnum | DepoInventoryScalarFieldEnum[]
+  }
+
+  /**
+   * DepoInventory create
+   */
+  export type DepoInventoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoInventory
+     */
+    select?: DepoInventorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoInventory
+     */
+    omit?: DepoInventoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoInventoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DepoInventory.
+     */
+    data: XOR<DepoInventoryCreateInput, DepoInventoryUncheckedCreateInput>
+  }
+
+  /**
+   * DepoInventory createMany
+   */
+  export type DepoInventoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DepoInventories.
+     */
+    data: DepoInventoryCreateManyInput | DepoInventoryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DepoInventory update
+   */
+  export type DepoInventoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoInventory
+     */
+    select?: DepoInventorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoInventory
+     */
+    omit?: DepoInventoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoInventoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DepoInventory.
+     */
+    data: XOR<DepoInventoryUpdateInput, DepoInventoryUncheckedUpdateInput>
+    /**
+     * Choose, which DepoInventory to update.
+     */
+    where: DepoInventoryWhereUniqueInput
+  }
+
+  /**
+   * DepoInventory updateMany
+   */
+  export type DepoInventoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DepoInventories.
+     */
+    data: XOR<DepoInventoryUpdateManyMutationInput, DepoInventoryUncheckedUpdateManyInput>
+    /**
+     * Filter which DepoInventories to update
+     */
+    where?: DepoInventoryWhereInput
+    /**
+     * Limit how many DepoInventories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DepoInventory upsert
+   */
+  export type DepoInventoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoInventory
+     */
+    select?: DepoInventorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoInventory
+     */
+    omit?: DepoInventoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoInventoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DepoInventory to update in case it exists.
+     */
+    where: DepoInventoryWhereUniqueInput
+    /**
+     * In case the DepoInventory found by the `where` argument doesn't exist, create a new DepoInventory with this data.
+     */
+    create: XOR<DepoInventoryCreateInput, DepoInventoryUncheckedCreateInput>
+    /**
+     * In case the DepoInventory was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DepoInventoryUpdateInput, DepoInventoryUncheckedUpdateInput>
+  }
+
+  /**
+   * DepoInventory delete
+   */
+  export type DepoInventoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoInventory
+     */
+    select?: DepoInventorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoInventory
+     */
+    omit?: DepoInventoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoInventoryInclude<ExtArgs> | null
+    /**
+     * Filter which DepoInventory to delete.
+     */
+    where: DepoInventoryWhereUniqueInput
+  }
+
+  /**
+   * DepoInventory deleteMany
+   */
+  export type DepoInventoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DepoInventories to delete
+     */
+    where?: DepoInventoryWhereInput
+    /**
+     * Limit how many DepoInventories to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DepoInventory.depoTransaction
+   */
+  export type DepoInventory$depoTransactionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoTransaction
+     */
+    select?: DepoTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoTransaction
+     */
+    omit?: DepoTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoTransactionInclude<ExtArgs> | null
+    where?: DepoTransactionWhereInput
+  }
+
+  /**
+   * DepoInventory without action
+   */
+  export type DepoInventoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoInventory
+     */
+    select?: DepoInventorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoInventory
+     */
+    omit?: DepoInventoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoInventoryInclude<ExtArgs> | null
   }
 
 
@@ -35903,6 +38201,11 @@ export namespace Prisma {
      * Skip the first `n` Orders.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Orders.
+     */
     distinct?: OrderScalarFieldEnum | OrderScalarFieldEnum[]
   }
 
@@ -36949,6 +39252,11 @@ export namespace Prisma {
      * Skip the first `n` OrderItems.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OrderItems.
+     */
     distinct?: OrderItemScalarFieldEnum | OrderItemScalarFieldEnum[]
   }
 
@@ -37934,6 +40242,11 @@ export namespace Prisma {
      * Skip the first `n` OrderStatuses.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OrderStatuses.
+     */
     distinct?: OrderStatusScalarFieldEnum | OrderStatusScalarFieldEnum[]
   }
 
@@ -38949,6 +41262,11 @@ export namespace Prisma {
      * Skip the first `n` Attendances.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Attendances.
+     */
     distinct?: AttendanceScalarFieldEnum | AttendanceScalarFieldEnum[]
   }
 
@@ -39934,6 +42252,11 @@ export namespace Prisma {
      * Skip the first `n` Overtimes.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Overtimes.
+     */
     distinct?: OvertimeScalarFieldEnum | OvertimeScalarFieldEnum[]
   }
 
@@ -40866,6 +43189,11 @@ export namespace Prisma {
      * Skip the first `n` LeaveTypes.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LeaveTypes.
+     */
     distinct?: LeaveTypeScalarFieldEnum | LeaveTypeScalarFieldEnum[]
   }
 
@@ -41894,6 +44222,11 @@ export namespace Prisma {
      * Skip the first `n` Leves.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Leves.
+     */
     distinct?: LevesScalarFieldEnum | LevesScalarFieldEnum[]
   }
 
@@ -42830,6 +45163,11 @@ export namespace Prisma {
      * Skip the first `n` EmployeeBankDetails.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EmployeeBankDetails.
+     */
     distinct?: EmployeeBankDetailsScalarFieldEnum | EmployeeBankDetailsScalarFieldEnum[]
   }
 
@@ -43852,6 +46190,11 @@ export namespace Prisma {
      * Skip the first `n` SalaryInfos.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SalaryInfos.
+     */
     distinct?: SalaryInfoScalarFieldEnum | SalaryInfoScalarFieldEnum[]
   }
 
@@ -44980,6 +47323,11 @@ export namespace Prisma {
      * Skip the first `n` Payrolls.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Payrolls.
+     */
     distinct?: PayrollScalarFieldEnum | PayrollScalarFieldEnum[]
   }
 
@@ -45501,7 +47849,6 @@ export namespace Prisma {
     depoId: 'depoId',
     employeeId: 'employeeId',
     transactionId: 'transactionId',
-    fixedJournalId: 'fixedJournalId',
     unitPrice: 'unitPrice',
     quantityAdd: 'quantityAdd',
     quantityLess: 'quantityLess',
@@ -45509,8 +47856,7 @@ export namespace Prisma {
     creditAmount: 'creditAmount',
     isClosing: 'isClosing',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    isFixted: 'isFixted'
+    updatedAt: 'updatedAt'
   };
 
   export type InventoryScalarFieldEnum = (typeof InventoryScalarFieldEnum)[keyof typeof InventoryScalarFieldEnum]
@@ -45527,7 +47873,6 @@ export namespace Prisma {
     employeeId: 'employeeId',
     partyId: 'partyId',
     voucherType: 'voucherType',
-    paymentType: 'paymentType',
     status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -45553,22 +47898,46 @@ export namespace Prisma {
   export type JournalScalarFieldEnum = (typeof JournalScalarFieldEnum)[keyof typeof JournalScalarFieldEnum]
 
 
-  export const FixedJournalScalarFieldEnum: {
+  export const DepoTransactionScalarFieldEnum: {
     id: 'id',
     date: 'date',
+    providerdepoId: 'providerdepoId',
+    receverdepoId: 'receverdepoId',
     voucherNo: 'voucherNo',
-    chemistId: 'chemistId',
-    ledgerHeadId: 'ledgerHeadId',
-    depoId: 'depoId',
-    creditAmount: 'creditAmount',
-    debitAmount: 'debitAmount',
-    narration: 'narration',
-    isClosing: 'isClosing',
+    status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
-  export type FixedJournalScalarFieldEnum = (typeof FixedJournalScalarFieldEnum)[keyof typeof FixedJournalScalarFieldEnum]
+  export type DepoTransactionScalarFieldEnum = (typeof DepoTransactionScalarFieldEnum)[keyof typeof DepoTransactionScalarFieldEnum]
+
+
+  export const DepoJournalScalarFieldEnum: {
+    id: 'id',
+    date: 'date',
+    depoId: 'depoId',
+    ledgerHeadId: 'ledgerHeadId',
+    amount: 'amount',
+    narration: 'narration'
+  };
+
+  export type DepoJournalScalarFieldEnum = (typeof DepoJournalScalarFieldEnum)[keyof typeof DepoJournalScalarFieldEnum]
+
+
+  export const DepoInventoryScalarFieldEnum: {
+    id: 'id',
+    depoTransactionId: 'depoTransactionId',
+    date: 'date',
+    productId: 'productId',
+    reqQuantity: 'reqQuantity',
+    acceptedQuantity: 'acceptedQuantity',
+    unitePrice: 'unitePrice',
+    amount: 'amount',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DepoInventoryScalarFieldEnum = (typeof DepoInventoryScalarFieldEnum)[keyof typeof DepoInventoryScalarFieldEnum]
 
 
   export const OrderScalarFieldEnum: {
@@ -45973,13 +48342,18 @@ export namespace Prisma {
   export type JournalOrderByRelevanceFieldEnum = (typeof JournalOrderByRelevanceFieldEnum)[keyof typeof JournalOrderByRelevanceFieldEnum]
 
 
-  export const FixedJournalOrderByRelevanceFieldEnum: {
-    voucherNo: 'voucherNo',
-    chemistId: 'chemistId',
+  export const DepoTransactionOrderByRelevanceFieldEnum: {
+    voucherNo: 'voucherNo'
+  };
+
+  export type DepoTransactionOrderByRelevanceFieldEnum = (typeof DepoTransactionOrderByRelevanceFieldEnum)[keyof typeof DepoTransactionOrderByRelevanceFieldEnum]
+
+
+  export const DepoJournalOrderByRelevanceFieldEnum: {
     narration: 'narration'
   };
 
-  export type FixedJournalOrderByRelevanceFieldEnum = (typeof FixedJournalOrderByRelevanceFieldEnum)[keyof typeof FixedJournalOrderByRelevanceFieldEnum]
+  export type DepoJournalOrderByRelevanceFieldEnum = (typeof DepoJournalOrderByRelevanceFieldEnum)[keyof typeof DepoJournalOrderByRelevanceFieldEnum]
 
 
   export const OrderOrderByRelevanceFieldEnum: {
@@ -46143,13 +48517,6 @@ export namespace Prisma {
    * Reference to a field of type 'VoucherType'
    */
   export type EnumVoucherTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VoucherType'>
-    
-
-
-  /**
-   * Reference to a field of type 'PaymentType'
-   */
-  export type EnumPaymentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentType'>
     
 
 
@@ -46473,7 +48840,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Chemist"> | Date | string
     depo?: XOR<DepoScalarRelationFilter, DepoWhereInput>
     scopes?: ScopeListRelationFilter
-    FixedJournal?: FixedJournalListRelationFilter
     order?: OrderListRelationFilter
     transactionInfo?: TransactionInfoListRelationFilter
   }
@@ -46495,7 +48861,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
     depo?: DepoOrderByWithRelationInput
     scopes?: ScopeOrderByRelationAggregateInput
-    FixedJournal?: FixedJournalOrderByRelationAggregateInput
     order?: OrderOrderByRelationAggregateInput
     transactionInfo?: TransactionInfoOrderByRelationAggregateInput
     _relevance?: ChemistOrderByRelevanceInput
@@ -46521,7 +48886,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Chemist"> | Date | string
     depo?: XOR<DepoScalarRelationFilter, DepoWhereInput>
     scopes?: ScopeListRelationFilter
-    FixedJournal?: FixedJournalListRelationFilter
     order?: OrderListRelationFilter
     transactionInfo?: TransactionInfoListRelationFilter
   }, "id" | "chemistId">
@@ -46580,11 +48944,12 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Depo"> | Date | string
     updatedAt?: DateTimeFilter<"Depo"> | Date | string
     chemist?: ChemistListRelationFilter
-    FixedJournal?: FixedJournalListRelationFilter
     inventory?: InventoryListRelationFilter
     jobPost?: JobPostListRelationFilter
     journal?: JournalListRelationFilter
     scopes?: ScopeListRelationFilter
+    providerTransactions?: DepoTransactionListRelationFilter
+    receiverTransactions?: DepoTransactionListRelationFilter
   }
 
   export type DepoOrderByWithRelationInput = {
@@ -46596,11 +48961,12 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     chemist?: ChemistOrderByRelationAggregateInput
-    FixedJournal?: FixedJournalOrderByRelationAggregateInput
     inventory?: InventoryOrderByRelationAggregateInput
     jobPost?: JobPostOrderByRelationAggregateInput
     journal?: JournalOrderByRelationAggregateInput
     scopes?: ScopeOrderByRelationAggregateInput
+    providerTransactions?: DepoTransactionOrderByRelationAggregateInput
+    receiverTransactions?: DepoTransactionOrderByRelationAggregateInput
     _relevance?: DepoOrderByRelevanceInput
   }
 
@@ -46616,11 +48982,12 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Depo"> | Date | string
     updatedAt?: DateTimeFilter<"Depo"> | Date | string
     chemist?: ChemistListRelationFilter
-    FixedJournal?: FixedJournalListRelationFilter
     inventory?: InventoryListRelationFilter
     jobPost?: JobPostListRelationFilter
     journal?: JournalListRelationFilter
     scopes?: ScopeListRelationFilter
+    providerTransactions?: DepoTransactionListRelationFilter
+    receiverTransactions?: DepoTransactionListRelationFilter
   }, "id" | "depoName">
 
   export type DepoOrderByWithAggregationInput = {
@@ -47699,9 +50066,9 @@ export namespace Prisma {
     headCodeId?: IntFilter<"LedgerHead"> | number
     createdAt?: DateTimeFilter<"LedgerHead"> | Date | string
     updatedAt?: DateTimeFilter<"LedgerHead"> | Date | string
-    fixedJournal?: FixedJournalListRelationFilter
-    journal?: JournalListRelationFilter
     accountHead?: XOR<AccountHeadScalarRelationFilter, AccountHeadWhereInput>
+    journal?: JournalListRelationFilter
+    depoJournals?: DepoJournalListRelationFilter
   }
 
   export type LedgerHeadOrderByWithRelationInput = {
@@ -47711,9 +50078,9 @@ export namespace Prisma {
     headCodeId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    fixedJournal?: FixedJournalOrderByRelationAggregateInput
-    journal?: JournalOrderByRelationAggregateInput
     accountHead?: AccountHeadOrderByWithRelationInput
+    journal?: JournalOrderByRelationAggregateInput
+    depoJournals?: DepoJournalOrderByRelationAggregateInput
     _relevance?: LedgerHeadOrderByRelevanceInput
   }
 
@@ -47727,9 +50094,9 @@ export namespace Prisma {
     headCodeId?: IntFilter<"LedgerHead"> | number
     createdAt?: DateTimeFilter<"LedgerHead"> | Date | string
     updatedAt?: DateTimeFilter<"LedgerHead"> | Date | string
-    fixedJournal?: FixedJournalListRelationFilter
-    journal?: JournalListRelationFilter
     accountHead?: XOR<AccountHeadScalarRelationFilter, AccountHeadWhereInput>
+    journal?: JournalListRelationFilter
+    depoJournals?: DepoJournalListRelationFilter
   }, "id">
 
   export type LedgerHeadOrderByWithAggregationInput = {
@@ -47784,6 +50151,7 @@ export namespace Prisma {
     Stakeholder?: XOR<StakeholderNullableScalarRelationFilter, StakeholderWhereInput> | null
     subCategory?: XOR<SubCategoryScalarRelationFilter, SubCategoryWhereInput>
     unit?: XOR<UnitScalarRelationFilter, UnitWhereInput>
+    depoInventories?: DepoInventoryListRelationFilter
   }
 
   export type ProductOrderByWithRelationInput = {
@@ -47809,6 +50177,7 @@ export namespace Prisma {
     Stakeholder?: StakeholderOrderByWithRelationInput
     subCategory?: SubCategoryOrderByWithRelationInput
     unit?: UnitOrderByWithRelationInput
+    depoInventories?: DepoInventoryOrderByRelationAggregateInput
     _relevance?: ProductOrderByRelevanceInput
   }
 
@@ -47838,6 +50207,7 @@ export namespace Prisma {
     Stakeholder?: XOR<StakeholderNullableScalarRelationFilter, StakeholderWhereInput> | null
     subCategory?: XOR<SubCategoryScalarRelationFilter, SubCategoryWhereInput>
     unit?: XOR<UnitScalarRelationFilter, UnitWhereInput>
+    depoInventories?: DepoInventoryListRelationFilter
   }, "id">
 
   export type ProductOrderByWithAggregationInput = {
@@ -48045,7 +50415,6 @@ export namespace Prisma {
     depoId?: IntNullableFilter<"Inventory"> | number | null
     employeeId?: StringNullableFilter<"Inventory"> | string | null
     transactionId?: IntNullableFilter<"Inventory"> | number | null
-    fixedJournalId?: IntNullableFilter<"Inventory"> | number | null
     unitPrice?: FloatFilter<"Inventory"> | number
     quantityAdd?: FloatNullableFilter<"Inventory"> | number | null
     quantityLess?: FloatNullableFilter<"Inventory"> | number | null
@@ -48054,9 +50423,7 @@ export namespace Prisma {
     isClosing?: BoolFilter<"Inventory"> | boolean
     createdAt?: DateTimeFilter<"Inventory"> | Date | string
     updatedAt?: DateTimeFilter<"Inventory"> | Date | string
-    isFixted?: BoolFilter<"Inventory"> | boolean
     depo?: XOR<DepoNullableScalarRelationFilter, DepoWhereInput> | null
-    fixedJournal?: XOR<FixedJournalNullableScalarRelationFilter, FixedJournalWhereInput> | null
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
     transactionInfo?: XOR<TransactionInfoNullableScalarRelationFilter, TransactionInfoWhereInput> | null
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
@@ -48069,7 +50436,6 @@ export namespace Prisma {
     depoId?: SortOrderInput | SortOrder
     employeeId?: SortOrderInput | SortOrder
     transactionId?: SortOrderInput | SortOrder
-    fixedJournalId?: SortOrderInput | SortOrder
     unitPrice?: SortOrder
     quantityAdd?: SortOrderInput | SortOrder
     quantityLess?: SortOrderInput | SortOrder
@@ -48078,9 +50444,7 @@ export namespace Prisma {
     isClosing?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    isFixted?: SortOrder
     depo?: DepoOrderByWithRelationInput
-    fixedJournal?: FixedJournalOrderByWithRelationInput
     product?: ProductOrderByWithRelationInput
     transactionInfo?: TransactionInfoOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
@@ -48097,7 +50461,6 @@ export namespace Prisma {
     depoId?: IntNullableFilter<"Inventory"> | number | null
     employeeId?: StringNullableFilter<"Inventory"> | string | null
     transactionId?: IntNullableFilter<"Inventory"> | number | null
-    fixedJournalId?: IntNullableFilter<"Inventory"> | number | null
     unitPrice?: FloatFilter<"Inventory"> | number
     quantityAdd?: FloatNullableFilter<"Inventory"> | number | null
     quantityLess?: FloatNullableFilter<"Inventory"> | number | null
@@ -48106,9 +50469,7 @@ export namespace Prisma {
     isClosing?: BoolFilter<"Inventory"> | boolean
     createdAt?: DateTimeFilter<"Inventory"> | Date | string
     updatedAt?: DateTimeFilter<"Inventory"> | Date | string
-    isFixted?: BoolFilter<"Inventory"> | boolean
     depo?: XOR<DepoNullableScalarRelationFilter, DepoWhereInput> | null
-    fixedJournal?: XOR<FixedJournalNullableScalarRelationFilter, FixedJournalWhereInput> | null
     product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
     transactionInfo?: XOR<TransactionInfoNullableScalarRelationFilter, TransactionInfoWhereInput> | null
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
@@ -48121,7 +50482,6 @@ export namespace Prisma {
     depoId?: SortOrderInput | SortOrder
     employeeId?: SortOrderInput | SortOrder
     transactionId?: SortOrderInput | SortOrder
-    fixedJournalId?: SortOrderInput | SortOrder
     unitPrice?: SortOrder
     quantityAdd?: SortOrderInput | SortOrder
     quantityLess?: SortOrderInput | SortOrder
@@ -48130,7 +50490,6 @@ export namespace Prisma {
     isClosing?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    isFixted?: SortOrder
     _count?: InventoryCountOrderByAggregateInput
     _avg?: InventoryAvgOrderByAggregateInput
     _max?: InventoryMaxOrderByAggregateInput
@@ -48148,7 +50507,6 @@ export namespace Prisma {
     depoId?: IntNullableWithAggregatesFilter<"Inventory"> | number | null
     employeeId?: StringNullableWithAggregatesFilter<"Inventory"> | string | null
     transactionId?: IntNullableWithAggregatesFilter<"Inventory"> | number | null
-    fixedJournalId?: IntNullableWithAggregatesFilter<"Inventory"> | number | null
     unitPrice?: FloatWithAggregatesFilter<"Inventory"> | number
     quantityAdd?: FloatNullableWithAggregatesFilter<"Inventory"> | number | null
     quantityLess?: FloatNullableWithAggregatesFilter<"Inventory"> | number | null
@@ -48157,7 +50515,6 @@ export namespace Prisma {
     isClosing?: BoolWithAggregatesFilter<"Inventory"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Inventory"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Inventory"> | Date | string
-    isFixted?: BoolWithAggregatesFilter<"Inventory"> | boolean
   }
 
   export type TransactionInfoWhereInput = {
@@ -48174,7 +50531,6 @@ export namespace Prisma {
     employeeId?: StringNullableFilter<"TransactionInfo"> | string | null
     partyId?: IntNullableFilter<"TransactionInfo"> | number | null
     voucherType?: EnumVoucherTypeFilter<"TransactionInfo"> | $Enums.VoucherType
-    paymentType?: EnumPaymentTypeNullableFilter<"TransactionInfo"> | $Enums.PaymentType | null
     status?: EnumStatusFilter<"TransactionInfo"> | $Enums.Status
     createdAt?: DateTimeFilter<"TransactionInfo"> | Date | string
     updatedAt?: DateTimeFilter<"TransactionInfo"> | Date | string
@@ -48198,7 +50554,6 @@ export namespace Prisma {
     employeeId?: SortOrderInput | SortOrder
     partyId?: SortOrderInput | SortOrder
     voucherType?: SortOrder
-    paymentType?: SortOrderInput | SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -48226,7 +50581,6 @@ export namespace Prisma {
     employeeId?: StringNullableFilter<"TransactionInfo"> | string | null
     partyId?: IntNullableFilter<"TransactionInfo"> | number | null
     voucherType?: EnumVoucherTypeFilter<"TransactionInfo"> | $Enums.VoucherType
-    paymentType?: EnumPaymentTypeNullableFilter<"TransactionInfo"> | $Enums.PaymentType | null
     status?: EnumStatusFilter<"TransactionInfo"> | $Enums.Status
     createdAt?: DateTimeFilter<"TransactionInfo"> | Date | string
     updatedAt?: DateTimeFilter<"TransactionInfo"> | Date | string
@@ -48250,7 +50604,6 @@ export namespace Prisma {
     employeeId?: SortOrderInput | SortOrder
     partyId?: SortOrderInput | SortOrder
     voucherType?: SortOrder
-    paymentType?: SortOrderInput | SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -48275,7 +50628,6 @@ export namespace Prisma {
     employeeId?: StringNullableWithAggregatesFilter<"TransactionInfo"> | string | null
     partyId?: IntNullableWithAggregatesFilter<"TransactionInfo"> | number | null
     voucherType?: EnumVoucherTypeWithAggregatesFilter<"TransactionInfo"> | $Enums.VoucherType
-    paymentType?: EnumPaymentTypeNullableWithAggregatesFilter<"TransactionInfo"> | $Enums.PaymentType | null
     status?: EnumStatusWithAggregatesFilter<"TransactionInfo"> | $Enums.Status
     createdAt?: DateTimeWithAggregatesFilter<"TransactionInfo"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"TransactionInfo"> | Date | string
@@ -48378,106 +50730,231 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Journal"> | Date | string
   }
 
-  export type FixedJournalWhereInput = {
-    AND?: FixedJournalWhereInput | FixedJournalWhereInput[]
-    OR?: FixedJournalWhereInput[]
-    NOT?: FixedJournalWhereInput | FixedJournalWhereInput[]
-    id?: IntFilter<"FixedJournal"> | number
-    date?: DateTimeFilter<"FixedJournal"> | Date | string
-    voucherNo?: StringFilter<"FixedJournal"> | string
-    chemistId?: StringFilter<"FixedJournal"> | string
-    ledgerHeadId?: IntFilter<"FixedJournal"> | number
-    depoId?: IntFilter<"FixedJournal"> | number
-    creditAmount?: FloatNullableFilter<"FixedJournal"> | number | null
-    debitAmount?: FloatNullableFilter<"FixedJournal"> | number | null
-    narration?: StringNullableFilter<"FixedJournal"> | string | null
-    isClosing?: BoolFilter<"FixedJournal"> | boolean
-    createdAt?: DateTimeFilter<"FixedJournal"> | Date | string
-    updatedAt?: DateTimeFilter<"FixedJournal"> | Date | string
-    chemist?: XOR<ChemistScalarRelationFilter, ChemistWhereInput>
-    depo?: XOR<DepoScalarRelationFilter, DepoWhereInput>
-    ledgerHead?: XOR<LedgerHeadScalarRelationFilter, LedgerHeadWhereInput>
-    inventory?: InventoryListRelationFilter
+  export type DepoTransactionWhereInput = {
+    AND?: DepoTransactionWhereInput | DepoTransactionWhereInput[]
+    OR?: DepoTransactionWhereInput[]
+    NOT?: DepoTransactionWhereInput | DepoTransactionWhereInput[]
+    id?: IntFilter<"DepoTransaction"> | number
+    date?: DateTimeFilter<"DepoTransaction"> | Date | string
+    providerdepoId?: IntFilter<"DepoTransaction"> | number
+    receverdepoId?: IntFilter<"DepoTransaction"> | number
+    voucherNo?: StringFilter<"DepoTransaction"> | string
+    status?: EnumOrdStatusFilter<"DepoTransaction"> | $Enums.OrdStatus
+    createdAt?: DateTimeFilter<"DepoTransaction"> | Date | string
+    updatedAt?: DateTimeFilter<"DepoTransaction"> | Date | string
+    providerdepo?: XOR<DepoScalarRelationFilter, DepoWhereInput>
+    receverdepo?: XOR<DepoScalarRelationFilter, DepoWhereInput>
+    depoInventories?: DepoInventoryListRelationFilter
   }
 
-  export type FixedJournalOrderByWithRelationInput = {
+  export type DepoTransactionOrderByWithRelationInput = {
     id?: SortOrder
     date?: SortOrder
+    providerdepoId?: SortOrder
+    receverdepoId?: SortOrder
     voucherNo?: SortOrder
-    chemistId?: SortOrder
-    ledgerHeadId?: SortOrder
-    depoId?: SortOrder
-    creditAmount?: SortOrderInput | SortOrder
-    debitAmount?: SortOrderInput | SortOrder
-    narration?: SortOrderInput | SortOrder
-    isClosing?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    chemist?: ChemistOrderByWithRelationInput
-    depo?: DepoOrderByWithRelationInput
-    ledgerHead?: LedgerHeadOrderByWithRelationInput
-    inventory?: InventoryOrderByRelationAggregateInput
-    _relevance?: FixedJournalOrderByRelevanceInput
+    providerdepo?: DepoOrderByWithRelationInput
+    receverdepo?: DepoOrderByWithRelationInput
+    depoInventories?: DepoInventoryOrderByRelationAggregateInput
+    _relevance?: DepoTransactionOrderByRelevanceInput
   }
 
-  export type FixedJournalWhereUniqueInput = Prisma.AtLeast<{
+  export type DepoTransactionWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    AND?: FixedJournalWhereInput | FixedJournalWhereInput[]
-    OR?: FixedJournalWhereInput[]
-    NOT?: FixedJournalWhereInput | FixedJournalWhereInput[]
-    date?: DateTimeFilter<"FixedJournal"> | Date | string
-    voucherNo?: StringFilter<"FixedJournal"> | string
-    chemistId?: StringFilter<"FixedJournal"> | string
-    ledgerHeadId?: IntFilter<"FixedJournal"> | number
-    depoId?: IntFilter<"FixedJournal"> | number
-    creditAmount?: FloatNullableFilter<"FixedJournal"> | number | null
-    debitAmount?: FloatNullableFilter<"FixedJournal"> | number | null
-    narration?: StringNullableFilter<"FixedJournal"> | string | null
-    isClosing?: BoolFilter<"FixedJournal"> | boolean
-    createdAt?: DateTimeFilter<"FixedJournal"> | Date | string
-    updatedAt?: DateTimeFilter<"FixedJournal"> | Date | string
-    chemist?: XOR<ChemistScalarRelationFilter, ChemistWhereInput>
-    depo?: XOR<DepoScalarRelationFilter, DepoWhereInput>
-    ledgerHead?: XOR<LedgerHeadScalarRelationFilter, LedgerHeadWhereInput>
-    inventory?: InventoryListRelationFilter
+    AND?: DepoTransactionWhereInput | DepoTransactionWhereInput[]
+    OR?: DepoTransactionWhereInput[]
+    NOT?: DepoTransactionWhereInput | DepoTransactionWhereInput[]
+    date?: DateTimeFilter<"DepoTransaction"> | Date | string
+    providerdepoId?: IntFilter<"DepoTransaction"> | number
+    receverdepoId?: IntFilter<"DepoTransaction"> | number
+    voucherNo?: StringFilter<"DepoTransaction"> | string
+    status?: EnumOrdStatusFilter<"DepoTransaction"> | $Enums.OrdStatus
+    createdAt?: DateTimeFilter<"DepoTransaction"> | Date | string
+    updatedAt?: DateTimeFilter<"DepoTransaction"> | Date | string
+    providerdepo?: XOR<DepoScalarRelationFilter, DepoWhereInput>
+    receverdepo?: XOR<DepoScalarRelationFilter, DepoWhereInput>
+    depoInventories?: DepoInventoryListRelationFilter
   }, "id">
 
-  export type FixedJournalOrderByWithAggregationInput = {
+  export type DepoTransactionOrderByWithAggregationInput = {
     id?: SortOrder
     date?: SortOrder
+    providerdepoId?: SortOrder
+    receverdepoId?: SortOrder
     voucherNo?: SortOrder
-    chemistId?: SortOrder
-    ledgerHeadId?: SortOrder
-    depoId?: SortOrder
-    creditAmount?: SortOrderInput | SortOrder
-    debitAmount?: SortOrderInput | SortOrder
-    narration?: SortOrderInput | SortOrder
-    isClosing?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    _count?: FixedJournalCountOrderByAggregateInput
-    _avg?: FixedJournalAvgOrderByAggregateInput
-    _max?: FixedJournalMaxOrderByAggregateInput
-    _min?: FixedJournalMinOrderByAggregateInput
-    _sum?: FixedJournalSumOrderByAggregateInput
+    _count?: DepoTransactionCountOrderByAggregateInput
+    _avg?: DepoTransactionAvgOrderByAggregateInput
+    _max?: DepoTransactionMaxOrderByAggregateInput
+    _min?: DepoTransactionMinOrderByAggregateInput
+    _sum?: DepoTransactionSumOrderByAggregateInput
   }
 
-  export type FixedJournalScalarWhereWithAggregatesInput = {
-    AND?: FixedJournalScalarWhereWithAggregatesInput | FixedJournalScalarWhereWithAggregatesInput[]
-    OR?: FixedJournalScalarWhereWithAggregatesInput[]
-    NOT?: FixedJournalScalarWhereWithAggregatesInput | FixedJournalScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"FixedJournal"> | number
-    date?: DateTimeWithAggregatesFilter<"FixedJournal"> | Date | string
-    voucherNo?: StringWithAggregatesFilter<"FixedJournal"> | string
-    chemistId?: StringWithAggregatesFilter<"FixedJournal"> | string
-    ledgerHeadId?: IntWithAggregatesFilter<"FixedJournal"> | number
-    depoId?: IntWithAggregatesFilter<"FixedJournal"> | number
-    creditAmount?: FloatNullableWithAggregatesFilter<"FixedJournal"> | number | null
-    debitAmount?: FloatNullableWithAggregatesFilter<"FixedJournal"> | number | null
-    narration?: StringNullableWithAggregatesFilter<"FixedJournal"> | string | null
-    isClosing?: BoolWithAggregatesFilter<"FixedJournal"> | boolean
-    createdAt?: DateTimeWithAggregatesFilter<"FixedJournal"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"FixedJournal"> | Date | string
+  export type DepoTransactionScalarWhereWithAggregatesInput = {
+    AND?: DepoTransactionScalarWhereWithAggregatesInput | DepoTransactionScalarWhereWithAggregatesInput[]
+    OR?: DepoTransactionScalarWhereWithAggregatesInput[]
+    NOT?: DepoTransactionScalarWhereWithAggregatesInput | DepoTransactionScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"DepoTransaction"> | number
+    date?: DateTimeWithAggregatesFilter<"DepoTransaction"> | Date | string
+    providerdepoId?: IntWithAggregatesFilter<"DepoTransaction"> | number
+    receverdepoId?: IntWithAggregatesFilter<"DepoTransaction"> | number
+    voucherNo?: StringWithAggregatesFilter<"DepoTransaction"> | string
+    status?: EnumOrdStatusWithAggregatesFilter<"DepoTransaction"> | $Enums.OrdStatus
+    createdAt?: DateTimeWithAggregatesFilter<"DepoTransaction"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DepoTransaction"> | Date | string
+  }
+
+  export type DepoJournalWhereInput = {
+    AND?: DepoJournalWhereInput | DepoJournalWhereInput[]
+    OR?: DepoJournalWhereInput[]
+    NOT?: DepoJournalWhereInput | DepoJournalWhereInput[]
+    id?: IntFilter<"DepoJournal"> | number
+    date?: DateTimeFilter<"DepoJournal"> | Date | string
+    depoId?: IntFilter<"DepoJournal"> | number
+    ledgerHeadId?: IntNullableFilter<"DepoJournal"> | number | null
+    amount?: FloatNullableFilter<"DepoJournal"> | number | null
+    narration?: StringNullableFilter<"DepoJournal"> | string | null
+    ledgerHead?: XOR<LedgerHeadNullableScalarRelationFilter, LedgerHeadWhereInput> | null
+  }
+
+  export type DepoJournalOrderByWithRelationInput = {
+    id?: SortOrder
+    date?: SortOrder
+    depoId?: SortOrder
+    ledgerHeadId?: SortOrderInput | SortOrder
+    amount?: SortOrderInput | SortOrder
+    narration?: SortOrderInput | SortOrder
+    ledgerHead?: LedgerHeadOrderByWithRelationInput
+    _relevance?: DepoJournalOrderByRelevanceInput
+  }
+
+  export type DepoJournalWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: DepoJournalWhereInput | DepoJournalWhereInput[]
+    OR?: DepoJournalWhereInput[]
+    NOT?: DepoJournalWhereInput | DepoJournalWhereInput[]
+    date?: DateTimeFilter<"DepoJournal"> | Date | string
+    depoId?: IntFilter<"DepoJournal"> | number
+    ledgerHeadId?: IntNullableFilter<"DepoJournal"> | number | null
+    amount?: FloatNullableFilter<"DepoJournal"> | number | null
+    narration?: StringNullableFilter<"DepoJournal"> | string | null
+    ledgerHead?: XOR<LedgerHeadNullableScalarRelationFilter, LedgerHeadWhereInput> | null
+  }, "id">
+
+  export type DepoJournalOrderByWithAggregationInput = {
+    id?: SortOrder
+    date?: SortOrder
+    depoId?: SortOrder
+    ledgerHeadId?: SortOrderInput | SortOrder
+    amount?: SortOrderInput | SortOrder
+    narration?: SortOrderInput | SortOrder
+    _count?: DepoJournalCountOrderByAggregateInput
+    _avg?: DepoJournalAvgOrderByAggregateInput
+    _max?: DepoJournalMaxOrderByAggregateInput
+    _min?: DepoJournalMinOrderByAggregateInput
+    _sum?: DepoJournalSumOrderByAggregateInput
+  }
+
+  export type DepoJournalScalarWhereWithAggregatesInput = {
+    AND?: DepoJournalScalarWhereWithAggregatesInput | DepoJournalScalarWhereWithAggregatesInput[]
+    OR?: DepoJournalScalarWhereWithAggregatesInput[]
+    NOT?: DepoJournalScalarWhereWithAggregatesInput | DepoJournalScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"DepoJournal"> | number
+    date?: DateTimeWithAggregatesFilter<"DepoJournal"> | Date | string
+    depoId?: IntWithAggregatesFilter<"DepoJournal"> | number
+    ledgerHeadId?: IntNullableWithAggregatesFilter<"DepoJournal"> | number | null
+    amount?: FloatNullableWithAggregatesFilter<"DepoJournal"> | number | null
+    narration?: StringNullableWithAggregatesFilter<"DepoJournal"> | string | null
+  }
+
+  export type DepoInventoryWhereInput = {
+    AND?: DepoInventoryWhereInput | DepoInventoryWhereInput[]
+    OR?: DepoInventoryWhereInput[]
+    NOT?: DepoInventoryWhereInput | DepoInventoryWhereInput[]
+    id?: IntFilter<"DepoInventory"> | number
+    depoTransactionId?: IntNullableFilter<"DepoInventory"> | number | null
+    date?: DateTimeFilter<"DepoInventory"> | Date | string
+    productId?: IntFilter<"DepoInventory"> | number
+    reqQuantity?: IntNullableFilter<"DepoInventory"> | number | null
+    acceptedQuantity?: IntNullableFilter<"DepoInventory"> | number | null
+    unitePrice?: FloatNullableFilter<"DepoInventory"> | number | null
+    amount?: FloatNullableFilter<"DepoInventory"> | number | null
+    createdAt?: DateTimeFilter<"DepoInventory"> | Date | string
+    updatedAt?: DateTimeFilter<"DepoInventory"> | Date | string
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+    depoTransaction?: XOR<DepoTransactionNullableScalarRelationFilter, DepoTransactionWhereInput> | null
+  }
+
+  export type DepoInventoryOrderByWithRelationInput = {
+    id?: SortOrder
+    depoTransactionId?: SortOrderInput | SortOrder
+    date?: SortOrder
+    productId?: SortOrder
+    reqQuantity?: SortOrderInput | SortOrder
+    acceptedQuantity?: SortOrderInput | SortOrder
+    unitePrice?: SortOrderInput | SortOrder
+    amount?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    product?: ProductOrderByWithRelationInput
+    depoTransaction?: DepoTransactionOrderByWithRelationInput
+  }
+
+  export type DepoInventoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: DepoInventoryWhereInput | DepoInventoryWhereInput[]
+    OR?: DepoInventoryWhereInput[]
+    NOT?: DepoInventoryWhereInput | DepoInventoryWhereInput[]
+    depoTransactionId?: IntNullableFilter<"DepoInventory"> | number | null
+    date?: DateTimeFilter<"DepoInventory"> | Date | string
+    productId?: IntFilter<"DepoInventory"> | number
+    reqQuantity?: IntNullableFilter<"DepoInventory"> | number | null
+    acceptedQuantity?: IntNullableFilter<"DepoInventory"> | number | null
+    unitePrice?: FloatNullableFilter<"DepoInventory"> | number | null
+    amount?: FloatNullableFilter<"DepoInventory"> | number | null
+    createdAt?: DateTimeFilter<"DepoInventory"> | Date | string
+    updatedAt?: DateTimeFilter<"DepoInventory"> | Date | string
+    product?: XOR<ProductScalarRelationFilter, ProductWhereInput>
+    depoTransaction?: XOR<DepoTransactionNullableScalarRelationFilter, DepoTransactionWhereInput> | null
+  }, "id">
+
+  export type DepoInventoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    depoTransactionId?: SortOrderInput | SortOrder
+    date?: SortOrder
+    productId?: SortOrder
+    reqQuantity?: SortOrderInput | SortOrder
+    acceptedQuantity?: SortOrderInput | SortOrder
+    unitePrice?: SortOrderInput | SortOrder
+    amount?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DepoInventoryCountOrderByAggregateInput
+    _avg?: DepoInventoryAvgOrderByAggregateInput
+    _max?: DepoInventoryMaxOrderByAggregateInput
+    _min?: DepoInventoryMinOrderByAggregateInput
+    _sum?: DepoInventorySumOrderByAggregateInput
+  }
+
+  export type DepoInventoryScalarWhereWithAggregatesInput = {
+    AND?: DepoInventoryScalarWhereWithAggregatesInput | DepoInventoryScalarWhereWithAggregatesInput[]
+    OR?: DepoInventoryScalarWhereWithAggregatesInput[]
+    NOT?: DepoInventoryScalarWhereWithAggregatesInput | DepoInventoryScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"DepoInventory"> | number
+    depoTransactionId?: IntNullableWithAggregatesFilter<"DepoInventory"> | number | null
+    date?: DateTimeWithAggregatesFilter<"DepoInventory"> | Date | string
+    productId?: IntWithAggregatesFilter<"DepoInventory"> | number
+    reqQuantity?: IntNullableWithAggregatesFilter<"DepoInventory"> | number | null
+    acceptedQuantity?: IntNullableWithAggregatesFilter<"DepoInventory"> | number | null
+    unitePrice?: FloatNullableWithAggregatesFilter<"DepoInventory"> | number | null
+    amount?: FloatNullableWithAggregatesFilter<"DepoInventory"> | number | null
+    createdAt?: DateTimeWithAggregatesFilter<"DepoInventory"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DepoInventory"> | Date | string
   }
 
   export type OrderWhereInput = {
@@ -49542,7 +52019,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     depo: DepoCreateNestedOneWithoutChemistInput
     scopes?: ScopeCreateNestedManyWithoutChemistInput
-    FixedJournal?: FixedJournalCreateNestedManyWithoutChemistInput
     order?: OrderCreateNestedManyWithoutChemistInput
     transactionInfo?: TransactionInfoCreateNestedManyWithoutChemistInput
   }
@@ -49563,7 +52039,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     scopes?: ScopeUncheckedCreateNestedManyWithoutChemistInput
-    FixedJournal?: FixedJournalUncheckedCreateNestedManyWithoutChemistInput
     order?: OrderUncheckedCreateNestedManyWithoutChemistInput
     transactionInfo?: TransactionInfoUncheckedCreateNestedManyWithoutChemistInput
   }
@@ -49583,7 +52058,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     depo?: DepoUpdateOneRequiredWithoutChemistNestedInput
     scopes?: ScopeUpdateManyWithoutChemistNestedInput
-    FixedJournal?: FixedJournalUpdateManyWithoutChemistNestedInput
     order?: OrderUpdateManyWithoutChemistNestedInput
     transactionInfo?: TransactionInfoUpdateManyWithoutChemistNestedInput
   }
@@ -49604,7 +52078,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     scopes?: ScopeUncheckedUpdateManyWithoutChemistNestedInput
-    FixedJournal?: FixedJournalUncheckedUpdateManyWithoutChemistNestedInput
     order?: OrderUncheckedUpdateManyWithoutChemistNestedInput
     transactionInfo?: TransactionInfoUncheckedUpdateManyWithoutChemistNestedInput
   }
@@ -49666,11 +52139,12 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     chemist?: ChemistCreateNestedManyWithoutDepoInput
-    FixedJournal?: FixedJournalCreateNestedManyWithoutDepoInput
     inventory?: InventoryCreateNestedManyWithoutDepoInput
     jobPost?: JobPostCreateNestedManyWithoutDepoInput
     journal?: JournalCreateNestedManyWithoutDepoInput
     scopes?: ScopeCreateNestedManyWithoutDepoInput
+    providerTransactions?: DepoTransactionCreateNestedManyWithoutProviderdepoInput
+    receiverTransactions?: DepoTransactionCreateNestedManyWithoutReceverdepoInput
   }
 
   export type DepoUncheckedCreateInput = {
@@ -49682,11 +52156,12 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     chemist?: ChemistUncheckedCreateNestedManyWithoutDepoInput
-    FixedJournal?: FixedJournalUncheckedCreateNestedManyWithoutDepoInput
     inventory?: InventoryUncheckedCreateNestedManyWithoutDepoInput
     jobPost?: JobPostUncheckedCreateNestedManyWithoutDepoInput
     journal?: JournalUncheckedCreateNestedManyWithoutDepoInput
     scopes?: ScopeUncheckedCreateNestedManyWithoutDepoInput
+    providerTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutProviderdepoInput
+    receiverTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutReceverdepoInput
   }
 
   export type DepoUpdateInput = {
@@ -49697,11 +52172,12 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chemist?: ChemistUpdateManyWithoutDepoNestedInput
-    FixedJournal?: FixedJournalUpdateManyWithoutDepoNestedInput
     inventory?: InventoryUpdateManyWithoutDepoNestedInput
     jobPost?: JobPostUpdateManyWithoutDepoNestedInput
     journal?: JournalUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUpdateManyWithoutDepoNestedInput
+    providerTransactions?: DepoTransactionUpdateManyWithoutProviderdepoNestedInput
+    receiverTransactions?: DepoTransactionUpdateManyWithoutReceverdepoNestedInput
   }
 
   export type DepoUncheckedUpdateInput = {
@@ -49713,11 +52189,12 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chemist?: ChemistUncheckedUpdateManyWithoutDepoNestedInput
-    FixedJournal?: FixedJournalUncheckedUpdateManyWithoutDepoNestedInput
     inventory?: InventoryUncheckedUpdateManyWithoutDepoNestedInput
     jobPost?: JobPostUncheckedUpdateManyWithoutDepoNestedInput
     journal?: JournalUncheckedUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUncheckedUpdateManyWithoutDepoNestedInput
+    providerTransactions?: DepoTransactionUncheckedUpdateManyWithoutProviderdepoNestedInput
+    receiverTransactions?: DepoTransactionUncheckedUpdateManyWithoutReceverdepoNestedInput
   }
 
   export type DepoCreateManyInput = {
@@ -50788,9 +53265,9 @@ export namespace Prisma {
     ledgerCode: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    fixedJournal?: FixedJournalCreateNestedManyWithoutLedgerHeadInput
-    journal?: JournalCreateNestedManyWithoutLedgerHeadInput
     accountHead: AccountHeadCreateNestedOneWithoutLedgerHeadInput
+    journal?: JournalCreateNestedManyWithoutLedgerHeadInput
+    depoJournals?: DepoJournalCreateNestedManyWithoutLedgerHeadInput
   }
 
   export type LedgerHeadUncheckedCreateInput = {
@@ -50800,8 +53277,8 @@ export namespace Prisma {
     headCodeId: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    fixedJournal?: FixedJournalUncheckedCreateNestedManyWithoutLedgerHeadInput
     journal?: JournalUncheckedCreateNestedManyWithoutLedgerHeadInput
+    depoJournals?: DepoJournalUncheckedCreateNestedManyWithoutLedgerHeadInput
   }
 
   export type LedgerHeadUpdateInput = {
@@ -50809,9 +53286,9 @@ export namespace Prisma {
     ledgerCode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    fixedJournal?: FixedJournalUpdateManyWithoutLedgerHeadNestedInput
-    journal?: JournalUpdateManyWithoutLedgerHeadNestedInput
     accountHead?: AccountHeadUpdateOneRequiredWithoutLedgerHeadNestedInput
+    journal?: JournalUpdateManyWithoutLedgerHeadNestedInput
+    depoJournals?: DepoJournalUpdateManyWithoutLedgerHeadNestedInput
   }
 
   export type LedgerHeadUncheckedUpdateInput = {
@@ -50821,8 +53298,8 @@ export namespace Prisma {
     headCodeId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    fixedJournal?: FixedJournalUncheckedUpdateManyWithoutLedgerHeadNestedInput
     journal?: JournalUncheckedUpdateManyWithoutLedgerHeadNestedInput
+    depoJournals?: DepoJournalUncheckedUpdateManyWithoutLedgerHeadNestedInput
   }
 
   export type LedgerHeadCreateManyInput = {
@@ -50869,6 +53346,7 @@ export namespace Prisma {
     Stakeholder?: StakeholderCreateNestedOneWithoutProductInput
     subCategory: SubCategoryCreateNestedOneWithoutProductInput
     unit: UnitCreateNestedOneWithoutProductInput
+    depoInventories?: DepoInventoryCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateInput = {
@@ -50891,6 +53369,7 @@ export namespace Prisma {
     targetProductBatch?: TargetProductBatchUncheckedCreateNestedManyWithoutProductInput
     inventory?: InventoryUncheckedCreateNestedManyWithoutProductInput
     orderItem?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    depoInventories?: DepoInventoryUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductUpdateInput = {
@@ -50912,6 +53391,7 @@ export namespace Prisma {
     Stakeholder?: StakeholderUpdateOneWithoutProductNestedInput
     subCategory?: SubCategoryUpdateOneRequiredWithoutProductNestedInput
     unit?: UnitUpdateOneRequiredWithoutProductNestedInput
+    depoInventories?: DepoInventoryUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -50934,6 +53414,7 @@ export namespace Prisma {
     targetProductBatch?: TargetProductBatchUncheckedUpdateManyWithoutProductNestedInput
     inventory?: InventoryUncheckedUpdateManyWithoutProductNestedInput
     orderItem?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    depoInventories?: DepoInventoryUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateManyInput = {
@@ -51149,9 +53630,7 @@ export namespace Prisma {
     isClosing?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    isFixted?: boolean
     depo?: DepoCreateNestedOneWithoutInventoryInput
-    fixedJournal?: FixedJournalCreateNestedOneWithoutInventoryInput
     product: ProductCreateNestedOneWithoutInventoryInput
     transactionInfo?: TransactionInfoCreateNestedOneWithoutInventoryInput
     user?: UserCreateNestedOneWithoutInventoriesInput
@@ -51164,7 +53643,6 @@ export namespace Prisma {
     depoId?: number | null
     employeeId?: string | null
     transactionId?: number | null
-    fixedJournalId?: number | null
     unitPrice?: number
     quantityAdd?: number | null
     quantityLess?: number | null
@@ -51173,7 +53651,6 @@ export namespace Prisma {
     isClosing?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    isFixted?: boolean
   }
 
   export type InventoryUpdateInput = {
@@ -51186,9 +53663,7 @@ export namespace Prisma {
     isClosing?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isFixted?: BoolFieldUpdateOperationsInput | boolean
     depo?: DepoUpdateOneWithoutInventoryNestedInput
-    fixedJournal?: FixedJournalUpdateOneWithoutInventoryNestedInput
     product?: ProductUpdateOneRequiredWithoutInventoryNestedInput
     transactionInfo?: TransactionInfoUpdateOneWithoutInventoryNestedInput
     user?: UserUpdateOneWithoutInventoriesNestedInput
@@ -51201,7 +53676,6 @@ export namespace Prisma {
     depoId?: NullableIntFieldUpdateOperationsInput | number | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableIntFieldUpdateOperationsInput | number | null
-    fixedJournalId?: NullableIntFieldUpdateOperationsInput | number | null
     unitPrice?: FloatFieldUpdateOperationsInput | number
     quantityAdd?: NullableFloatFieldUpdateOperationsInput | number | null
     quantityLess?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -51210,7 +53684,6 @@ export namespace Prisma {
     isClosing?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isFixted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type InventoryCreateManyInput = {
@@ -51220,7 +53693,6 @@ export namespace Prisma {
     depoId?: number | null
     employeeId?: string | null
     transactionId?: number | null
-    fixedJournalId?: number | null
     unitPrice?: number
     quantityAdd?: number | null
     quantityLess?: number | null
@@ -51229,7 +53701,6 @@ export namespace Prisma {
     isClosing?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    isFixted?: boolean
   }
 
   export type InventoryUpdateManyMutationInput = {
@@ -51242,7 +53713,6 @@ export namespace Prisma {
     isClosing?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isFixted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type InventoryUncheckedUpdateManyInput = {
@@ -51252,7 +53722,6 @@ export namespace Prisma {
     depoId?: NullableIntFieldUpdateOperationsInput | number | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableIntFieldUpdateOperationsInput | number | null
-    fixedJournalId?: NullableIntFieldUpdateOperationsInput | number | null
     unitPrice?: FloatFieldUpdateOperationsInput | number
     quantityAdd?: NullableFloatFieldUpdateOperationsInput | number | null
     quantityLess?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -51261,7 +53730,6 @@ export namespace Prisma {
     isClosing?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isFixted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type TransactionInfoCreateInput = {
@@ -51269,7 +53737,6 @@ export namespace Prisma {
     voucherNo: string
     invoiceNo?: string | null
     voucherType: $Enums.VoucherType
-    paymentType?: $Enums.PaymentType | null
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -51293,7 +53760,6 @@ export namespace Prisma {
     employeeId?: string | null
     partyId?: number | null
     voucherType: $Enums.VoucherType
-    paymentType?: $Enums.PaymentType | null
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -51306,7 +53772,6 @@ export namespace Prisma {
     voucherNo?: StringFieldUpdateOperationsInput | string
     invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    paymentType?: NullableEnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -51330,7 +53795,6 @@ export namespace Prisma {
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     partyId?: NullableIntFieldUpdateOperationsInput | number | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    paymentType?: NullableEnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -51349,7 +53813,6 @@ export namespace Prisma {
     employeeId?: string | null
     partyId?: number | null
     voucherType: $Enums.VoucherType
-    paymentType?: $Enums.PaymentType | null
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -51360,7 +53823,6 @@ export namespace Prisma {
     voucherNo?: StringFieldUpdateOperationsInput | string
     invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    paymentType?: NullableEnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -51377,7 +53839,6 @@ export namespace Prisma {
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     partyId?: NullableIntFieldUpdateOperationsInput | number | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    paymentType?: NullableEnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -51479,105 +53940,223 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type FixedJournalCreateInput = {
+  export type DepoTransactionCreateInput = {
     date: Date | string
     voucherNo: string
-    creditAmount?: number | null
-    debitAmount?: number | null
-    narration?: string | null
-    isClosing?: boolean
+    status?: $Enums.OrdStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    chemist: ChemistCreateNestedOneWithoutFixedJournalInput
-    depo: DepoCreateNestedOneWithoutFixedJournalInput
-    ledgerHead: LedgerHeadCreateNestedOneWithoutFixedJournalInput
-    inventory?: InventoryCreateNestedManyWithoutFixedJournalInput
+    providerdepo: DepoCreateNestedOneWithoutProviderTransactionsInput
+    receverdepo: DepoCreateNestedOneWithoutReceiverTransactionsInput
+    depoInventories?: DepoInventoryCreateNestedManyWithoutDepoTransactionInput
   }
 
-  export type FixedJournalUncheckedCreateInput = {
+  export type DepoTransactionUncheckedCreateInput = {
     id?: number
     date: Date | string
+    providerdepoId: number
+    receverdepoId: number
     voucherNo: string
-    chemistId: string
-    ledgerHeadId: number
-    depoId: number
-    creditAmount?: number | null
-    debitAmount?: number | null
-    narration?: string | null
-    isClosing?: boolean
+    status?: $Enums.OrdStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    inventory?: InventoryUncheckedCreateNestedManyWithoutFixedJournalInput
+    depoInventories?: DepoInventoryUncheckedCreateNestedManyWithoutDepoTransactionInput
   }
 
-  export type FixedJournalUpdateInput = {
+  export type DepoTransactionUpdateInput = {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     voucherNo?: StringFieldUpdateOperationsInput | string
-    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    narration?: NullableStringFieldUpdateOperationsInput | string | null
-    isClosing?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    chemist?: ChemistUpdateOneRequiredWithoutFixedJournalNestedInput
-    depo?: DepoUpdateOneRequiredWithoutFixedJournalNestedInput
-    ledgerHead?: LedgerHeadUpdateOneRequiredWithoutFixedJournalNestedInput
-    inventory?: InventoryUpdateManyWithoutFixedJournalNestedInput
+    providerdepo?: DepoUpdateOneRequiredWithoutProviderTransactionsNestedInput
+    receverdepo?: DepoUpdateOneRequiredWithoutReceiverTransactionsNestedInput
+    depoInventories?: DepoInventoryUpdateManyWithoutDepoTransactionNestedInput
   }
 
-  export type FixedJournalUncheckedUpdateInput = {
+  export type DepoTransactionUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
+    providerdepoId?: IntFieldUpdateOperationsInput | number
+    receverdepoId?: IntFieldUpdateOperationsInput | number
     voucherNo?: StringFieldUpdateOperationsInput | string
-    chemistId?: StringFieldUpdateOperationsInput | string
-    ledgerHeadId?: IntFieldUpdateOperationsInput | number
-    depoId?: IntFieldUpdateOperationsInput | number
-    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    narration?: NullableStringFieldUpdateOperationsInput | string | null
-    isClosing?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    inventory?: InventoryUncheckedUpdateManyWithoutFixedJournalNestedInput
+    depoInventories?: DepoInventoryUncheckedUpdateManyWithoutDepoTransactionNestedInput
   }
 
-  export type FixedJournalCreateManyInput = {
+  export type DepoTransactionCreateManyInput = {
     id?: number
     date: Date | string
+    providerdepoId: number
+    receverdepoId: number
     voucherNo: string
-    chemistId: string
-    ledgerHeadId: number
-    depoId: number
-    creditAmount?: number | null
-    debitAmount?: number | null
-    narration?: string | null
-    isClosing?: boolean
+    status?: $Enums.OrdStatus
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type FixedJournalUpdateManyMutationInput = {
+  export type DepoTransactionUpdateManyMutationInput = {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     voucherNo?: StringFieldUpdateOperationsInput | string
-    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    narration?: NullableStringFieldUpdateOperationsInput | string | null
-    isClosing?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type FixedJournalUncheckedUpdateManyInput = {
+  export type DepoTransactionUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
+    providerdepoId?: IntFieldUpdateOperationsInput | number
+    receverdepoId?: IntFieldUpdateOperationsInput | number
     voucherNo?: StringFieldUpdateOperationsInput | string
-    chemistId?: StringFieldUpdateOperationsInput | string
-    ledgerHeadId?: IntFieldUpdateOperationsInput | number
+    status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepoJournalCreateInput = {
+    date: Date | string
+    depoId: number
+    amount?: number | null
+    narration?: string | null
+    ledgerHead?: LedgerHeadCreateNestedOneWithoutDepoJournalsInput
+  }
+
+  export type DepoJournalUncheckedCreateInput = {
+    id?: number
+    date: Date | string
+    depoId: number
+    ledgerHeadId?: number | null
+    amount?: number | null
+    narration?: string | null
+  }
+
+  export type DepoJournalUpdateInput = {
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
     depoId?: IntFieldUpdateOperationsInput | number
-    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
     narration?: NullableStringFieldUpdateOperationsInput | string | null
-    isClosing?: BoolFieldUpdateOperationsInput | boolean
+    ledgerHead?: LedgerHeadUpdateOneWithoutDepoJournalsNestedInput
+  }
+
+  export type DepoJournalUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    depoId?: IntFieldUpdateOperationsInput | number
+    ledgerHeadId?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    narration?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DepoJournalCreateManyInput = {
+    id?: number
+    date: Date | string
+    depoId: number
+    ledgerHeadId?: number | null
+    amount?: number | null
+    narration?: string | null
+  }
+
+  export type DepoJournalUpdateManyMutationInput = {
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    depoId?: IntFieldUpdateOperationsInput | number
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    narration?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DepoJournalUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    depoId?: IntFieldUpdateOperationsInput | number
+    ledgerHeadId?: NullableIntFieldUpdateOperationsInput | number | null
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    narration?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DepoInventoryCreateInput = {
+    date: Date | string
+    reqQuantity?: number | null
+    acceptedQuantity?: number | null
+    unitePrice?: number | null
+    amount?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    product: ProductCreateNestedOneWithoutDepoInventoriesInput
+    depoTransaction?: DepoTransactionCreateNestedOneWithoutDepoInventoriesInput
+  }
+
+  export type DepoInventoryUncheckedCreateInput = {
+    id?: number
+    depoTransactionId?: number | null
+    date: Date | string
+    productId: number
+    reqQuantity?: number | null
+    acceptedQuantity?: number | null
+    unitePrice?: number | null
+    amount?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepoInventoryUpdateInput = {
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    reqQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    acceptedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    unitePrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneRequiredWithoutDepoInventoriesNestedInput
+    depoTransaction?: DepoTransactionUpdateOneWithoutDepoInventoriesNestedInput
+  }
+
+  export type DepoInventoryUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    depoTransactionId?: NullableIntFieldUpdateOperationsInput | number | null
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    productId?: IntFieldUpdateOperationsInput | number
+    reqQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    acceptedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    unitePrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepoInventoryCreateManyInput = {
+    id?: number
+    depoTransactionId?: number | null
+    date: Date | string
+    productId: number
+    reqQuantity?: number | null
+    acceptedQuantity?: number | null
+    unitePrice?: number | null
+    amount?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepoInventoryUpdateManyMutationInput = {
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    reqQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    acceptedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    unitePrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepoInventoryUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    depoTransactionId?: NullableIntFieldUpdateOperationsInput | number | null
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    productId?: IntFieldUpdateOperationsInput | number
+    reqQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    acceptedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    unitePrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -52808,16 +55387,6 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
-  export type FixedJournalListRelationFilter = {
-    every?: FixedJournalWhereInput
-    some?: FixedJournalWhereInput
-    none?: FixedJournalWhereInput
-  }
-
-  export type FixedJournalOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type ChemistOrderByRelevanceInput = {
     fields: ChemistOrderByRelevanceFieldEnum | ChemistOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -52946,6 +55515,12 @@ export namespace Prisma {
     none?: JournalWhereInput
   }
 
+  export type DepoTransactionListRelationFilter = {
+    every?: DepoTransactionWhereInput
+    some?: DepoTransactionWhereInput
+    none?: DepoTransactionWhereInput
+  }
+
   export type ChemistOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -52955,6 +55530,10 @@ export namespace Prisma {
   }
 
   export type JournalOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DepoTransactionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -53893,6 +56472,16 @@ export namespace Prisma {
     isNot?: AccountHeadWhereInput
   }
 
+  export type DepoJournalListRelationFilter = {
+    every?: DepoJournalWhereInput
+    some?: DepoJournalWhereInput
+    none?: DepoJournalWhereInput
+  }
+
+  export type DepoJournalOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type LedgerHeadOrderByRelevanceInput = {
     fields: LedgerHeadOrderByRelevanceFieldEnum | LedgerHeadOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -53952,7 +56541,17 @@ export namespace Prisma {
     isNot?: UnitWhereInput
   }
 
+  export type DepoInventoryListRelationFilter = {
+    every?: DepoInventoryWhereInput
+    some?: DepoInventoryWhereInput
+    none?: DepoInventoryWhereInput
+  }
+
   export type OrderItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DepoInventoryOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -54169,11 +56768,6 @@ export namespace Prisma {
     isNot?: DepoWhereInput | null
   }
 
-  export type FixedJournalNullableScalarRelationFilter = {
-    is?: FixedJournalWhereInput | null
-    isNot?: FixedJournalWhereInput | null
-  }
-
   export type TransactionInfoNullableScalarRelationFilter = {
     is?: TransactionInfoWhereInput | null
     isNot?: TransactionInfoWhereInput | null
@@ -54197,7 +56791,6 @@ export namespace Prisma {
     depoId?: SortOrder
     employeeId?: SortOrder
     transactionId?: SortOrder
-    fixedJournalId?: SortOrder
     unitPrice?: SortOrder
     quantityAdd?: SortOrder
     quantityLess?: SortOrder
@@ -54206,7 +56799,6 @@ export namespace Prisma {
     isClosing?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    isFixted?: SortOrder
   }
 
   export type InventoryAvgOrderByAggregateInput = {
@@ -54214,7 +56806,6 @@ export namespace Prisma {
     productId?: SortOrder
     depoId?: SortOrder
     transactionId?: SortOrder
-    fixedJournalId?: SortOrder
     unitPrice?: SortOrder
     quantityAdd?: SortOrder
     quantityLess?: SortOrder
@@ -54229,7 +56820,6 @@ export namespace Prisma {
     depoId?: SortOrder
     employeeId?: SortOrder
     transactionId?: SortOrder
-    fixedJournalId?: SortOrder
     unitPrice?: SortOrder
     quantityAdd?: SortOrder
     quantityLess?: SortOrder
@@ -54238,7 +56828,6 @@ export namespace Prisma {
     isClosing?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    isFixted?: SortOrder
   }
 
   export type InventoryMinOrderByAggregateInput = {
@@ -54248,7 +56837,6 @@ export namespace Prisma {
     depoId?: SortOrder
     employeeId?: SortOrder
     transactionId?: SortOrder
-    fixedJournalId?: SortOrder
     unitPrice?: SortOrder
     quantityAdd?: SortOrder
     quantityLess?: SortOrder
@@ -54257,7 +56845,6 @@ export namespace Prisma {
     isClosing?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    isFixted?: SortOrder
   }
 
   export type InventorySumOrderByAggregateInput = {
@@ -54265,7 +56852,6 @@ export namespace Prisma {
     productId?: SortOrder
     depoId?: SortOrder
     transactionId?: SortOrder
-    fixedJournalId?: SortOrder
     unitPrice?: SortOrder
     quantityAdd?: SortOrder
     quantityLess?: SortOrder
@@ -54278,13 +56864,6 @@ export namespace Prisma {
     in?: $Enums.VoucherType[]
     notIn?: $Enums.VoucherType[]
     not?: NestedEnumVoucherTypeFilter<$PrismaModel> | $Enums.VoucherType
-  }
-
-  export type EnumPaymentTypeNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.PaymentType | EnumPaymentTypeFieldRefInput<$PrismaModel> | null
-    in?: $Enums.PaymentType[] | null
-    notIn?: $Enums.PaymentType[] | null
-    not?: NestedEnumPaymentTypeNullableFilter<$PrismaModel> | $Enums.PaymentType | null
   }
 
   export type ChemistNullableScalarRelationFilter = {
@@ -54319,7 +56898,6 @@ export namespace Prisma {
     employeeId?: SortOrder
     partyId?: SortOrder
     voucherType?: SortOrder
-    paymentType?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -54342,7 +56920,6 @@ export namespace Prisma {
     employeeId?: SortOrder
     partyId?: SortOrder
     voucherType?: SortOrder
-    paymentType?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -54359,7 +56936,6 @@ export namespace Prisma {
     employeeId?: SortOrder
     partyId?: SortOrder
     voucherType?: SortOrder
-    paymentType?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -54379,16 +56955,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumVoucherTypeFilter<$PrismaModel>
     _max?: NestedEnumVoucherTypeFilter<$PrismaModel>
-  }
-
-  export type EnumPaymentTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.PaymentType | EnumPaymentTypeFieldRefInput<$PrismaModel> | null
-    in?: $Enums.PaymentType[] | null
-    notIn?: $Enums.PaymentType[] | null
-    not?: NestedEnumPaymentTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.PaymentType | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumPaymentTypeNullableFilter<$PrismaModel>
-    _max?: NestedEnumPaymentTypeNullableFilter<$PrismaModel>
   }
 
   export type LedgerHeadNullableScalarRelationFilter = {
@@ -54462,87 +57028,194 @@ export namespace Prisma {
     debitAmount?: SortOrder
   }
 
-  export type ChemistScalarRelationFilter = {
-    is?: ChemistWhereInput
-    isNot?: ChemistWhereInput
+  export type EnumOrdStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrdStatus | EnumOrdStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.OrdStatus[]
+    notIn?: $Enums.OrdStatus[]
+    not?: NestedEnumOrdStatusFilter<$PrismaModel> | $Enums.OrdStatus
   }
 
-  export type LedgerHeadScalarRelationFilter = {
-    is?: LedgerHeadWhereInput
-    isNot?: LedgerHeadWhereInput
-  }
-
-  export type FixedJournalOrderByRelevanceInput = {
-    fields: FixedJournalOrderByRelevanceFieldEnum | FixedJournalOrderByRelevanceFieldEnum[]
+  export type DepoTransactionOrderByRelevanceInput = {
+    fields: DepoTransactionOrderByRelevanceFieldEnum | DepoTransactionOrderByRelevanceFieldEnum[]
     sort: SortOrder
     search: string
   }
 
-  export type FixedJournalCountOrderByAggregateInput = {
+  export type DepoTransactionCountOrderByAggregateInput = {
     id?: SortOrder
     date?: SortOrder
+    providerdepoId?: SortOrder
+    receverdepoId?: SortOrder
     voucherNo?: SortOrder
-    chemistId?: SortOrder
-    ledgerHeadId?: SortOrder
-    depoId?: SortOrder
-    creditAmount?: SortOrder
-    debitAmount?: SortOrder
-    narration?: SortOrder
-    isClosing?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type FixedJournalAvgOrderByAggregateInput = {
+  export type DepoTransactionAvgOrderByAggregateInput = {
     id?: SortOrder
-    ledgerHeadId?: SortOrder
-    depoId?: SortOrder
-    creditAmount?: SortOrder
-    debitAmount?: SortOrder
+    providerdepoId?: SortOrder
+    receverdepoId?: SortOrder
   }
 
-  export type FixedJournalMaxOrderByAggregateInput = {
+  export type DepoTransactionMaxOrderByAggregateInput = {
     id?: SortOrder
     date?: SortOrder
+    providerdepoId?: SortOrder
+    receverdepoId?: SortOrder
     voucherNo?: SortOrder
-    chemistId?: SortOrder
-    ledgerHeadId?: SortOrder
-    depoId?: SortOrder
-    creditAmount?: SortOrder
-    debitAmount?: SortOrder
-    narration?: SortOrder
-    isClosing?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type FixedJournalMinOrderByAggregateInput = {
+  export type DepoTransactionMinOrderByAggregateInput = {
     id?: SortOrder
     date?: SortOrder
+    providerdepoId?: SortOrder
+    receverdepoId?: SortOrder
     voucherNo?: SortOrder
-    chemistId?: SortOrder
-    ledgerHeadId?: SortOrder
-    depoId?: SortOrder
-    creditAmount?: SortOrder
-    debitAmount?: SortOrder
-    narration?: SortOrder
-    isClosing?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type FixedJournalSumOrderByAggregateInput = {
+  export type DepoTransactionSumOrderByAggregateInput = {
     id?: SortOrder
-    ledgerHeadId?: SortOrder
+    providerdepoId?: SortOrder
+    receverdepoId?: SortOrder
+  }
+
+  export type EnumOrdStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OrdStatus | EnumOrdStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.OrdStatus[]
+    notIn?: $Enums.OrdStatus[]
+    not?: NestedEnumOrdStatusWithAggregatesFilter<$PrismaModel> | $Enums.OrdStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumOrdStatusFilter<$PrismaModel>
+    _max?: NestedEnumOrdStatusFilter<$PrismaModel>
+  }
+
+  export type DepoJournalOrderByRelevanceInput = {
+    fields: DepoJournalOrderByRelevanceFieldEnum | DepoJournalOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type DepoJournalCountOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
     depoId?: SortOrder
-    creditAmount?: SortOrder
-    debitAmount?: SortOrder
+    ledgerHeadId?: SortOrder
+    amount?: SortOrder
+    narration?: SortOrder
+  }
+
+  export type DepoJournalAvgOrderByAggregateInput = {
+    id?: SortOrder
+    depoId?: SortOrder
+    ledgerHeadId?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type DepoJournalMaxOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
+    depoId?: SortOrder
+    ledgerHeadId?: SortOrder
+    amount?: SortOrder
+    narration?: SortOrder
+  }
+
+  export type DepoJournalMinOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
+    depoId?: SortOrder
+    ledgerHeadId?: SortOrder
+    amount?: SortOrder
+    narration?: SortOrder
+  }
+
+  export type DepoJournalSumOrderByAggregateInput = {
+    id?: SortOrder
+    depoId?: SortOrder
+    ledgerHeadId?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type DepoTransactionNullableScalarRelationFilter = {
+    is?: DepoTransactionWhereInput | null
+    isNot?: DepoTransactionWhereInput | null
+  }
+
+  export type DepoInventoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    depoTransactionId?: SortOrder
+    date?: SortOrder
+    productId?: SortOrder
+    reqQuantity?: SortOrder
+    acceptedQuantity?: SortOrder
+    unitePrice?: SortOrder
+    amount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepoInventoryAvgOrderByAggregateInput = {
+    id?: SortOrder
+    depoTransactionId?: SortOrder
+    productId?: SortOrder
+    reqQuantity?: SortOrder
+    acceptedQuantity?: SortOrder
+    unitePrice?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type DepoInventoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    depoTransactionId?: SortOrder
+    date?: SortOrder
+    productId?: SortOrder
+    reqQuantity?: SortOrder
+    acceptedQuantity?: SortOrder
+    unitePrice?: SortOrder
+    amount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepoInventoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    depoTransactionId?: SortOrder
+    date?: SortOrder
+    productId?: SortOrder
+    reqQuantity?: SortOrder
+    acceptedQuantity?: SortOrder
+    unitePrice?: SortOrder
+    amount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DepoInventorySumOrderByAggregateInput = {
+    id?: SortOrder
+    depoTransactionId?: SortOrder
+    productId?: SortOrder
+    reqQuantity?: SortOrder
+    acceptedQuantity?: SortOrder
+    unitePrice?: SortOrder
+    amount?: SortOrder
   }
 
   export type OrderStatusListRelationFilter = {
     every?: OrderStatusWhereInput
     some?: OrderStatusWhereInput
     none?: OrderStatusWhereInput
+  }
+
+  export type ChemistScalarRelationFilter = {
+    is?: ChemistWhereInput
+    isNot?: ChemistWhereInput
   }
 
   export type OrderStatusOrderByRelationAggregateInput = {
@@ -54648,13 +57321,6 @@ export namespace Prisma {
     amount?: SortOrder
   }
 
-  export type EnumOrdStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.OrdStatus | EnumOrdStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.OrdStatus[]
-    notIn?: $Enums.OrdStatus[]
-    not?: NestedEnumOrdStatusFilter<$PrismaModel> | $Enums.OrdStatus
-  }
-
   export type OrderNullableScalarRelationFilter = {
     is?: OrderWhereInput | null
     isNot?: OrderWhereInput | null
@@ -54702,16 +57368,6 @@ export namespace Prisma {
 
   export type OrderStatusSumOrderByAggregateInput = {
     id?: SortOrder
-  }
-
-  export type EnumOrdStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.OrdStatus | EnumOrdStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.OrdStatus[]
-    notIn?: $Enums.OrdStatus[]
-    not?: NestedEnumOrdStatusWithAggregatesFilter<$PrismaModel> | $Enums.OrdStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumOrdStatusFilter<$PrismaModel>
-    _max?: NestedEnumOrdStatusFilter<$PrismaModel>
   }
 
   export type AttendanceOrderByRelevanceInput = {
@@ -55658,13 +58314,6 @@ export namespace Prisma {
     connect?: ScopeWhereUniqueInput | ScopeWhereUniqueInput[]
   }
 
-  export type FixedJournalCreateNestedManyWithoutChemistInput = {
-    create?: XOR<FixedJournalCreateWithoutChemistInput, FixedJournalUncheckedCreateWithoutChemistInput> | FixedJournalCreateWithoutChemistInput[] | FixedJournalUncheckedCreateWithoutChemistInput[]
-    connectOrCreate?: FixedJournalCreateOrConnectWithoutChemistInput | FixedJournalCreateOrConnectWithoutChemistInput[]
-    createMany?: FixedJournalCreateManyChemistInputEnvelope
-    connect?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-  }
-
   export type OrderCreateNestedManyWithoutChemistInput = {
     create?: XOR<OrderCreateWithoutChemistInput, OrderUncheckedCreateWithoutChemistInput> | OrderCreateWithoutChemistInput[] | OrderUncheckedCreateWithoutChemistInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutChemistInput | OrderCreateOrConnectWithoutChemistInput[]
@@ -55683,13 +58332,6 @@ export namespace Prisma {
     create?: XOR<ScopeCreateWithoutChemistInput, ScopeUncheckedCreateWithoutChemistInput> | ScopeCreateWithoutChemistInput[] | ScopeUncheckedCreateWithoutChemistInput[]
     connectOrCreate?: ScopeCreateOrConnectWithoutChemistInput | ScopeCreateOrConnectWithoutChemistInput[]
     connect?: ScopeWhereUniqueInput | ScopeWhereUniqueInput[]
-  }
-
-  export type FixedJournalUncheckedCreateNestedManyWithoutChemistInput = {
-    create?: XOR<FixedJournalCreateWithoutChemistInput, FixedJournalUncheckedCreateWithoutChemistInput> | FixedJournalCreateWithoutChemistInput[] | FixedJournalUncheckedCreateWithoutChemistInput[]
-    connectOrCreate?: FixedJournalCreateOrConnectWithoutChemistInput | FixedJournalCreateOrConnectWithoutChemistInput[]
-    createMany?: FixedJournalCreateManyChemistInputEnvelope
-    connect?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
   }
 
   export type OrderUncheckedCreateNestedManyWithoutChemistInput = {
@@ -55743,20 +58385,6 @@ export namespace Prisma {
     deleteMany?: ScopeScalarWhereInput | ScopeScalarWhereInput[]
   }
 
-  export type FixedJournalUpdateManyWithoutChemistNestedInput = {
-    create?: XOR<FixedJournalCreateWithoutChemistInput, FixedJournalUncheckedCreateWithoutChemistInput> | FixedJournalCreateWithoutChemistInput[] | FixedJournalUncheckedCreateWithoutChemistInput[]
-    connectOrCreate?: FixedJournalCreateOrConnectWithoutChemistInput | FixedJournalCreateOrConnectWithoutChemistInput[]
-    upsert?: FixedJournalUpsertWithWhereUniqueWithoutChemistInput | FixedJournalUpsertWithWhereUniqueWithoutChemistInput[]
-    createMany?: FixedJournalCreateManyChemistInputEnvelope
-    set?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    disconnect?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    delete?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    connect?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    update?: FixedJournalUpdateWithWhereUniqueWithoutChemistInput | FixedJournalUpdateWithWhereUniqueWithoutChemistInput[]
-    updateMany?: FixedJournalUpdateManyWithWhereWithoutChemistInput | FixedJournalUpdateManyWithWhereWithoutChemistInput[]
-    deleteMany?: FixedJournalScalarWhereInput | FixedJournalScalarWhereInput[]
-  }
-
   export type OrderUpdateManyWithoutChemistNestedInput = {
     create?: XOR<OrderCreateWithoutChemistInput, OrderUncheckedCreateWithoutChemistInput> | OrderCreateWithoutChemistInput[] | OrderUncheckedCreateWithoutChemistInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutChemistInput | OrderCreateOrConnectWithoutChemistInput[]
@@ -55798,20 +58426,6 @@ export namespace Prisma {
     deleteMany?: ScopeScalarWhereInput | ScopeScalarWhereInput[]
   }
 
-  export type FixedJournalUncheckedUpdateManyWithoutChemistNestedInput = {
-    create?: XOR<FixedJournalCreateWithoutChemistInput, FixedJournalUncheckedCreateWithoutChemistInput> | FixedJournalCreateWithoutChemistInput[] | FixedJournalUncheckedCreateWithoutChemistInput[]
-    connectOrCreate?: FixedJournalCreateOrConnectWithoutChemistInput | FixedJournalCreateOrConnectWithoutChemistInput[]
-    upsert?: FixedJournalUpsertWithWhereUniqueWithoutChemistInput | FixedJournalUpsertWithWhereUniqueWithoutChemistInput[]
-    createMany?: FixedJournalCreateManyChemistInputEnvelope
-    set?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    disconnect?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    delete?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    connect?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    update?: FixedJournalUpdateWithWhereUniqueWithoutChemistInput | FixedJournalUpdateWithWhereUniqueWithoutChemistInput[]
-    updateMany?: FixedJournalUpdateManyWithWhereWithoutChemistInput | FixedJournalUpdateManyWithWhereWithoutChemistInput[]
-    deleteMany?: FixedJournalScalarWhereInput | FixedJournalScalarWhereInput[]
-  }
-
   export type OrderUncheckedUpdateManyWithoutChemistNestedInput = {
     create?: XOR<OrderCreateWithoutChemistInput, OrderUncheckedCreateWithoutChemistInput> | OrderCreateWithoutChemistInput[] | OrderUncheckedCreateWithoutChemistInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutChemistInput | OrderCreateOrConnectWithoutChemistInput[]
@@ -55847,13 +58461,6 @@ export namespace Prisma {
     connect?: ChemistWhereUniqueInput | ChemistWhereUniqueInput[]
   }
 
-  export type FixedJournalCreateNestedManyWithoutDepoInput = {
-    create?: XOR<FixedJournalCreateWithoutDepoInput, FixedJournalUncheckedCreateWithoutDepoInput> | FixedJournalCreateWithoutDepoInput[] | FixedJournalUncheckedCreateWithoutDepoInput[]
-    connectOrCreate?: FixedJournalCreateOrConnectWithoutDepoInput | FixedJournalCreateOrConnectWithoutDepoInput[]
-    createMany?: FixedJournalCreateManyDepoInputEnvelope
-    connect?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-  }
-
   export type InventoryCreateNestedManyWithoutDepoInput = {
     create?: XOR<InventoryCreateWithoutDepoInput, InventoryUncheckedCreateWithoutDepoInput> | InventoryCreateWithoutDepoInput[] | InventoryUncheckedCreateWithoutDepoInput[]
     connectOrCreate?: InventoryCreateOrConnectWithoutDepoInput | InventoryCreateOrConnectWithoutDepoInput[]
@@ -55881,18 +58488,25 @@ export namespace Prisma {
     connect?: ScopeWhereUniqueInput | ScopeWhereUniqueInput[]
   }
 
+  export type DepoTransactionCreateNestedManyWithoutProviderdepoInput = {
+    create?: XOR<DepoTransactionCreateWithoutProviderdepoInput, DepoTransactionUncheckedCreateWithoutProviderdepoInput> | DepoTransactionCreateWithoutProviderdepoInput[] | DepoTransactionUncheckedCreateWithoutProviderdepoInput[]
+    connectOrCreate?: DepoTransactionCreateOrConnectWithoutProviderdepoInput | DepoTransactionCreateOrConnectWithoutProviderdepoInput[]
+    createMany?: DepoTransactionCreateManyProviderdepoInputEnvelope
+    connect?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
+  }
+
+  export type DepoTransactionCreateNestedManyWithoutReceverdepoInput = {
+    create?: XOR<DepoTransactionCreateWithoutReceverdepoInput, DepoTransactionUncheckedCreateWithoutReceverdepoInput> | DepoTransactionCreateWithoutReceverdepoInput[] | DepoTransactionUncheckedCreateWithoutReceverdepoInput[]
+    connectOrCreate?: DepoTransactionCreateOrConnectWithoutReceverdepoInput | DepoTransactionCreateOrConnectWithoutReceverdepoInput[]
+    createMany?: DepoTransactionCreateManyReceverdepoInputEnvelope
+    connect?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
+  }
+
   export type ChemistUncheckedCreateNestedManyWithoutDepoInput = {
     create?: XOR<ChemistCreateWithoutDepoInput, ChemistUncheckedCreateWithoutDepoInput> | ChemistCreateWithoutDepoInput[] | ChemistUncheckedCreateWithoutDepoInput[]
     connectOrCreate?: ChemistCreateOrConnectWithoutDepoInput | ChemistCreateOrConnectWithoutDepoInput[]
     createMany?: ChemistCreateManyDepoInputEnvelope
     connect?: ChemistWhereUniqueInput | ChemistWhereUniqueInput[]
-  }
-
-  export type FixedJournalUncheckedCreateNestedManyWithoutDepoInput = {
-    create?: XOR<FixedJournalCreateWithoutDepoInput, FixedJournalUncheckedCreateWithoutDepoInput> | FixedJournalCreateWithoutDepoInput[] | FixedJournalUncheckedCreateWithoutDepoInput[]
-    connectOrCreate?: FixedJournalCreateOrConnectWithoutDepoInput | FixedJournalCreateOrConnectWithoutDepoInput[]
-    createMany?: FixedJournalCreateManyDepoInputEnvelope
-    connect?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
   }
 
   export type InventoryUncheckedCreateNestedManyWithoutDepoInput = {
@@ -55922,6 +58536,20 @@ export namespace Prisma {
     connect?: ScopeWhereUniqueInput | ScopeWhereUniqueInput[]
   }
 
+  export type DepoTransactionUncheckedCreateNestedManyWithoutProviderdepoInput = {
+    create?: XOR<DepoTransactionCreateWithoutProviderdepoInput, DepoTransactionUncheckedCreateWithoutProviderdepoInput> | DepoTransactionCreateWithoutProviderdepoInput[] | DepoTransactionUncheckedCreateWithoutProviderdepoInput[]
+    connectOrCreate?: DepoTransactionCreateOrConnectWithoutProviderdepoInput | DepoTransactionCreateOrConnectWithoutProviderdepoInput[]
+    createMany?: DepoTransactionCreateManyProviderdepoInputEnvelope
+    connect?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
+  }
+
+  export type DepoTransactionUncheckedCreateNestedManyWithoutReceverdepoInput = {
+    create?: XOR<DepoTransactionCreateWithoutReceverdepoInput, DepoTransactionUncheckedCreateWithoutReceverdepoInput> | DepoTransactionCreateWithoutReceverdepoInput[] | DepoTransactionUncheckedCreateWithoutReceverdepoInput[]
+    connectOrCreate?: DepoTransactionCreateOrConnectWithoutReceverdepoInput | DepoTransactionCreateOrConnectWithoutReceverdepoInput[]
+    createMany?: DepoTransactionCreateManyReceverdepoInputEnvelope
+    connect?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
+  }
+
   export type EnumStatusFieldUpdateOperationsInput = {
     set?: $Enums.Status
   }
@@ -55938,20 +58566,6 @@ export namespace Prisma {
     update?: ChemistUpdateWithWhereUniqueWithoutDepoInput | ChemistUpdateWithWhereUniqueWithoutDepoInput[]
     updateMany?: ChemistUpdateManyWithWhereWithoutDepoInput | ChemistUpdateManyWithWhereWithoutDepoInput[]
     deleteMany?: ChemistScalarWhereInput | ChemistScalarWhereInput[]
-  }
-
-  export type FixedJournalUpdateManyWithoutDepoNestedInput = {
-    create?: XOR<FixedJournalCreateWithoutDepoInput, FixedJournalUncheckedCreateWithoutDepoInput> | FixedJournalCreateWithoutDepoInput[] | FixedJournalUncheckedCreateWithoutDepoInput[]
-    connectOrCreate?: FixedJournalCreateOrConnectWithoutDepoInput | FixedJournalCreateOrConnectWithoutDepoInput[]
-    upsert?: FixedJournalUpsertWithWhereUniqueWithoutDepoInput | FixedJournalUpsertWithWhereUniqueWithoutDepoInput[]
-    createMany?: FixedJournalCreateManyDepoInputEnvelope
-    set?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    disconnect?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    delete?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    connect?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    update?: FixedJournalUpdateWithWhereUniqueWithoutDepoInput | FixedJournalUpdateWithWhereUniqueWithoutDepoInput[]
-    updateMany?: FixedJournalUpdateManyWithWhereWithoutDepoInput | FixedJournalUpdateManyWithWhereWithoutDepoInput[]
-    deleteMany?: FixedJournalScalarWhereInput | FixedJournalScalarWhereInput[]
   }
 
   export type InventoryUpdateManyWithoutDepoNestedInput = {
@@ -56009,6 +58623,34 @@ export namespace Prisma {
     deleteMany?: ScopeScalarWhereInput | ScopeScalarWhereInput[]
   }
 
+  export type DepoTransactionUpdateManyWithoutProviderdepoNestedInput = {
+    create?: XOR<DepoTransactionCreateWithoutProviderdepoInput, DepoTransactionUncheckedCreateWithoutProviderdepoInput> | DepoTransactionCreateWithoutProviderdepoInput[] | DepoTransactionUncheckedCreateWithoutProviderdepoInput[]
+    connectOrCreate?: DepoTransactionCreateOrConnectWithoutProviderdepoInput | DepoTransactionCreateOrConnectWithoutProviderdepoInput[]
+    upsert?: DepoTransactionUpsertWithWhereUniqueWithoutProviderdepoInput | DepoTransactionUpsertWithWhereUniqueWithoutProviderdepoInput[]
+    createMany?: DepoTransactionCreateManyProviderdepoInputEnvelope
+    set?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
+    disconnect?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
+    delete?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
+    connect?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
+    update?: DepoTransactionUpdateWithWhereUniqueWithoutProviderdepoInput | DepoTransactionUpdateWithWhereUniqueWithoutProviderdepoInput[]
+    updateMany?: DepoTransactionUpdateManyWithWhereWithoutProviderdepoInput | DepoTransactionUpdateManyWithWhereWithoutProviderdepoInput[]
+    deleteMany?: DepoTransactionScalarWhereInput | DepoTransactionScalarWhereInput[]
+  }
+
+  export type DepoTransactionUpdateManyWithoutReceverdepoNestedInput = {
+    create?: XOR<DepoTransactionCreateWithoutReceverdepoInput, DepoTransactionUncheckedCreateWithoutReceverdepoInput> | DepoTransactionCreateWithoutReceverdepoInput[] | DepoTransactionUncheckedCreateWithoutReceverdepoInput[]
+    connectOrCreate?: DepoTransactionCreateOrConnectWithoutReceverdepoInput | DepoTransactionCreateOrConnectWithoutReceverdepoInput[]
+    upsert?: DepoTransactionUpsertWithWhereUniqueWithoutReceverdepoInput | DepoTransactionUpsertWithWhereUniqueWithoutReceverdepoInput[]
+    createMany?: DepoTransactionCreateManyReceverdepoInputEnvelope
+    set?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
+    disconnect?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
+    delete?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
+    connect?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
+    update?: DepoTransactionUpdateWithWhereUniqueWithoutReceverdepoInput | DepoTransactionUpdateWithWhereUniqueWithoutReceverdepoInput[]
+    updateMany?: DepoTransactionUpdateManyWithWhereWithoutReceverdepoInput | DepoTransactionUpdateManyWithWhereWithoutReceverdepoInput[]
+    deleteMany?: DepoTransactionScalarWhereInput | DepoTransactionScalarWhereInput[]
+  }
+
   export type ChemistUncheckedUpdateManyWithoutDepoNestedInput = {
     create?: XOR<ChemistCreateWithoutDepoInput, ChemistUncheckedCreateWithoutDepoInput> | ChemistCreateWithoutDepoInput[] | ChemistUncheckedCreateWithoutDepoInput[]
     connectOrCreate?: ChemistCreateOrConnectWithoutDepoInput | ChemistCreateOrConnectWithoutDepoInput[]
@@ -56021,20 +58663,6 @@ export namespace Prisma {
     update?: ChemistUpdateWithWhereUniqueWithoutDepoInput | ChemistUpdateWithWhereUniqueWithoutDepoInput[]
     updateMany?: ChemistUpdateManyWithWhereWithoutDepoInput | ChemistUpdateManyWithWhereWithoutDepoInput[]
     deleteMany?: ChemistScalarWhereInput | ChemistScalarWhereInput[]
-  }
-
-  export type FixedJournalUncheckedUpdateManyWithoutDepoNestedInput = {
-    create?: XOR<FixedJournalCreateWithoutDepoInput, FixedJournalUncheckedCreateWithoutDepoInput> | FixedJournalCreateWithoutDepoInput[] | FixedJournalUncheckedCreateWithoutDepoInput[]
-    connectOrCreate?: FixedJournalCreateOrConnectWithoutDepoInput | FixedJournalCreateOrConnectWithoutDepoInput[]
-    upsert?: FixedJournalUpsertWithWhereUniqueWithoutDepoInput | FixedJournalUpsertWithWhereUniqueWithoutDepoInput[]
-    createMany?: FixedJournalCreateManyDepoInputEnvelope
-    set?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    disconnect?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    delete?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    connect?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    update?: FixedJournalUpdateWithWhereUniqueWithoutDepoInput | FixedJournalUpdateWithWhereUniqueWithoutDepoInput[]
-    updateMany?: FixedJournalUpdateManyWithWhereWithoutDepoInput | FixedJournalUpdateManyWithWhereWithoutDepoInput[]
-    deleteMany?: FixedJournalScalarWhereInput | FixedJournalScalarWhereInput[]
   }
 
   export type InventoryUncheckedUpdateManyWithoutDepoNestedInput = {
@@ -56090,6 +58718,34 @@ export namespace Prisma {
     update?: ScopeUpdateWithWhereUniqueWithoutDepoInput | ScopeUpdateWithWhereUniqueWithoutDepoInput[]
     updateMany?: ScopeUpdateManyWithWhereWithoutDepoInput | ScopeUpdateManyWithWhereWithoutDepoInput[]
     deleteMany?: ScopeScalarWhereInput | ScopeScalarWhereInput[]
+  }
+
+  export type DepoTransactionUncheckedUpdateManyWithoutProviderdepoNestedInput = {
+    create?: XOR<DepoTransactionCreateWithoutProviderdepoInput, DepoTransactionUncheckedCreateWithoutProviderdepoInput> | DepoTransactionCreateWithoutProviderdepoInput[] | DepoTransactionUncheckedCreateWithoutProviderdepoInput[]
+    connectOrCreate?: DepoTransactionCreateOrConnectWithoutProviderdepoInput | DepoTransactionCreateOrConnectWithoutProviderdepoInput[]
+    upsert?: DepoTransactionUpsertWithWhereUniqueWithoutProviderdepoInput | DepoTransactionUpsertWithWhereUniqueWithoutProviderdepoInput[]
+    createMany?: DepoTransactionCreateManyProviderdepoInputEnvelope
+    set?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
+    disconnect?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
+    delete?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
+    connect?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
+    update?: DepoTransactionUpdateWithWhereUniqueWithoutProviderdepoInput | DepoTransactionUpdateWithWhereUniqueWithoutProviderdepoInput[]
+    updateMany?: DepoTransactionUpdateManyWithWhereWithoutProviderdepoInput | DepoTransactionUpdateManyWithWhereWithoutProviderdepoInput[]
+    deleteMany?: DepoTransactionScalarWhereInput | DepoTransactionScalarWhereInput[]
+  }
+
+  export type DepoTransactionUncheckedUpdateManyWithoutReceverdepoNestedInput = {
+    create?: XOR<DepoTransactionCreateWithoutReceverdepoInput, DepoTransactionUncheckedCreateWithoutReceverdepoInput> | DepoTransactionCreateWithoutReceverdepoInput[] | DepoTransactionUncheckedCreateWithoutReceverdepoInput[]
+    connectOrCreate?: DepoTransactionCreateOrConnectWithoutReceverdepoInput | DepoTransactionCreateOrConnectWithoutReceverdepoInput[]
+    upsert?: DepoTransactionUpsertWithWhereUniqueWithoutReceverdepoInput | DepoTransactionUpsertWithWhereUniqueWithoutReceverdepoInput[]
+    createMany?: DepoTransactionCreateManyReceverdepoInputEnvelope
+    set?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
+    disconnect?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
+    delete?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
+    connect?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
+    update?: DepoTransactionUpdateWithWhereUniqueWithoutReceverdepoInput | DepoTransactionUpdateWithWhereUniqueWithoutReceverdepoInput[]
+    updateMany?: DepoTransactionUpdateManyWithWhereWithoutReceverdepoInput | DepoTransactionUpdateManyWithWhereWithoutReceverdepoInput[]
+    deleteMany?: DepoTransactionScalarWhereInput | DepoTransactionScalarWhereInput[]
   }
 
   export type TransactionInfoCreateNestedManyWithoutPartyInput = {
@@ -56966,11 +59622,10 @@ export namespace Prisma {
     deleteMany?: LedgerHeadScalarWhereInput | LedgerHeadScalarWhereInput[]
   }
 
-  export type FixedJournalCreateNestedManyWithoutLedgerHeadInput = {
-    create?: XOR<FixedJournalCreateWithoutLedgerHeadInput, FixedJournalUncheckedCreateWithoutLedgerHeadInput> | FixedJournalCreateWithoutLedgerHeadInput[] | FixedJournalUncheckedCreateWithoutLedgerHeadInput[]
-    connectOrCreate?: FixedJournalCreateOrConnectWithoutLedgerHeadInput | FixedJournalCreateOrConnectWithoutLedgerHeadInput[]
-    createMany?: FixedJournalCreateManyLedgerHeadInputEnvelope
-    connect?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
+  export type AccountHeadCreateNestedOneWithoutLedgerHeadInput = {
+    create?: XOR<AccountHeadCreateWithoutLedgerHeadInput, AccountHeadUncheckedCreateWithoutLedgerHeadInput>
+    connectOrCreate?: AccountHeadCreateOrConnectWithoutLedgerHeadInput
+    connect?: AccountHeadWhereUniqueInput
   }
 
   export type JournalCreateNestedManyWithoutLedgerHeadInput = {
@@ -56980,17 +59635,11 @@ export namespace Prisma {
     connect?: JournalWhereUniqueInput | JournalWhereUniqueInput[]
   }
 
-  export type AccountHeadCreateNestedOneWithoutLedgerHeadInput = {
-    create?: XOR<AccountHeadCreateWithoutLedgerHeadInput, AccountHeadUncheckedCreateWithoutLedgerHeadInput>
-    connectOrCreate?: AccountHeadCreateOrConnectWithoutLedgerHeadInput
-    connect?: AccountHeadWhereUniqueInput
-  }
-
-  export type FixedJournalUncheckedCreateNestedManyWithoutLedgerHeadInput = {
-    create?: XOR<FixedJournalCreateWithoutLedgerHeadInput, FixedJournalUncheckedCreateWithoutLedgerHeadInput> | FixedJournalCreateWithoutLedgerHeadInput[] | FixedJournalUncheckedCreateWithoutLedgerHeadInput[]
-    connectOrCreate?: FixedJournalCreateOrConnectWithoutLedgerHeadInput | FixedJournalCreateOrConnectWithoutLedgerHeadInput[]
-    createMany?: FixedJournalCreateManyLedgerHeadInputEnvelope
-    connect?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
+  export type DepoJournalCreateNestedManyWithoutLedgerHeadInput = {
+    create?: XOR<DepoJournalCreateWithoutLedgerHeadInput, DepoJournalUncheckedCreateWithoutLedgerHeadInput> | DepoJournalCreateWithoutLedgerHeadInput[] | DepoJournalUncheckedCreateWithoutLedgerHeadInput[]
+    connectOrCreate?: DepoJournalCreateOrConnectWithoutLedgerHeadInput | DepoJournalCreateOrConnectWithoutLedgerHeadInput[]
+    createMany?: DepoJournalCreateManyLedgerHeadInputEnvelope
+    connect?: DepoJournalWhereUniqueInput | DepoJournalWhereUniqueInput[]
   }
 
   export type JournalUncheckedCreateNestedManyWithoutLedgerHeadInput = {
@@ -57000,18 +59649,19 @@ export namespace Prisma {
     connect?: JournalWhereUniqueInput | JournalWhereUniqueInput[]
   }
 
-  export type FixedJournalUpdateManyWithoutLedgerHeadNestedInput = {
-    create?: XOR<FixedJournalCreateWithoutLedgerHeadInput, FixedJournalUncheckedCreateWithoutLedgerHeadInput> | FixedJournalCreateWithoutLedgerHeadInput[] | FixedJournalUncheckedCreateWithoutLedgerHeadInput[]
-    connectOrCreate?: FixedJournalCreateOrConnectWithoutLedgerHeadInput | FixedJournalCreateOrConnectWithoutLedgerHeadInput[]
-    upsert?: FixedJournalUpsertWithWhereUniqueWithoutLedgerHeadInput | FixedJournalUpsertWithWhereUniqueWithoutLedgerHeadInput[]
-    createMany?: FixedJournalCreateManyLedgerHeadInputEnvelope
-    set?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    disconnect?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    delete?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    connect?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    update?: FixedJournalUpdateWithWhereUniqueWithoutLedgerHeadInput | FixedJournalUpdateWithWhereUniqueWithoutLedgerHeadInput[]
-    updateMany?: FixedJournalUpdateManyWithWhereWithoutLedgerHeadInput | FixedJournalUpdateManyWithWhereWithoutLedgerHeadInput[]
-    deleteMany?: FixedJournalScalarWhereInput | FixedJournalScalarWhereInput[]
+  export type DepoJournalUncheckedCreateNestedManyWithoutLedgerHeadInput = {
+    create?: XOR<DepoJournalCreateWithoutLedgerHeadInput, DepoJournalUncheckedCreateWithoutLedgerHeadInput> | DepoJournalCreateWithoutLedgerHeadInput[] | DepoJournalUncheckedCreateWithoutLedgerHeadInput[]
+    connectOrCreate?: DepoJournalCreateOrConnectWithoutLedgerHeadInput | DepoJournalCreateOrConnectWithoutLedgerHeadInput[]
+    createMany?: DepoJournalCreateManyLedgerHeadInputEnvelope
+    connect?: DepoJournalWhereUniqueInput | DepoJournalWhereUniqueInput[]
+  }
+
+  export type AccountHeadUpdateOneRequiredWithoutLedgerHeadNestedInput = {
+    create?: XOR<AccountHeadCreateWithoutLedgerHeadInput, AccountHeadUncheckedCreateWithoutLedgerHeadInput>
+    connectOrCreate?: AccountHeadCreateOrConnectWithoutLedgerHeadInput
+    upsert?: AccountHeadUpsertWithoutLedgerHeadInput
+    connect?: AccountHeadWhereUniqueInput
+    update?: XOR<XOR<AccountHeadUpdateToOneWithWhereWithoutLedgerHeadInput, AccountHeadUpdateWithoutLedgerHeadInput>, AccountHeadUncheckedUpdateWithoutLedgerHeadInput>
   }
 
   export type JournalUpdateManyWithoutLedgerHeadNestedInput = {
@@ -57028,26 +59678,18 @@ export namespace Prisma {
     deleteMany?: JournalScalarWhereInput | JournalScalarWhereInput[]
   }
 
-  export type AccountHeadUpdateOneRequiredWithoutLedgerHeadNestedInput = {
-    create?: XOR<AccountHeadCreateWithoutLedgerHeadInput, AccountHeadUncheckedCreateWithoutLedgerHeadInput>
-    connectOrCreate?: AccountHeadCreateOrConnectWithoutLedgerHeadInput
-    upsert?: AccountHeadUpsertWithoutLedgerHeadInput
-    connect?: AccountHeadWhereUniqueInput
-    update?: XOR<XOR<AccountHeadUpdateToOneWithWhereWithoutLedgerHeadInput, AccountHeadUpdateWithoutLedgerHeadInput>, AccountHeadUncheckedUpdateWithoutLedgerHeadInput>
-  }
-
-  export type FixedJournalUncheckedUpdateManyWithoutLedgerHeadNestedInput = {
-    create?: XOR<FixedJournalCreateWithoutLedgerHeadInput, FixedJournalUncheckedCreateWithoutLedgerHeadInput> | FixedJournalCreateWithoutLedgerHeadInput[] | FixedJournalUncheckedCreateWithoutLedgerHeadInput[]
-    connectOrCreate?: FixedJournalCreateOrConnectWithoutLedgerHeadInput | FixedJournalCreateOrConnectWithoutLedgerHeadInput[]
-    upsert?: FixedJournalUpsertWithWhereUniqueWithoutLedgerHeadInput | FixedJournalUpsertWithWhereUniqueWithoutLedgerHeadInput[]
-    createMany?: FixedJournalCreateManyLedgerHeadInputEnvelope
-    set?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    disconnect?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    delete?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    connect?: FixedJournalWhereUniqueInput | FixedJournalWhereUniqueInput[]
-    update?: FixedJournalUpdateWithWhereUniqueWithoutLedgerHeadInput | FixedJournalUpdateWithWhereUniqueWithoutLedgerHeadInput[]
-    updateMany?: FixedJournalUpdateManyWithWhereWithoutLedgerHeadInput | FixedJournalUpdateManyWithWhereWithoutLedgerHeadInput[]
-    deleteMany?: FixedJournalScalarWhereInput | FixedJournalScalarWhereInput[]
+  export type DepoJournalUpdateManyWithoutLedgerHeadNestedInput = {
+    create?: XOR<DepoJournalCreateWithoutLedgerHeadInput, DepoJournalUncheckedCreateWithoutLedgerHeadInput> | DepoJournalCreateWithoutLedgerHeadInput[] | DepoJournalUncheckedCreateWithoutLedgerHeadInput[]
+    connectOrCreate?: DepoJournalCreateOrConnectWithoutLedgerHeadInput | DepoJournalCreateOrConnectWithoutLedgerHeadInput[]
+    upsert?: DepoJournalUpsertWithWhereUniqueWithoutLedgerHeadInput | DepoJournalUpsertWithWhereUniqueWithoutLedgerHeadInput[]
+    createMany?: DepoJournalCreateManyLedgerHeadInputEnvelope
+    set?: DepoJournalWhereUniqueInput | DepoJournalWhereUniqueInput[]
+    disconnect?: DepoJournalWhereUniqueInput | DepoJournalWhereUniqueInput[]
+    delete?: DepoJournalWhereUniqueInput | DepoJournalWhereUniqueInput[]
+    connect?: DepoJournalWhereUniqueInput | DepoJournalWhereUniqueInput[]
+    update?: DepoJournalUpdateWithWhereUniqueWithoutLedgerHeadInput | DepoJournalUpdateWithWhereUniqueWithoutLedgerHeadInput[]
+    updateMany?: DepoJournalUpdateManyWithWhereWithoutLedgerHeadInput | DepoJournalUpdateManyWithWhereWithoutLedgerHeadInput[]
+    deleteMany?: DepoJournalScalarWhereInput | DepoJournalScalarWhereInput[]
   }
 
   export type JournalUncheckedUpdateManyWithoutLedgerHeadNestedInput = {
@@ -57062,6 +59704,20 @@ export namespace Prisma {
     update?: JournalUpdateWithWhereUniqueWithoutLedgerHeadInput | JournalUpdateWithWhereUniqueWithoutLedgerHeadInput[]
     updateMany?: JournalUpdateManyWithWhereWithoutLedgerHeadInput | JournalUpdateManyWithWhereWithoutLedgerHeadInput[]
     deleteMany?: JournalScalarWhereInput | JournalScalarWhereInput[]
+  }
+
+  export type DepoJournalUncheckedUpdateManyWithoutLedgerHeadNestedInput = {
+    create?: XOR<DepoJournalCreateWithoutLedgerHeadInput, DepoJournalUncheckedCreateWithoutLedgerHeadInput> | DepoJournalCreateWithoutLedgerHeadInput[] | DepoJournalUncheckedCreateWithoutLedgerHeadInput[]
+    connectOrCreate?: DepoJournalCreateOrConnectWithoutLedgerHeadInput | DepoJournalCreateOrConnectWithoutLedgerHeadInput[]
+    upsert?: DepoJournalUpsertWithWhereUniqueWithoutLedgerHeadInput | DepoJournalUpsertWithWhereUniqueWithoutLedgerHeadInput[]
+    createMany?: DepoJournalCreateManyLedgerHeadInputEnvelope
+    set?: DepoJournalWhereUniqueInput | DepoJournalWhereUniqueInput[]
+    disconnect?: DepoJournalWhereUniqueInput | DepoJournalWhereUniqueInput[]
+    delete?: DepoJournalWhereUniqueInput | DepoJournalWhereUniqueInput[]
+    connect?: DepoJournalWhereUniqueInput | DepoJournalWhereUniqueInput[]
+    update?: DepoJournalUpdateWithWhereUniqueWithoutLedgerHeadInput | DepoJournalUpdateWithWhereUniqueWithoutLedgerHeadInput[]
+    updateMany?: DepoJournalUpdateManyWithWhereWithoutLedgerHeadInput | DepoJournalUpdateManyWithWhereWithoutLedgerHeadInput[]
+    deleteMany?: DepoJournalScalarWhereInput | DepoJournalScalarWhereInput[]
   }
 
   export type TargetProductBatchCreateNestedManyWithoutProductInput = {
@@ -57103,6 +59759,13 @@ export namespace Prisma {
     connect?: UnitWhereUniqueInput
   }
 
+  export type DepoInventoryCreateNestedManyWithoutProductInput = {
+    create?: XOR<DepoInventoryCreateWithoutProductInput, DepoInventoryUncheckedCreateWithoutProductInput> | DepoInventoryCreateWithoutProductInput[] | DepoInventoryUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: DepoInventoryCreateOrConnectWithoutProductInput | DepoInventoryCreateOrConnectWithoutProductInput[]
+    createMany?: DepoInventoryCreateManyProductInputEnvelope
+    connect?: DepoInventoryWhereUniqueInput | DepoInventoryWhereUniqueInput[]
+  }
+
   export type TargetProductBatchUncheckedCreateNestedManyWithoutProductInput = {
     create?: XOR<TargetProductBatchCreateWithoutProductInput, TargetProductBatchUncheckedCreateWithoutProductInput> | TargetProductBatchCreateWithoutProductInput[] | TargetProductBatchUncheckedCreateWithoutProductInput[]
     connectOrCreate?: TargetProductBatchCreateOrConnectWithoutProductInput | TargetProductBatchCreateOrConnectWithoutProductInput[]
@@ -57122,6 +59785,13 @@ export namespace Prisma {
     connectOrCreate?: OrderItemCreateOrConnectWithoutProductInput | OrderItemCreateOrConnectWithoutProductInput[]
     createMany?: OrderItemCreateManyProductInputEnvelope
     connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+  }
+
+  export type DepoInventoryUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<DepoInventoryCreateWithoutProductInput, DepoInventoryUncheckedCreateWithoutProductInput> | DepoInventoryCreateWithoutProductInput[] | DepoInventoryUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: DepoInventoryCreateOrConnectWithoutProductInput | DepoInventoryCreateOrConnectWithoutProductInput[]
+    createMany?: DepoInventoryCreateManyProductInputEnvelope
+    connect?: DepoInventoryWhereUniqueInput | DepoInventoryWhereUniqueInput[]
   }
 
   export type TargetProductBatchUpdateManyWithoutProductNestedInput = {
@@ -57192,6 +59862,20 @@ export namespace Prisma {
     update?: XOR<XOR<UnitUpdateToOneWithWhereWithoutProductInput, UnitUpdateWithoutProductInput>, UnitUncheckedUpdateWithoutProductInput>
   }
 
+  export type DepoInventoryUpdateManyWithoutProductNestedInput = {
+    create?: XOR<DepoInventoryCreateWithoutProductInput, DepoInventoryUncheckedCreateWithoutProductInput> | DepoInventoryCreateWithoutProductInput[] | DepoInventoryUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: DepoInventoryCreateOrConnectWithoutProductInput | DepoInventoryCreateOrConnectWithoutProductInput[]
+    upsert?: DepoInventoryUpsertWithWhereUniqueWithoutProductInput | DepoInventoryUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: DepoInventoryCreateManyProductInputEnvelope
+    set?: DepoInventoryWhereUniqueInput | DepoInventoryWhereUniqueInput[]
+    disconnect?: DepoInventoryWhereUniqueInput | DepoInventoryWhereUniqueInput[]
+    delete?: DepoInventoryWhereUniqueInput | DepoInventoryWhereUniqueInput[]
+    connect?: DepoInventoryWhereUniqueInput | DepoInventoryWhereUniqueInput[]
+    update?: DepoInventoryUpdateWithWhereUniqueWithoutProductInput | DepoInventoryUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: DepoInventoryUpdateManyWithWhereWithoutProductInput | DepoInventoryUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: DepoInventoryScalarWhereInput | DepoInventoryScalarWhereInput[]
+  }
+
   export type TargetProductBatchUncheckedUpdateManyWithoutProductNestedInput = {
     create?: XOR<TargetProductBatchCreateWithoutProductInput, TargetProductBatchUncheckedCreateWithoutProductInput> | TargetProductBatchCreateWithoutProductInput[] | TargetProductBatchUncheckedCreateWithoutProductInput[]
     connectOrCreate?: TargetProductBatchCreateOrConnectWithoutProductInput | TargetProductBatchCreateOrConnectWithoutProductInput[]
@@ -57232,6 +59916,20 @@ export namespace Prisma {
     update?: OrderItemUpdateWithWhereUniqueWithoutProductInput | OrderItemUpdateWithWhereUniqueWithoutProductInput[]
     updateMany?: OrderItemUpdateManyWithWhereWithoutProductInput | OrderItemUpdateManyWithWhereWithoutProductInput[]
     deleteMany?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
+  }
+
+  export type DepoInventoryUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<DepoInventoryCreateWithoutProductInput, DepoInventoryUncheckedCreateWithoutProductInput> | DepoInventoryCreateWithoutProductInput[] | DepoInventoryUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: DepoInventoryCreateOrConnectWithoutProductInput | DepoInventoryCreateOrConnectWithoutProductInput[]
+    upsert?: DepoInventoryUpsertWithWhereUniqueWithoutProductInput | DepoInventoryUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: DepoInventoryCreateManyProductInputEnvelope
+    set?: DepoInventoryWhereUniqueInput | DepoInventoryWhereUniqueInput[]
+    disconnect?: DepoInventoryWhereUniqueInput | DepoInventoryWhereUniqueInput[]
+    delete?: DepoInventoryWhereUniqueInput | DepoInventoryWhereUniqueInput[]
+    connect?: DepoInventoryWhereUniqueInput | DepoInventoryWhereUniqueInput[]
+    update?: DepoInventoryUpdateWithWhereUniqueWithoutProductInput | DepoInventoryUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: DepoInventoryUpdateManyWithWhereWithoutProductInput | DepoInventoryUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: DepoInventoryScalarWhereInput | DepoInventoryScalarWhereInput[]
   }
 
   export type BankTransactionCreateNestedManyWithoutBankAccountInput = {
@@ -57312,12 +60010,6 @@ export namespace Prisma {
     connect?: DepoWhereUniqueInput
   }
 
-  export type FixedJournalCreateNestedOneWithoutInventoryInput = {
-    create?: XOR<FixedJournalCreateWithoutInventoryInput, FixedJournalUncheckedCreateWithoutInventoryInput>
-    connectOrCreate?: FixedJournalCreateOrConnectWithoutInventoryInput
-    connect?: FixedJournalWhereUniqueInput
-  }
-
   export type ProductCreateNestedOneWithoutInventoryInput = {
     create?: XOR<ProductCreateWithoutInventoryInput, ProductUncheckedCreateWithoutInventoryInput>
     connectOrCreate?: ProductCreateOrConnectWithoutInventoryInput
@@ -57344,16 +60036,6 @@ export namespace Prisma {
     delete?: DepoWhereInput | boolean
     connect?: DepoWhereUniqueInput
     update?: XOR<XOR<DepoUpdateToOneWithWhereWithoutInventoryInput, DepoUpdateWithoutInventoryInput>, DepoUncheckedUpdateWithoutInventoryInput>
-  }
-
-  export type FixedJournalUpdateOneWithoutInventoryNestedInput = {
-    create?: XOR<FixedJournalCreateWithoutInventoryInput, FixedJournalUncheckedCreateWithoutInventoryInput>
-    connectOrCreate?: FixedJournalCreateOrConnectWithoutInventoryInput
-    upsert?: FixedJournalUpsertWithoutInventoryInput
-    disconnect?: FixedJournalWhereInput | boolean
-    delete?: FixedJournalWhereInput | boolean
-    connect?: FixedJournalWhereUniqueInput
-    update?: XOR<XOR<FixedJournalUpdateToOneWithWhereWithoutInventoryInput, FixedJournalUpdateWithoutInventoryInput>, FixedJournalUncheckedUpdateWithoutInventoryInput>
   }
 
   export type ProductUpdateOneRequiredWithoutInventoryNestedInput = {
@@ -57444,10 +60126,6 @@ export namespace Prisma {
 
   export type EnumVoucherTypeFieldUpdateOperationsInput = {
     set?: $Enums.VoucherType
-  }
-
-  export type NullableEnumPaymentTypeFieldUpdateOperationsInput = {
-    set?: $Enums.PaymentType | null
   }
 
   export type InventoryUpdateManyWithoutTransactionInfoNestedInput = {
@@ -57646,88 +60324,124 @@ export namespace Prisma {
     deleteMany?: BankTransactionScalarWhereInput | BankTransactionScalarWhereInput[]
   }
 
-  export type ChemistCreateNestedOneWithoutFixedJournalInput = {
-    create?: XOR<ChemistCreateWithoutFixedJournalInput, ChemistUncheckedCreateWithoutFixedJournalInput>
-    connectOrCreate?: ChemistCreateOrConnectWithoutFixedJournalInput
-    connect?: ChemistWhereUniqueInput
-  }
-
-  export type DepoCreateNestedOneWithoutFixedJournalInput = {
-    create?: XOR<DepoCreateWithoutFixedJournalInput, DepoUncheckedCreateWithoutFixedJournalInput>
-    connectOrCreate?: DepoCreateOrConnectWithoutFixedJournalInput
+  export type DepoCreateNestedOneWithoutProviderTransactionsInput = {
+    create?: XOR<DepoCreateWithoutProviderTransactionsInput, DepoUncheckedCreateWithoutProviderTransactionsInput>
+    connectOrCreate?: DepoCreateOrConnectWithoutProviderTransactionsInput
     connect?: DepoWhereUniqueInput
   }
 
-  export type LedgerHeadCreateNestedOneWithoutFixedJournalInput = {
-    create?: XOR<LedgerHeadCreateWithoutFixedJournalInput, LedgerHeadUncheckedCreateWithoutFixedJournalInput>
-    connectOrCreate?: LedgerHeadCreateOrConnectWithoutFixedJournalInput
-    connect?: LedgerHeadWhereUniqueInput
-  }
-
-  export type InventoryCreateNestedManyWithoutFixedJournalInput = {
-    create?: XOR<InventoryCreateWithoutFixedJournalInput, InventoryUncheckedCreateWithoutFixedJournalInput> | InventoryCreateWithoutFixedJournalInput[] | InventoryUncheckedCreateWithoutFixedJournalInput[]
-    connectOrCreate?: InventoryCreateOrConnectWithoutFixedJournalInput | InventoryCreateOrConnectWithoutFixedJournalInput[]
-    createMany?: InventoryCreateManyFixedJournalInputEnvelope
-    connect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-  }
-
-  export type InventoryUncheckedCreateNestedManyWithoutFixedJournalInput = {
-    create?: XOR<InventoryCreateWithoutFixedJournalInput, InventoryUncheckedCreateWithoutFixedJournalInput> | InventoryCreateWithoutFixedJournalInput[] | InventoryUncheckedCreateWithoutFixedJournalInput[]
-    connectOrCreate?: InventoryCreateOrConnectWithoutFixedJournalInput | InventoryCreateOrConnectWithoutFixedJournalInput[]
-    createMany?: InventoryCreateManyFixedJournalInputEnvelope
-    connect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-  }
-
-  export type ChemistUpdateOneRequiredWithoutFixedJournalNestedInput = {
-    create?: XOR<ChemistCreateWithoutFixedJournalInput, ChemistUncheckedCreateWithoutFixedJournalInput>
-    connectOrCreate?: ChemistCreateOrConnectWithoutFixedJournalInput
-    upsert?: ChemistUpsertWithoutFixedJournalInput
-    connect?: ChemistWhereUniqueInput
-    update?: XOR<XOR<ChemistUpdateToOneWithWhereWithoutFixedJournalInput, ChemistUpdateWithoutFixedJournalInput>, ChemistUncheckedUpdateWithoutFixedJournalInput>
-  }
-
-  export type DepoUpdateOneRequiredWithoutFixedJournalNestedInput = {
-    create?: XOR<DepoCreateWithoutFixedJournalInput, DepoUncheckedCreateWithoutFixedJournalInput>
-    connectOrCreate?: DepoCreateOrConnectWithoutFixedJournalInput
-    upsert?: DepoUpsertWithoutFixedJournalInput
+  export type DepoCreateNestedOneWithoutReceiverTransactionsInput = {
+    create?: XOR<DepoCreateWithoutReceiverTransactionsInput, DepoUncheckedCreateWithoutReceiverTransactionsInput>
+    connectOrCreate?: DepoCreateOrConnectWithoutReceiverTransactionsInput
     connect?: DepoWhereUniqueInput
-    update?: XOR<XOR<DepoUpdateToOneWithWhereWithoutFixedJournalInput, DepoUpdateWithoutFixedJournalInput>, DepoUncheckedUpdateWithoutFixedJournalInput>
   }
 
-  export type LedgerHeadUpdateOneRequiredWithoutFixedJournalNestedInput = {
-    create?: XOR<LedgerHeadCreateWithoutFixedJournalInput, LedgerHeadUncheckedCreateWithoutFixedJournalInput>
-    connectOrCreate?: LedgerHeadCreateOrConnectWithoutFixedJournalInput
-    upsert?: LedgerHeadUpsertWithoutFixedJournalInput
+  export type DepoInventoryCreateNestedManyWithoutDepoTransactionInput = {
+    create?: XOR<DepoInventoryCreateWithoutDepoTransactionInput, DepoInventoryUncheckedCreateWithoutDepoTransactionInput> | DepoInventoryCreateWithoutDepoTransactionInput[] | DepoInventoryUncheckedCreateWithoutDepoTransactionInput[]
+    connectOrCreate?: DepoInventoryCreateOrConnectWithoutDepoTransactionInput | DepoInventoryCreateOrConnectWithoutDepoTransactionInput[]
+    createMany?: DepoInventoryCreateManyDepoTransactionInputEnvelope
+    connect?: DepoInventoryWhereUniqueInput | DepoInventoryWhereUniqueInput[]
+  }
+
+  export type DepoInventoryUncheckedCreateNestedManyWithoutDepoTransactionInput = {
+    create?: XOR<DepoInventoryCreateWithoutDepoTransactionInput, DepoInventoryUncheckedCreateWithoutDepoTransactionInput> | DepoInventoryCreateWithoutDepoTransactionInput[] | DepoInventoryUncheckedCreateWithoutDepoTransactionInput[]
+    connectOrCreate?: DepoInventoryCreateOrConnectWithoutDepoTransactionInput | DepoInventoryCreateOrConnectWithoutDepoTransactionInput[]
+    createMany?: DepoInventoryCreateManyDepoTransactionInputEnvelope
+    connect?: DepoInventoryWhereUniqueInput | DepoInventoryWhereUniqueInput[]
+  }
+
+  export type EnumOrdStatusFieldUpdateOperationsInput = {
+    set?: $Enums.OrdStatus
+  }
+
+  export type DepoUpdateOneRequiredWithoutProviderTransactionsNestedInput = {
+    create?: XOR<DepoCreateWithoutProviderTransactionsInput, DepoUncheckedCreateWithoutProviderTransactionsInput>
+    connectOrCreate?: DepoCreateOrConnectWithoutProviderTransactionsInput
+    upsert?: DepoUpsertWithoutProviderTransactionsInput
+    connect?: DepoWhereUniqueInput
+    update?: XOR<XOR<DepoUpdateToOneWithWhereWithoutProviderTransactionsInput, DepoUpdateWithoutProviderTransactionsInput>, DepoUncheckedUpdateWithoutProviderTransactionsInput>
+  }
+
+  export type DepoUpdateOneRequiredWithoutReceiverTransactionsNestedInput = {
+    create?: XOR<DepoCreateWithoutReceiverTransactionsInput, DepoUncheckedCreateWithoutReceiverTransactionsInput>
+    connectOrCreate?: DepoCreateOrConnectWithoutReceiverTransactionsInput
+    upsert?: DepoUpsertWithoutReceiverTransactionsInput
+    connect?: DepoWhereUniqueInput
+    update?: XOR<XOR<DepoUpdateToOneWithWhereWithoutReceiverTransactionsInput, DepoUpdateWithoutReceiverTransactionsInput>, DepoUncheckedUpdateWithoutReceiverTransactionsInput>
+  }
+
+  export type DepoInventoryUpdateManyWithoutDepoTransactionNestedInput = {
+    create?: XOR<DepoInventoryCreateWithoutDepoTransactionInput, DepoInventoryUncheckedCreateWithoutDepoTransactionInput> | DepoInventoryCreateWithoutDepoTransactionInput[] | DepoInventoryUncheckedCreateWithoutDepoTransactionInput[]
+    connectOrCreate?: DepoInventoryCreateOrConnectWithoutDepoTransactionInput | DepoInventoryCreateOrConnectWithoutDepoTransactionInput[]
+    upsert?: DepoInventoryUpsertWithWhereUniqueWithoutDepoTransactionInput | DepoInventoryUpsertWithWhereUniqueWithoutDepoTransactionInput[]
+    createMany?: DepoInventoryCreateManyDepoTransactionInputEnvelope
+    set?: DepoInventoryWhereUniqueInput | DepoInventoryWhereUniqueInput[]
+    disconnect?: DepoInventoryWhereUniqueInput | DepoInventoryWhereUniqueInput[]
+    delete?: DepoInventoryWhereUniqueInput | DepoInventoryWhereUniqueInput[]
+    connect?: DepoInventoryWhereUniqueInput | DepoInventoryWhereUniqueInput[]
+    update?: DepoInventoryUpdateWithWhereUniqueWithoutDepoTransactionInput | DepoInventoryUpdateWithWhereUniqueWithoutDepoTransactionInput[]
+    updateMany?: DepoInventoryUpdateManyWithWhereWithoutDepoTransactionInput | DepoInventoryUpdateManyWithWhereWithoutDepoTransactionInput[]
+    deleteMany?: DepoInventoryScalarWhereInput | DepoInventoryScalarWhereInput[]
+  }
+
+  export type DepoInventoryUncheckedUpdateManyWithoutDepoTransactionNestedInput = {
+    create?: XOR<DepoInventoryCreateWithoutDepoTransactionInput, DepoInventoryUncheckedCreateWithoutDepoTransactionInput> | DepoInventoryCreateWithoutDepoTransactionInput[] | DepoInventoryUncheckedCreateWithoutDepoTransactionInput[]
+    connectOrCreate?: DepoInventoryCreateOrConnectWithoutDepoTransactionInput | DepoInventoryCreateOrConnectWithoutDepoTransactionInput[]
+    upsert?: DepoInventoryUpsertWithWhereUniqueWithoutDepoTransactionInput | DepoInventoryUpsertWithWhereUniqueWithoutDepoTransactionInput[]
+    createMany?: DepoInventoryCreateManyDepoTransactionInputEnvelope
+    set?: DepoInventoryWhereUniqueInput | DepoInventoryWhereUniqueInput[]
+    disconnect?: DepoInventoryWhereUniqueInput | DepoInventoryWhereUniqueInput[]
+    delete?: DepoInventoryWhereUniqueInput | DepoInventoryWhereUniqueInput[]
+    connect?: DepoInventoryWhereUniqueInput | DepoInventoryWhereUniqueInput[]
+    update?: DepoInventoryUpdateWithWhereUniqueWithoutDepoTransactionInput | DepoInventoryUpdateWithWhereUniqueWithoutDepoTransactionInput[]
+    updateMany?: DepoInventoryUpdateManyWithWhereWithoutDepoTransactionInput | DepoInventoryUpdateManyWithWhereWithoutDepoTransactionInput[]
+    deleteMany?: DepoInventoryScalarWhereInput | DepoInventoryScalarWhereInput[]
+  }
+
+  export type LedgerHeadCreateNestedOneWithoutDepoJournalsInput = {
+    create?: XOR<LedgerHeadCreateWithoutDepoJournalsInput, LedgerHeadUncheckedCreateWithoutDepoJournalsInput>
+    connectOrCreate?: LedgerHeadCreateOrConnectWithoutDepoJournalsInput
     connect?: LedgerHeadWhereUniqueInput
-    update?: XOR<XOR<LedgerHeadUpdateToOneWithWhereWithoutFixedJournalInput, LedgerHeadUpdateWithoutFixedJournalInput>, LedgerHeadUncheckedUpdateWithoutFixedJournalInput>
   }
 
-  export type InventoryUpdateManyWithoutFixedJournalNestedInput = {
-    create?: XOR<InventoryCreateWithoutFixedJournalInput, InventoryUncheckedCreateWithoutFixedJournalInput> | InventoryCreateWithoutFixedJournalInput[] | InventoryUncheckedCreateWithoutFixedJournalInput[]
-    connectOrCreate?: InventoryCreateOrConnectWithoutFixedJournalInput | InventoryCreateOrConnectWithoutFixedJournalInput[]
-    upsert?: InventoryUpsertWithWhereUniqueWithoutFixedJournalInput | InventoryUpsertWithWhereUniqueWithoutFixedJournalInput[]
-    createMany?: InventoryCreateManyFixedJournalInputEnvelope
-    set?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    disconnect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    delete?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    connect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    update?: InventoryUpdateWithWhereUniqueWithoutFixedJournalInput | InventoryUpdateWithWhereUniqueWithoutFixedJournalInput[]
-    updateMany?: InventoryUpdateManyWithWhereWithoutFixedJournalInput | InventoryUpdateManyWithWhereWithoutFixedJournalInput[]
-    deleteMany?: InventoryScalarWhereInput | InventoryScalarWhereInput[]
+  export type LedgerHeadUpdateOneWithoutDepoJournalsNestedInput = {
+    create?: XOR<LedgerHeadCreateWithoutDepoJournalsInput, LedgerHeadUncheckedCreateWithoutDepoJournalsInput>
+    connectOrCreate?: LedgerHeadCreateOrConnectWithoutDepoJournalsInput
+    upsert?: LedgerHeadUpsertWithoutDepoJournalsInput
+    disconnect?: LedgerHeadWhereInput | boolean
+    delete?: LedgerHeadWhereInput | boolean
+    connect?: LedgerHeadWhereUniqueInput
+    update?: XOR<XOR<LedgerHeadUpdateToOneWithWhereWithoutDepoJournalsInput, LedgerHeadUpdateWithoutDepoJournalsInput>, LedgerHeadUncheckedUpdateWithoutDepoJournalsInput>
   }
 
-  export type InventoryUncheckedUpdateManyWithoutFixedJournalNestedInput = {
-    create?: XOR<InventoryCreateWithoutFixedJournalInput, InventoryUncheckedCreateWithoutFixedJournalInput> | InventoryCreateWithoutFixedJournalInput[] | InventoryUncheckedCreateWithoutFixedJournalInput[]
-    connectOrCreate?: InventoryCreateOrConnectWithoutFixedJournalInput | InventoryCreateOrConnectWithoutFixedJournalInput[]
-    upsert?: InventoryUpsertWithWhereUniqueWithoutFixedJournalInput | InventoryUpsertWithWhereUniqueWithoutFixedJournalInput[]
-    createMany?: InventoryCreateManyFixedJournalInputEnvelope
-    set?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    disconnect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    delete?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    connect?: InventoryWhereUniqueInput | InventoryWhereUniqueInput[]
-    update?: InventoryUpdateWithWhereUniqueWithoutFixedJournalInput | InventoryUpdateWithWhereUniqueWithoutFixedJournalInput[]
-    updateMany?: InventoryUpdateManyWithWhereWithoutFixedJournalInput | InventoryUpdateManyWithWhereWithoutFixedJournalInput[]
-    deleteMany?: InventoryScalarWhereInput | InventoryScalarWhereInput[]
+  export type ProductCreateNestedOneWithoutDepoInventoriesInput = {
+    create?: XOR<ProductCreateWithoutDepoInventoriesInput, ProductUncheckedCreateWithoutDepoInventoriesInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutDepoInventoriesInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type DepoTransactionCreateNestedOneWithoutDepoInventoriesInput = {
+    create?: XOR<DepoTransactionCreateWithoutDepoInventoriesInput, DepoTransactionUncheckedCreateWithoutDepoInventoriesInput>
+    connectOrCreate?: DepoTransactionCreateOrConnectWithoutDepoInventoriesInput
+    connect?: DepoTransactionWhereUniqueInput
+  }
+
+  export type ProductUpdateOneRequiredWithoutDepoInventoriesNestedInput = {
+    create?: XOR<ProductCreateWithoutDepoInventoriesInput, ProductUncheckedCreateWithoutDepoInventoriesInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutDepoInventoriesInput
+    upsert?: ProductUpsertWithoutDepoInventoriesInput
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutDepoInventoriesInput, ProductUpdateWithoutDepoInventoriesInput>, ProductUncheckedUpdateWithoutDepoInventoriesInput>
+  }
+
+  export type DepoTransactionUpdateOneWithoutDepoInventoriesNestedInput = {
+    create?: XOR<DepoTransactionCreateWithoutDepoInventoriesInput, DepoTransactionUncheckedCreateWithoutDepoInventoriesInput>
+    connectOrCreate?: DepoTransactionCreateOrConnectWithoutDepoInventoriesInput
+    upsert?: DepoTransactionUpsertWithoutDepoInventoriesInput
+    disconnect?: DepoTransactionWhereInput | boolean
+    delete?: DepoTransactionWhereInput | boolean
+    connect?: DepoTransactionWhereUniqueInput
+    update?: XOR<XOR<DepoTransactionUpdateToOneWithWhereWithoutDepoInventoriesInput, DepoTransactionUpdateWithoutDepoInventoriesInput>, DepoTransactionUncheckedUpdateWithoutDepoInventoriesInput>
   }
 
   export type OrderItemCreateNestedManyWithoutOrderInput = {
@@ -57874,10 +60588,6 @@ export namespace Prisma {
     create?: XOR<OrderCreateWithoutOrderStatusInput, OrderUncheckedCreateWithoutOrderStatusInput>
     connectOrCreate?: OrderCreateOrConnectWithoutOrderStatusInput
     connect?: OrderWhereUniqueInput
-  }
-
-  export type EnumOrdStatusFieldUpdateOperationsInput = {
-    set?: $Enums.OrdStatus
   }
 
   export type OrderUpdateOneWithoutOrderStatusNestedInput = {
@@ -58351,13 +61061,6 @@ export namespace Prisma {
     not?: NestedEnumVoucherTypeFilter<$PrismaModel> | $Enums.VoucherType
   }
 
-  export type NestedEnumPaymentTypeNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.PaymentType | EnumPaymentTypeFieldRefInput<$PrismaModel> | null
-    in?: $Enums.PaymentType[] | null
-    notIn?: $Enums.PaymentType[] | null
-    not?: NestedEnumPaymentTypeNullableFilter<$PrismaModel> | $Enums.PaymentType | null
-  }
-
   export type NestedEnumVoucherTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.VoucherType | EnumVoucherTypeFieldRefInput<$PrismaModel>
     in?: $Enums.VoucherType[]
@@ -58366,16 +61069,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumVoucherTypeFilter<$PrismaModel>
     _max?: NestedEnumVoucherTypeFilter<$PrismaModel>
-  }
-
-  export type NestedEnumPaymentTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.PaymentType | EnumPaymentTypeFieldRefInput<$PrismaModel> | null
-    in?: $Enums.PaymentType[] | null
-    notIn?: $Enums.PaymentType[] | null
-    not?: NestedEnumPaymentTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.PaymentType | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumPaymentTypeNullableFilter<$PrismaModel>
-    _max?: NestedEnumPaymentTypeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumOrdStatusFilter<$PrismaModel = never> = {
@@ -58698,7 +61391,6 @@ export namespace Prisma {
     voucherNo: string
     invoiceNo?: string | null
     voucherType: $Enums.VoucherType
-    paymentType?: $Enums.PaymentType | null
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -58720,7 +61412,6 @@ export namespace Prisma {
     stakeholderId?: string | null
     partyId?: number | null
     voucherType: $Enums.VoucherType
-    paymentType?: $Enums.PaymentType | null
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -58748,9 +61439,7 @@ export namespace Prisma {
     isClosing?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    isFixted?: boolean
     depo?: DepoCreateNestedOneWithoutInventoryInput
-    fixedJournal?: FixedJournalCreateNestedOneWithoutInventoryInput
     product: ProductCreateNestedOneWithoutInventoryInput
     transactionInfo?: TransactionInfoCreateNestedOneWithoutInventoryInput
   }
@@ -58761,7 +61450,6 @@ export namespace Prisma {
     productId: number
     depoId?: number | null
     transactionId?: number | null
-    fixedJournalId?: number | null
     unitPrice?: number
     quantityAdd?: number | null
     quantityLess?: number | null
@@ -58770,7 +61458,6 @@ export namespace Prisma {
     isClosing?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    isFixted?: boolean
   }
 
   export type InventoryCreateOrConnectWithoutUserInput = {
@@ -59128,7 +61815,6 @@ export namespace Prisma {
     employeeId?: StringNullableFilter<"TransactionInfo"> | string | null
     partyId?: IntNullableFilter<"TransactionInfo"> | number | null
     voucherType?: EnumVoucherTypeFilter<"TransactionInfo"> | $Enums.VoucherType
-    paymentType?: EnumPaymentTypeNullableFilter<"TransactionInfo"> | $Enums.PaymentType | null
     status?: EnumStatusFilter<"TransactionInfo"> | $Enums.Status
     createdAt?: DateTimeFilter<"TransactionInfo"> | Date | string
     updatedAt?: DateTimeFilter<"TransactionInfo"> | Date | string
@@ -59160,7 +61846,6 @@ export namespace Prisma {
     depoId?: IntNullableFilter<"Inventory"> | number | null
     employeeId?: StringNullableFilter<"Inventory"> | string | null
     transactionId?: IntNullableFilter<"Inventory"> | number | null
-    fixedJournalId?: IntNullableFilter<"Inventory"> | number | null
     unitPrice?: FloatFilter<"Inventory"> | number
     quantityAdd?: FloatNullableFilter<"Inventory"> | number | null
     quantityLess?: FloatNullableFilter<"Inventory"> | number | null
@@ -59169,7 +61854,6 @@ export namespace Prisma {
     isClosing?: BoolFilter<"Inventory"> | boolean
     createdAt?: DateTimeFilter<"Inventory"> | Date | string
     updatedAt?: DateTimeFilter<"Inventory"> | Date | string
-    isFixted?: BoolFilter<"Inventory"> | boolean
   }
 
   export type UserCreateWithoutEmployeeProfileInput = {
@@ -59290,10 +61974,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     chemist?: ChemistCreateNestedManyWithoutDepoInput
-    FixedJournal?: FixedJournalCreateNestedManyWithoutDepoInput
     inventory?: InventoryCreateNestedManyWithoutDepoInput
     journal?: JournalCreateNestedManyWithoutDepoInput
     scopes?: ScopeCreateNestedManyWithoutDepoInput
+    providerTransactions?: DepoTransactionCreateNestedManyWithoutProviderdepoInput
+    receiverTransactions?: DepoTransactionCreateNestedManyWithoutReceverdepoInput
   }
 
   export type DepoUncheckedCreateWithoutJobPostInput = {
@@ -59305,10 +61990,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     chemist?: ChemistUncheckedCreateNestedManyWithoutDepoInput
-    FixedJournal?: FixedJournalUncheckedCreateNestedManyWithoutDepoInput
     inventory?: InventoryUncheckedCreateNestedManyWithoutDepoInput
     journal?: JournalUncheckedCreateNestedManyWithoutDepoInput
     scopes?: ScopeUncheckedCreateNestedManyWithoutDepoInput
+    providerTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutProviderdepoInput
+    receiverTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutReceverdepoInput
   }
 
   export type DepoCreateOrConnectWithoutJobPostInput = {
@@ -59364,10 +62050,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chemist?: ChemistUpdateManyWithoutDepoNestedInput
-    FixedJournal?: FixedJournalUpdateManyWithoutDepoNestedInput
     inventory?: InventoryUpdateManyWithoutDepoNestedInput
     journal?: JournalUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUpdateManyWithoutDepoNestedInput
+    providerTransactions?: DepoTransactionUpdateManyWithoutProviderdepoNestedInput
+    receiverTransactions?: DepoTransactionUpdateManyWithoutReceverdepoNestedInput
   }
 
   export type DepoUncheckedUpdateWithoutJobPostInput = {
@@ -59379,10 +62066,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chemist?: ChemistUncheckedUpdateManyWithoutDepoNestedInput
-    FixedJournal?: FixedJournalUncheckedUpdateManyWithoutDepoNestedInput
     inventory?: InventoryUncheckedUpdateManyWithoutDepoNestedInput
     journal?: JournalUncheckedUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUncheckedUpdateManyWithoutDepoNestedInput
+    providerTransactions?: DepoTransactionUncheckedUpdateManyWithoutProviderdepoNestedInput
+    receiverTransactions?: DepoTransactionUncheckedUpdateManyWithoutReceverdepoNestedInput
   }
 
   export type ScopeUpsertWithWhereUniqueWithoutJobPostInput = {
@@ -59419,11 +62107,12 @@ export namespace Prisma {
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
-    FixedJournal?: FixedJournalCreateNestedManyWithoutDepoInput
     inventory?: InventoryCreateNestedManyWithoutDepoInput
     jobPost?: JobPostCreateNestedManyWithoutDepoInput
     journal?: JournalCreateNestedManyWithoutDepoInput
     scopes?: ScopeCreateNestedManyWithoutDepoInput
+    providerTransactions?: DepoTransactionCreateNestedManyWithoutProviderdepoInput
+    receiverTransactions?: DepoTransactionCreateNestedManyWithoutReceverdepoInput
   }
 
   export type DepoUncheckedCreateWithoutChemistInput = {
@@ -59434,11 +62123,12 @@ export namespace Prisma {
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
-    FixedJournal?: FixedJournalUncheckedCreateNestedManyWithoutDepoInput
     inventory?: InventoryUncheckedCreateNestedManyWithoutDepoInput
     jobPost?: JobPostUncheckedCreateNestedManyWithoutDepoInput
     journal?: JournalUncheckedCreateNestedManyWithoutDepoInput
     scopes?: ScopeUncheckedCreateNestedManyWithoutDepoInput
+    providerTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutProviderdepoInput
+    receiverTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutReceverdepoInput
   }
 
   export type DepoCreateOrConnectWithoutChemistInput = {
@@ -59468,45 +62158,6 @@ export namespace Prisma {
   export type ScopeCreateOrConnectWithoutChemistInput = {
     where: ScopeWhereUniqueInput
     create: XOR<ScopeCreateWithoutChemistInput, ScopeUncheckedCreateWithoutChemistInput>
-  }
-
-  export type FixedJournalCreateWithoutChemistInput = {
-    date: Date | string
-    voucherNo: string
-    creditAmount?: number | null
-    debitAmount?: number | null
-    narration?: string | null
-    isClosing?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    depo: DepoCreateNestedOneWithoutFixedJournalInput
-    ledgerHead: LedgerHeadCreateNestedOneWithoutFixedJournalInput
-    inventory?: InventoryCreateNestedManyWithoutFixedJournalInput
-  }
-
-  export type FixedJournalUncheckedCreateWithoutChemistInput = {
-    id?: number
-    date: Date | string
-    voucherNo: string
-    ledgerHeadId: number
-    depoId: number
-    creditAmount?: number | null
-    debitAmount?: number | null
-    narration?: string | null
-    isClosing?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    inventory?: InventoryUncheckedCreateNestedManyWithoutFixedJournalInput
-  }
-
-  export type FixedJournalCreateOrConnectWithoutChemistInput = {
-    where: FixedJournalWhereUniqueInput
-    create: XOR<FixedJournalCreateWithoutChemistInput, FixedJournalUncheckedCreateWithoutChemistInput>
-  }
-
-  export type FixedJournalCreateManyChemistInputEnvelope = {
-    data: FixedJournalCreateManyChemistInput | FixedJournalCreateManyChemistInput[]
-    skipDuplicates?: boolean
   }
 
   export type OrderCreateWithoutChemistInput = {
@@ -59547,7 +62198,6 @@ export namespace Prisma {
     voucherNo: string
     invoiceNo?: string | null
     voucherType: $Enums.VoucherType
-    paymentType?: $Enums.PaymentType | null
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -59569,7 +62219,6 @@ export namespace Prisma {
     employeeId?: string | null
     partyId?: number | null
     voucherType: $Enums.VoucherType
-    paymentType?: $Enums.PaymentType | null
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -59605,11 +62254,12 @@ export namespace Prisma {
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    FixedJournal?: FixedJournalUpdateManyWithoutDepoNestedInput
     inventory?: InventoryUpdateManyWithoutDepoNestedInput
     jobPost?: JobPostUpdateManyWithoutDepoNestedInput
     journal?: JournalUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUpdateManyWithoutDepoNestedInput
+    providerTransactions?: DepoTransactionUpdateManyWithoutProviderdepoNestedInput
+    receiverTransactions?: DepoTransactionUpdateManyWithoutReceverdepoNestedInput
   }
 
   export type DepoUncheckedUpdateWithoutChemistInput = {
@@ -59620,11 +62270,12 @@ export namespace Prisma {
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    FixedJournal?: FixedJournalUncheckedUpdateManyWithoutDepoNestedInput
     inventory?: InventoryUncheckedUpdateManyWithoutDepoNestedInput
     jobPost?: JobPostUncheckedUpdateManyWithoutDepoNestedInput
     journal?: JournalUncheckedUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUncheckedUpdateManyWithoutDepoNestedInput
+    providerTransactions?: DepoTransactionUncheckedUpdateManyWithoutProviderdepoNestedInput
+    receiverTransactions?: DepoTransactionUncheckedUpdateManyWithoutReceverdepoNestedInput
   }
 
   export type ScopeUpsertWithWhereUniqueWithoutChemistInput = {
@@ -59641,40 +62292,6 @@ export namespace Prisma {
   export type ScopeUpdateManyWithWhereWithoutChemistInput = {
     where: ScopeScalarWhereInput
     data: XOR<ScopeUpdateManyMutationInput, ScopeUncheckedUpdateManyWithoutChemistInput>
-  }
-
-  export type FixedJournalUpsertWithWhereUniqueWithoutChemistInput = {
-    where: FixedJournalWhereUniqueInput
-    update: XOR<FixedJournalUpdateWithoutChemistInput, FixedJournalUncheckedUpdateWithoutChemistInput>
-    create: XOR<FixedJournalCreateWithoutChemistInput, FixedJournalUncheckedCreateWithoutChemistInput>
-  }
-
-  export type FixedJournalUpdateWithWhereUniqueWithoutChemistInput = {
-    where: FixedJournalWhereUniqueInput
-    data: XOR<FixedJournalUpdateWithoutChemistInput, FixedJournalUncheckedUpdateWithoutChemistInput>
-  }
-
-  export type FixedJournalUpdateManyWithWhereWithoutChemistInput = {
-    where: FixedJournalScalarWhereInput
-    data: XOR<FixedJournalUpdateManyMutationInput, FixedJournalUncheckedUpdateManyWithoutChemistInput>
-  }
-
-  export type FixedJournalScalarWhereInput = {
-    AND?: FixedJournalScalarWhereInput | FixedJournalScalarWhereInput[]
-    OR?: FixedJournalScalarWhereInput[]
-    NOT?: FixedJournalScalarWhereInput | FixedJournalScalarWhereInput[]
-    id?: IntFilter<"FixedJournal"> | number
-    date?: DateTimeFilter<"FixedJournal"> | Date | string
-    voucherNo?: StringFilter<"FixedJournal"> | string
-    chemistId?: StringFilter<"FixedJournal"> | string
-    ledgerHeadId?: IntFilter<"FixedJournal"> | number
-    depoId?: IntFilter<"FixedJournal"> | number
-    creditAmount?: FloatNullableFilter<"FixedJournal"> | number | null
-    debitAmount?: FloatNullableFilter<"FixedJournal"> | number | null
-    narration?: StringNullableFilter<"FixedJournal"> | string | null
-    isClosing?: BoolFilter<"FixedJournal"> | boolean
-    createdAt?: DateTimeFilter<"FixedJournal"> | Date | string
-    updatedAt?: DateTimeFilter<"FixedJournal"> | Date | string
   }
 
   export type OrderUpsertWithWhereUniqueWithoutChemistInput = {
@@ -59723,7 +62340,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     scopes?: ScopeCreateNestedManyWithoutChemistInput
-    FixedJournal?: FixedJournalCreateNestedManyWithoutChemistInput
     order?: OrderCreateNestedManyWithoutChemistInput
     transactionInfo?: TransactionInfoCreateNestedManyWithoutChemistInput
   }
@@ -59743,7 +62359,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     scopes?: ScopeUncheckedCreateNestedManyWithoutChemistInput
-    FixedJournal?: FixedJournalUncheckedCreateNestedManyWithoutChemistInput
     order?: OrderUncheckedCreateNestedManyWithoutChemistInput
     transactionInfo?: TransactionInfoUncheckedCreateNestedManyWithoutChemistInput
   }
@@ -59758,45 +62373,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type FixedJournalCreateWithoutDepoInput = {
-    date: Date | string
-    voucherNo: string
-    creditAmount?: number | null
-    debitAmount?: number | null
-    narration?: string | null
-    isClosing?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    chemist: ChemistCreateNestedOneWithoutFixedJournalInput
-    ledgerHead: LedgerHeadCreateNestedOneWithoutFixedJournalInput
-    inventory?: InventoryCreateNestedManyWithoutFixedJournalInput
-  }
-
-  export type FixedJournalUncheckedCreateWithoutDepoInput = {
-    id?: number
-    date: Date | string
-    voucherNo: string
-    chemistId: string
-    ledgerHeadId: number
-    creditAmount?: number | null
-    debitAmount?: number | null
-    narration?: string | null
-    isClosing?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    inventory?: InventoryUncheckedCreateNestedManyWithoutFixedJournalInput
-  }
-
-  export type FixedJournalCreateOrConnectWithoutDepoInput = {
-    where: FixedJournalWhereUniqueInput
-    create: XOR<FixedJournalCreateWithoutDepoInput, FixedJournalUncheckedCreateWithoutDepoInput>
-  }
-
-  export type FixedJournalCreateManyDepoInputEnvelope = {
-    data: FixedJournalCreateManyDepoInput | FixedJournalCreateManyDepoInput[]
-    skipDuplicates?: boolean
-  }
-
   export type InventoryCreateWithoutDepoInput = {
     date: Date | string
     unitPrice?: number
@@ -59807,8 +62383,6 @@ export namespace Prisma {
     isClosing?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    isFixted?: boolean
-    fixedJournal?: FixedJournalCreateNestedOneWithoutInventoryInput
     product: ProductCreateNestedOneWithoutInventoryInput
     transactionInfo?: TransactionInfoCreateNestedOneWithoutInventoryInput
     user?: UserCreateNestedOneWithoutInventoriesInput
@@ -59820,7 +62394,6 @@ export namespace Prisma {
     productId: number
     employeeId?: string | null
     transactionId?: number | null
-    fixedJournalId?: number | null
     unitPrice?: number
     quantityAdd?: number | null
     quantityLess?: number | null
@@ -59829,7 +62402,6 @@ export namespace Prisma {
     isClosing?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    isFixted?: boolean
   }
 
   export type InventoryCreateOrConnectWithoutDepoInput = {
@@ -59934,6 +62506,68 @@ export namespace Prisma {
     create: XOR<ScopeCreateWithoutDepoInput, ScopeUncheckedCreateWithoutDepoInput>
   }
 
+  export type DepoTransactionCreateWithoutProviderdepoInput = {
+    date: Date | string
+    voucherNo: string
+    status?: $Enums.OrdStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    receverdepo: DepoCreateNestedOneWithoutReceiverTransactionsInput
+    depoInventories?: DepoInventoryCreateNestedManyWithoutDepoTransactionInput
+  }
+
+  export type DepoTransactionUncheckedCreateWithoutProviderdepoInput = {
+    id?: number
+    date: Date | string
+    receverdepoId: number
+    voucherNo: string
+    status?: $Enums.OrdStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    depoInventories?: DepoInventoryUncheckedCreateNestedManyWithoutDepoTransactionInput
+  }
+
+  export type DepoTransactionCreateOrConnectWithoutProviderdepoInput = {
+    where: DepoTransactionWhereUniqueInput
+    create: XOR<DepoTransactionCreateWithoutProviderdepoInput, DepoTransactionUncheckedCreateWithoutProviderdepoInput>
+  }
+
+  export type DepoTransactionCreateManyProviderdepoInputEnvelope = {
+    data: DepoTransactionCreateManyProviderdepoInput | DepoTransactionCreateManyProviderdepoInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DepoTransactionCreateWithoutReceverdepoInput = {
+    date: Date | string
+    voucherNo: string
+    status?: $Enums.OrdStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    providerdepo: DepoCreateNestedOneWithoutProviderTransactionsInput
+    depoInventories?: DepoInventoryCreateNestedManyWithoutDepoTransactionInput
+  }
+
+  export type DepoTransactionUncheckedCreateWithoutReceverdepoInput = {
+    id?: number
+    date: Date | string
+    providerdepoId: number
+    voucherNo: string
+    status?: $Enums.OrdStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    depoInventories?: DepoInventoryUncheckedCreateNestedManyWithoutDepoTransactionInput
+  }
+
+  export type DepoTransactionCreateOrConnectWithoutReceverdepoInput = {
+    where: DepoTransactionWhereUniqueInput
+    create: XOR<DepoTransactionCreateWithoutReceverdepoInput, DepoTransactionUncheckedCreateWithoutReceverdepoInput>
+  }
+
+  export type DepoTransactionCreateManyReceverdepoInputEnvelope = {
+    data: DepoTransactionCreateManyReceverdepoInput | DepoTransactionCreateManyReceverdepoInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ChemistUpsertWithWhereUniqueWithoutDepoInput = {
     where: ChemistWhereUniqueInput
     update: XOR<ChemistUpdateWithoutDepoInput, ChemistUncheckedUpdateWithoutDepoInput>
@@ -59968,22 +62602,6 @@ export namespace Prisma {
     isDeleted?: BoolFilter<"Chemist"> | boolean
     createdAt?: DateTimeFilter<"Chemist"> | Date | string
     updatedAt?: DateTimeFilter<"Chemist"> | Date | string
-  }
-
-  export type FixedJournalUpsertWithWhereUniqueWithoutDepoInput = {
-    where: FixedJournalWhereUniqueInput
-    update: XOR<FixedJournalUpdateWithoutDepoInput, FixedJournalUncheckedUpdateWithoutDepoInput>
-    create: XOR<FixedJournalCreateWithoutDepoInput, FixedJournalUncheckedCreateWithoutDepoInput>
-  }
-
-  export type FixedJournalUpdateWithWhereUniqueWithoutDepoInput = {
-    where: FixedJournalWhereUniqueInput
-    data: XOR<FixedJournalUpdateWithoutDepoInput, FixedJournalUncheckedUpdateWithoutDepoInput>
-  }
-
-  export type FixedJournalUpdateManyWithWhereWithoutDepoInput = {
-    where: FixedJournalScalarWhereInput
-    data: XOR<FixedJournalUpdateManyMutationInput, FixedJournalUncheckedUpdateManyWithoutDepoInput>
   }
 
   export type InventoryUpsertWithWhereUniqueWithoutDepoInput = {
@@ -60081,12 +62699,57 @@ export namespace Prisma {
     data: XOR<ScopeUpdateManyMutationInput, ScopeUncheckedUpdateManyWithoutDepoInput>
   }
 
+  export type DepoTransactionUpsertWithWhereUniqueWithoutProviderdepoInput = {
+    where: DepoTransactionWhereUniqueInput
+    update: XOR<DepoTransactionUpdateWithoutProviderdepoInput, DepoTransactionUncheckedUpdateWithoutProviderdepoInput>
+    create: XOR<DepoTransactionCreateWithoutProviderdepoInput, DepoTransactionUncheckedCreateWithoutProviderdepoInput>
+  }
+
+  export type DepoTransactionUpdateWithWhereUniqueWithoutProviderdepoInput = {
+    where: DepoTransactionWhereUniqueInput
+    data: XOR<DepoTransactionUpdateWithoutProviderdepoInput, DepoTransactionUncheckedUpdateWithoutProviderdepoInput>
+  }
+
+  export type DepoTransactionUpdateManyWithWhereWithoutProviderdepoInput = {
+    where: DepoTransactionScalarWhereInput
+    data: XOR<DepoTransactionUpdateManyMutationInput, DepoTransactionUncheckedUpdateManyWithoutProviderdepoInput>
+  }
+
+  export type DepoTransactionScalarWhereInput = {
+    AND?: DepoTransactionScalarWhereInput | DepoTransactionScalarWhereInput[]
+    OR?: DepoTransactionScalarWhereInput[]
+    NOT?: DepoTransactionScalarWhereInput | DepoTransactionScalarWhereInput[]
+    id?: IntFilter<"DepoTransaction"> | number
+    date?: DateTimeFilter<"DepoTransaction"> | Date | string
+    providerdepoId?: IntFilter<"DepoTransaction"> | number
+    receverdepoId?: IntFilter<"DepoTransaction"> | number
+    voucherNo?: StringFilter<"DepoTransaction"> | string
+    status?: EnumOrdStatusFilter<"DepoTransaction"> | $Enums.OrdStatus
+    createdAt?: DateTimeFilter<"DepoTransaction"> | Date | string
+    updatedAt?: DateTimeFilter<"DepoTransaction"> | Date | string
+  }
+
+  export type DepoTransactionUpsertWithWhereUniqueWithoutReceverdepoInput = {
+    where: DepoTransactionWhereUniqueInput
+    update: XOR<DepoTransactionUpdateWithoutReceverdepoInput, DepoTransactionUncheckedUpdateWithoutReceverdepoInput>
+    create: XOR<DepoTransactionCreateWithoutReceverdepoInput, DepoTransactionUncheckedCreateWithoutReceverdepoInput>
+  }
+
+  export type DepoTransactionUpdateWithWhereUniqueWithoutReceverdepoInput = {
+    where: DepoTransactionWhereUniqueInput
+    data: XOR<DepoTransactionUpdateWithoutReceverdepoInput, DepoTransactionUncheckedUpdateWithoutReceverdepoInput>
+  }
+
+  export type DepoTransactionUpdateManyWithWhereWithoutReceverdepoInput = {
+    where: DepoTransactionScalarWhereInput
+    data: XOR<DepoTransactionUpdateManyMutationInput, DepoTransactionUncheckedUpdateManyWithoutReceverdepoInput>
+  }
+
   export type TransactionInfoCreateWithoutPartyInput = {
     date: Date | string
     voucherNo: string
     invoiceNo?: string | null
     voucherType: $Enums.VoucherType
-    paymentType?: $Enums.PaymentType | null
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -60108,7 +62771,6 @@ export namespace Prisma {
     stakeholderId?: string | null
     employeeId?: string | null
     voucherType: $Enums.VoucherType
-    paymentType?: $Enums.PaymentType | null
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -60160,6 +62822,7 @@ export namespace Prisma {
     orderItem?: OrderItemCreateNestedManyWithoutProductInput
     subCategory: SubCategoryCreateNestedOneWithoutProductInput
     unit: UnitCreateNestedOneWithoutProductInput
+    depoInventories?: DepoInventoryCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutStakeholderInput = {
@@ -60181,6 +62844,7 @@ export namespace Prisma {
     targetProductBatch?: TargetProductBatchUncheckedCreateNestedManyWithoutProductInput
     inventory?: InventoryUncheckedCreateNestedManyWithoutProductInput
     orderItem?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    depoInventories?: DepoInventoryUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutStakeholderInput = {
@@ -60324,7 +62988,6 @@ export namespace Prisma {
     voucherNo: string
     invoiceNo?: string | null
     voucherType: $Enums.VoucherType
-    paymentType?: $Enums.PaymentType | null
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -60346,7 +63009,6 @@ export namespace Prisma {
     employeeId?: string | null
     partyId?: number | null
     voucherType: $Enums.VoucherType
-    paymentType?: $Enums.PaymentType | null
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -60905,7 +63567,6 @@ export namespace Prisma {
     voucherNo: string
     invoiceNo?: string | null
     voucherType: $Enums.VoucherType
-    paymentType?: $Enums.PaymentType | null
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -60927,7 +63588,6 @@ export namespace Prisma {
     employeeId?: string | null
     partyId?: number | null
     voucherType: $Enums.VoucherType
-    paymentType?: $Enums.PaymentType | null
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -60975,7 +63635,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     depo: DepoCreateNestedOneWithoutChemistInput
-    FixedJournal?: FixedJournalCreateNestedManyWithoutChemistInput
     order?: OrderCreateNestedManyWithoutChemistInput
     transactionInfo?: TransactionInfoCreateNestedManyWithoutChemistInput
   }
@@ -60995,7 +63654,6 @@ export namespace Prisma {
     isDeleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    FixedJournal?: FixedJournalUncheckedCreateNestedManyWithoutChemistInput
     order?: OrderUncheckedCreateNestedManyWithoutChemistInput
     transactionInfo?: TransactionInfoUncheckedCreateNestedManyWithoutChemistInput
   }
@@ -61013,10 +63671,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     chemist?: ChemistCreateNestedManyWithoutDepoInput
-    FixedJournal?: FixedJournalCreateNestedManyWithoutDepoInput
     inventory?: InventoryCreateNestedManyWithoutDepoInput
     jobPost?: JobPostCreateNestedManyWithoutDepoInput
     journal?: JournalCreateNestedManyWithoutDepoInput
+    providerTransactions?: DepoTransactionCreateNestedManyWithoutProviderdepoInput
+    receiverTransactions?: DepoTransactionCreateNestedManyWithoutReceverdepoInput
   }
 
   export type DepoUncheckedCreateWithoutScopesInput = {
@@ -61028,10 +63687,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     chemist?: ChemistUncheckedCreateNestedManyWithoutDepoInput
-    FixedJournal?: FixedJournalUncheckedCreateNestedManyWithoutDepoInput
     inventory?: InventoryUncheckedCreateNestedManyWithoutDepoInput
     jobPost?: JobPostUncheckedCreateNestedManyWithoutDepoInput
     journal?: JournalUncheckedCreateNestedManyWithoutDepoInput
+    providerTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutProviderdepoInput
+    receiverTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutReceverdepoInput
   }
 
   export type DepoCreateOrConnectWithoutScopesInput = {
@@ -61608,6 +64268,7 @@ export namespace Prisma {
     Stakeholder?: StakeholderCreateNestedOneWithoutProductInput
     subCategory: SubCategoryCreateNestedOneWithoutProductInput
     unit: UnitCreateNestedOneWithoutProductInput
+    depoInventories?: DepoInventoryCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutTargetProductBatchInput = {
@@ -61629,6 +64290,7 @@ export namespace Prisma {
     updateAt?: Date | string
     inventory?: InventoryUncheckedCreateNestedManyWithoutProductInput
     orderItem?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    depoInventories?: DepoInventoryUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutTargetProductBatchInput = {
@@ -61689,6 +64351,7 @@ export namespace Prisma {
     Stakeholder?: StakeholderUpdateOneWithoutProductNestedInput
     subCategory?: SubCategoryUpdateOneRequiredWithoutProductNestedInput
     unit?: UnitUpdateOneRequiredWithoutProductNestedInput
+    depoInventories?: DepoInventoryUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutTargetProductBatchInput = {
@@ -61710,6 +64373,7 @@ export namespace Prisma {
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
     inventory?: InventoryUncheckedUpdateManyWithoutProductNestedInput
     orderItem?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    depoInventories?: DepoInventoryUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductWiseTargetUpsertWithoutTargetProductBatchInput = {
@@ -61812,6 +64476,7 @@ export namespace Prisma {
     orderItem?: OrderItemCreateNestedManyWithoutProductInput
     Stakeholder?: StakeholderCreateNestedOneWithoutProductInput
     unit: UnitCreateNestedOneWithoutProductInput
+    depoInventories?: DepoInventoryCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutSubCategoryInput = {
@@ -61833,6 +64498,7 @@ export namespace Prisma {
     targetProductBatch?: TargetProductBatchUncheckedCreateNestedManyWithoutProductInput
     inventory?: InventoryUncheckedCreateNestedManyWithoutProductInput
     orderItem?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    depoInventories?: DepoInventoryUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutSubCategoryInput = {
@@ -61921,6 +64587,7 @@ export namespace Prisma {
     orderItem?: OrderItemCreateNestedManyWithoutProductInput
     Stakeholder?: StakeholderCreateNestedOneWithoutProductInput
     subCategory: SubCategoryCreateNestedOneWithoutProductInput
+    depoInventories?: DepoInventoryCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutUnitInput = {
@@ -61942,6 +64609,7 @@ export namespace Prisma {
     targetProductBatch?: TargetProductBatchUncheckedCreateNestedManyWithoutProductInput
     inventory?: InventoryUncheckedCreateNestedManyWithoutProductInput
     orderItem?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    depoInventories?: DepoInventoryUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutUnitInput = {
@@ -61975,8 +64643,8 @@ export namespace Prisma {
     ledgerCode: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    fixedJournal?: FixedJournalCreateNestedManyWithoutLedgerHeadInput
     journal?: JournalCreateNestedManyWithoutLedgerHeadInput
+    depoJournals?: DepoJournalCreateNestedManyWithoutLedgerHeadInput
   }
 
   export type LedgerHeadUncheckedCreateWithoutAccountHeadInput = {
@@ -61985,8 +64653,8 @@ export namespace Prisma {
     ledgerCode: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    fixedJournal?: FixedJournalUncheckedCreateNestedManyWithoutLedgerHeadInput
     journal?: JournalUncheckedCreateNestedManyWithoutLedgerHeadInput
+    depoJournals?: DepoJournalUncheckedCreateNestedManyWithoutLedgerHeadInput
   }
 
   export type LedgerHeadCreateOrConnectWithoutAccountHeadInput = {
@@ -62027,43 +64695,24 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"LedgerHead"> | Date | string
   }
 
-  export type FixedJournalCreateWithoutLedgerHeadInput = {
-    date: Date | string
-    voucherNo: string
-    creditAmount?: number | null
-    debitAmount?: number | null
-    narration?: string | null
-    isClosing?: boolean
+  export type AccountHeadCreateWithoutLedgerHeadInput = {
+    headName: string
+    headCode: string
     createdAt?: Date | string
-    updatedAt?: Date | string
-    chemist: ChemistCreateNestedOneWithoutFixedJournalInput
-    depo: DepoCreateNestedOneWithoutFixedJournalInput
-    inventory?: InventoryCreateNestedManyWithoutFixedJournalInput
+    updateAt?: Date | string
   }
 
-  export type FixedJournalUncheckedCreateWithoutLedgerHeadInput = {
+  export type AccountHeadUncheckedCreateWithoutLedgerHeadInput = {
     id?: number
-    date: Date | string
-    voucherNo: string
-    chemistId: string
-    depoId: number
-    creditAmount?: number | null
-    debitAmount?: number | null
-    narration?: string | null
-    isClosing?: boolean
+    headName: string
+    headCode: string
     createdAt?: Date | string
-    updatedAt?: Date | string
-    inventory?: InventoryUncheckedCreateNestedManyWithoutFixedJournalInput
+    updateAt?: Date | string
   }
 
-  export type FixedJournalCreateOrConnectWithoutLedgerHeadInput = {
-    where: FixedJournalWhereUniqueInput
-    create: XOR<FixedJournalCreateWithoutLedgerHeadInput, FixedJournalUncheckedCreateWithoutLedgerHeadInput>
-  }
-
-  export type FixedJournalCreateManyLedgerHeadInputEnvelope = {
-    data: FixedJournalCreateManyLedgerHeadInput | FixedJournalCreateManyLedgerHeadInput[]
-    skipDuplicates?: boolean
+  export type AccountHeadCreateOrConnectWithoutLedgerHeadInput = {
+    where: AccountHeadWhereUniqueInput
+    create: XOR<AccountHeadCreateWithoutLedgerHeadInput, AccountHeadUncheckedCreateWithoutLedgerHeadInput>
   }
 
   export type JournalCreateWithoutLedgerHeadInput = {
@@ -62103,56 +64752,29 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type AccountHeadCreateWithoutLedgerHeadInput = {
-    headName: string
-    headCode: string
-    createdAt?: Date | string
-    updateAt?: Date | string
+  export type DepoJournalCreateWithoutLedgerHeadInput = {
+    date: Date | string
+    depoId: number
+    amount?: number | null
+    narration?: string | null
   }
 
-  export type AccountHeadUncheckedCreateWithoutLedgerHeadInput = {
+  export type DepoJournalUncheckedCreateWithoutLedgerHeadInput = {
     id?: number
-    headName: string
-    headCode: string
-    createdAt?: Date | string
-    updateAt?: Date | string
+    date: Date | string
+    depoId: number
+    amount?: number | null
+    narration?: string | null
   }
 
-  export type AccountHeadCreateOrConnectWithoutLedgerHeadInput = {
-    where: AccountHeadWhereUniqueInput
-    create: XOR<AccountHeadCreateWithoutLedgerHeadInput, AccountHeadUncheckedCreateWithoutLedgerHeadInput>
+  export type DepoJournalCreateOrConnectWithoutLedgerHeadInput = {
+    where: DepoJournalWhereUniqueInput
+    create: XOR<DepoJournalCreateWithoutLedgerHeadInput, DepoJournalUncheckedCreateWithoutLedgerHeadInput>
   }
 
-  export type FixedJournalUpsertWithWhereUniqueWithoutLedgerHeadInput = {
-    where: FixedJournalWhereUniqueInput
-    update: XOR<FixedJournalUpdateWithoutLedgerHeadInput, FixedJournalUncheckedUpdateWithoutLedgerHeadInput>
-    create: XOR<FixedJournalCreateWithoutLedgerHeadInput, FixedJournalUncheckedCreateWithoutLedgerHeadInput>
-  }
-
-  export type FixedJournalUpdateWithWhereUniqueWithoutLedgerHeadInput = {
-    where: FixedJournalWhereUniqueInput
-    data: XOR<FixedJournalUpdateWithoutLedgerHeadInput, FixedJournalUncheckedUpdateWithoutLedgerHeadInput>
-  }
-
-  export type FixedJournalUpdateManyWithWhereWithoutLedgerHeadInput = {
-    where: FixedJournalScalarWhereInput
-    data: XOR<FixedJournalUpdateManyMutationInput, FixedJournalUncheckedUpdateManyWithoutLedgerHeadInput>
-  }
-
-  export type JournalUpsertWithWhereUniqueWithoutLedgerHeadInput = {
-    where: JournalWhereUniqueInput
-    update: XOR<JournalUpdateWithoutLedgerHeadInput, JournalUncheckedUpdateWithoutLedgerHeadInput>
-    create: XOR<JournalCreateWithoutLedgerHeadInput, JournalUncheckedCreateWithoutLedgerHeadInput>
-  }
-
-  export type JournalUpdateWithWhereUniqueWithoutLedgerHeadInput = {
-    where: JournalWhereUniqueInput
-    data: XOR<JournalUpdateWithoutLedgerHeadInput, JournalUncheckedUpdateWithoutLedgerHeadInput>
-  }
-
-  export type JournalUpdateManyWithWhereWithoutLedgerHeadInput = {
-    where: JournalScalarWhereInput
-    data: XOR<JournalUpdateManyMutationInput, JournalUncheckedUpdateManyWithoutLedgerHeadInput>
+  export type DepoJournalCreateManyLedgerHeadInputEnvelope = {
+    data: DepoJournalCreateManyLedgerHeadInput | DepoJournalCreateManyLedgerHeadInput[]
+    skipDuplicates?: boolean
   }
 
   export type AccountHeadUpsertWithoutLedgerHeadInput = {
@@ -62179,6 +64801,50 @@ export namespace Prisma {
     headCode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type JournalUpsertWithWhereUniqueWithoutLedgerHeadInput = {
+    where: JournalWhereUniqueInput
+    update: XOR<JournalUpdateWithoutLedgerHeadInput, JournalUncheckedUpdateWithoutLedgerHeadInput>
+    create: XOR<JournalCreateWithoutLedgerHeadInput, JournalUncheckedCreateWithoutLedgerHeadInput>
+  }
+
+  export type JournalUpdateWithWhereUniqueWithoutLedgerHeadInput = {
+    where: JournalWhereUniqueInput
+    data: XOR<JournalUpdateWithoutLedgerHeadInput, JournalUncheckedUpdateWithoutLedgerHeadInput>
+  }
+
+  export type JournalUpdateManyWithWhereWithoutLedgerHeadInput = {
+    where: JournalScalarWhereInput
+    data: XOR<JournalUpdateManyMutationInput, JournalUncheckedUpdateManyWithoutLedgerHeadInput>
+  }
+
+  export type DepoJournalUpsertWithWhereUniqueWithoutLedgerHeadInput = {
+    where: DepoJournalWhereUniqueInput
+    update: XOR<DepoJournalUpdateWithoutLedgerHeadInput, DepoJournalUncheckedUpdateWithoutLedgerHeadInput>
+    create: XOR<DepoJournalCreateWithoutLedgerHeadInput, DepoJournalUncheckedCreateWithoutLedgerHeadInput>
+  }
+
+  export type DepoJournalUpdateWithWhereUniqueWithoutLedgerHeadInput = {
+    where: DepoJournalWhereUniqueInput
+    data: XOR<DepoJournalUpdateWithoutLedgerHeadInput, DepoJournalUncheckedUpdateWithoutLedgerHeadInput>
+  }
+
+  export type DepoJournalUpdateManyWithWhereWithoutLedgerHeadInput = {
+    where: DepoJournalScalarWhereInput
+    data: XOR<DepoJournalUpdateManyMutationInput, DepoJournalUncheckedUpdateManyWithoutLedgerHeadInput>
+  }
+
+  export type DepoJournalScalarWhereInput = {
+    AND?: DepoJournalScalarWhereInput | DepoJournalScalarWhereInput[]
+    OR?: DepoJournalScalarWhereInput[]
+    NOT?: DepoJournalScalarWhereInput | DepoJournalScalarWhereInput[]
+    id?: IntFilter<"DepoJournal"> | number
+    date?: DateTimeFilter<"DepoJournal"> | Date | string
+    depoId?: IntFilter<"DepoJournal"> | number
+    ledgerHeadId?: IntNullableFilter<"DepoJournal"> | number | null
+    amount?: FloatNullableFilter<"DepoJournal"> | number | null
+    narration?: StringNullableFilter<"DepoJournal"> | string | null
   }
 
   export type TargetProductBatchCreateWithoutProductInput = {
@@ -62218,9 +64884,7 @@ export namespace Prisma {
     isClosing?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    isFixted?: boolean
     depo?: DepoCreateNestedOneWithoutInventoryInput
-    fixedJournal?: FixedJournalCreateNestedOneWithoutInventoryInput
     transactionInfo?: TransactionInfoCreateNestedOneWithoutInventoryInput
     user?: UserCreateNestedOneWithoutInventoriesInput
   }
@@ -62231,7 +64895,6 @@ export namespace Prisma {
     depoId?: number | null
     employeeId?: string | null
     transactionId?: number | null
-    fixedJournalId?: number | null
     unitPrice?: number
     quantityAdd?: number | null
     quantityLess?: number | null
@@ -62240,7 +64903,6 @@ export namespace Prisma {
     isClosing?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    isFixted?: boolean
   }
 
   export type InventoryCreateOrConnectWithoutProductInput = {
@@ -62360,6 +65022,39 @@ export namespace Prisma {
   export type UnitCreateOrConnectWithoutProductInput = {
     where: UnitWhereUniqueInput
     create: XOR<UnitCreateWithoutProductInput, UnitUncheckedCreateWithoutProductInput>
+  }
+
+  export type DepoInventoryCreateWithoutProductInput = {
+    date: Date | string
+    reqQuantity?: number | null
+    acceptedQuantity?: number | null
+    unitePrice?: number | null
+    amount?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    depoTransaction?: DepoTransactionCreateNestedOneWithoutDepoInventoriesInput
+  }
+
+  export type DepoInventoryUncheckedCreateWithoutProductInput = {
+    id?: number
+    depoTransactionId?: number | null
+    date: Date | string
+    reqQuantity?: number | null
+    acceptedQuantity?: number | null
+    unitePrice?: number | null
+    amount?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepoInventoryCreateOrConnectWithoutProductInput = {
+    where: DepoInventoryWhereUniqueInput
+    create: XOR<DepoInventoryCreateWithoutProductInput, DepoInventoryUncheckedCreateWithoutProductInput>
+  }
+
+  export type DepoInventoryCreateManyProductInputEnvelope = {
+    data: DepoInventoryCreateManyProductInput | DepoInventoryCreateManyProductInput[]
+    skipDuplicates?: boolean
   }
 
   export type TargetProductBatchUpsertWithWhereUniqueWithoutProductInput = {
@@ -62522,6 +65217,38 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepoInventoryUpsertWithWhereUniqueWithoutProductInput = {
+    where: DepoInventoryWhereUniqueInput
+    update: XOR<DepoInventoryUpdateWithoutProductInput, DepoInventoryUncheckedUpdateWithoutProductInput>
+    create: XOR<DepoInventoryCreateWithoutProductInput, DepoInventoryUncheckedCreateWithoutProductInput>
+  }
+
+  export type DepoInventoryUpdateWithWhereUniqueWithoutProductInput = {
+    where: DepoInventoryWhereUniqueInput
+    data: XOR<DepoInventoryUpdateWithoutProductInput, DepoInventoryUncheckedUpdateWithoutProductInput>
+  }
+
+  export type DepoInventoryUpdateManyWithWhereWithoutProductInput = {
+    where: DepoInventoryScalarWhereInput
+    data: XOR<DepoInventoryUpdateManyMutationInput, DepoInventoryUncheckedUpdateManyWithoutProductInput>
+  }
+
+  export type DepoInventoryScalarWhereInput = {
+    AND?: DepoInventoryScalarWhereInput | DepoInventoryScalarWhereInput[]
+    OR?: DepoInventoryScalarWhereInput[]
+    NOT?: DepoInventoryScalarWhereInput | DepoInventoryScalarWhereInput[]
+    id?: IntFilter<"DepoInventory"> | number
+    depoTransactionId?: IntNullableFilter<"DepoInventory"> | number | null
+    date?: DateTimeFilter<"DepoInventory"> | Date | string
+    productId?: IntFilter<"DepoInventory"> | number
+    reqQuantity?: IntNullableFilter<"DepoInventory"> | number | null
+    acceptedQuantity?: IntNullableFilter<"DepoInventory"> | number | null
+    unitePrice?: FloatNullableFilter<"DepoInventory"> | number | null
+    amount?: FloatNullableFilter<"DepoInventory"> | number | null
+    createdAt?: DateTimeFilter<"DepoInventory"> | Date | string
+    updatedAt?: DateTimeFilter<"DepoInventory"> | Date | string
   }
 
   export type BankTransactionCreateWithoutBankAccountInput = {
@@ -62718,10 +65445,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     chemist?: ChemistCreateNestedManyWithoutDepoInput
-    FixedJournal?: FixedJournalCreateNestedManyWithoutDepoInput
     jobPost?: JobPostCreateNestedManyWithoutDepoInput
     journal?: JournalCreateNestedManyWithoutDepoInput
     scopes?: ScopeCreateNestedManyWithoutDepoInput
+    providerTransactions?: DepoTransactionCreateNestedManyWithoutProviderdepoInput
+    receiverTransactions?: DepoTransactionCreateNestedManyWithoutReceverdepoInput
   }
 
   export type DepoUncheckedCreateWithoutInventoryInput = {
@@ -62733,49 +65461,16 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     chemist?: ChemistUncheckedCreateNestedManyWithoutDepoInput
-    FixedJournal?: FixedJournalUncheckedCreateNestedManyWithoutDepoInput
     jobPost?: JobPostUncheckedCreateNestedManyWithoutDepoInput
     journal?: JournalUncheckedCreateNestedManyWithoutDepoInput
     scopes?: ScopeUncheckedCreateNestedManyWithoutDepoInput
+    providerTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutProviderdepoInput
+    receiverTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutReceverdepoInput
   }
 
   export type DepoCreateOrConnectWithoutInventoryInput = {
     where: DepoWhereUniqueInput
     create: XOR<DepoCreateWithoutInventoryInput, DepoUncheckedCreateWithoutInventoryInput>
-  }
-
-  export type FixedJournalCreateWithoutInventoryInput = {
-    date: Date | string
-    voucherNo: string
-    creditAmount?: number | null
-    debitAmount?: number | null
-    narration?: string | null
-    isClosing?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    chemist: ChemistCreateNestedOneWithoutFixedJournalInput
-    depo: DepoCreateNestedOneWithoutFixedJournalInput
-    ledgerHead: LedgerHeadCreateNestedOneWithoutFixedJournalInput
-  }
-
-  export type FixedJournalUncheckedCreateWithoutInventoryInput = {
-    id?: number
-    date: Date | string
-    voucherNo: string
-    chemistId: string
-    ledgerHeadId: number
-    depoId: number
-    creditAmount?: number | null
-    debitAmount?: number | null
-    narration?: string | null
-    isClosing?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type FixedJournalCreateOrConnectWithoutInventoryInput = {
-    where: FixedJournalWhereUniqueInput
-    create: XOR<FixedJournalCreateWithoutInventoryInput, FixedJournalUncheckedCreateWithoutInventoryInput>
   }
 
   export type ProductCreateWithoutInventoryInput = {
@@ -62796,6 +65491,7 @@ export namespace Prisma {
     Stakeholder?: StakeholderCreateNestedOneWithoutProductInput
     subCategory: SubCategoryCreateNestedOneWithoutProductInput
     unit: UnitCreateNestedOneWithoutProductInput
+    depoInventories?: DepoInventoryCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutInventoryInput = {
@@ -62817,6 +65513,7 @@ export namespace Prisma {
     updateAt?: Date | string
     targetProductBatch?: TargetProductBatchUncheckedCreateNestedManyWithoutProductInput
     orderItem?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    depoInventories?: DepoInventoryUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutInventoryInput = {
@@ -62829,7 +65526,6 @@ export namespace Prisma {
     voucherNo: string
     invoiceNo?: string | null
     voucherType: $Enums.VoucherType
-    paymentType?: $Enums.PaymentType | null
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -62852,7 +65548,6 @@ export namespace Prisma {
     employeeId?: string | null
     partyId?: number | null
     voucherType: $Enums.VoucherType
-    paymentType?: $Enums.PaymentType | null
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -62935,10 +65630,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chemist?: ChemistUpdateManyWithoutDepoNestedInput
-    FixedJournal?: FixedJournalUpdateManyWithoutDepoNestedInput
     jobPost?: JobPostUpdateManyWithoutDepoNestedInput
     journal?: JournalUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUpdateManyWithoutDepoNestedInput
+    providerTransactions?: DepoTransactionUpdateManyWithoutProviderdepoNestedInput
+    receiverTransactions?: DepoTransactionUpdateManyWithoutReceverdepoNestedInput
   }
 
   export type DepoUncheckedUpdateWithoutInventoryInput = {
@@ -62950,50 +65646,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chemist?: ChemistUncheckedUpdateManyWithoutDepoNestedInput
-    FixedJournal?: FixedJournalUncheckedUpdateManyWithoutDepoNestedInput
     jobPost?: JobPostUncheckedUpdateManyWithoutDepoNestedInput
     journal?: JournalUncheckedUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUncheckedUpdateManyWithoutDepoNestedInput
-  }
-
-  export type FixedJournalUpsertWithoutInventoryInput = {
-    update: XOR<FixedJournalUpdateWithoutInventoryInput, FixedJournalUncheckedUpdateWithoutInventoryInput>
-    create: XOR<FixedJournalCreateWithoutInventoryInput, FixedJournalUncheckedCreateWithoutInventoryInput>
-    where?: FixedJournalWhereInput
-  }
-
-  export type FixedJournalUpdateToOneWithWhereWithoutInventoryInput = {
-    where?: FixedJournalWhereInput
-    data: XOR<FixedJournalUpdateWithoutInventoryInput, FixedJournalUncheckedUpdateWithoutInventoryInput>
-  }
-
-  export type FixedJournalUpdateWithoutInventoryInput = {
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    voucherNo?: StringFieldUpdateOperationsInput | string
-    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    narration?: NullableStringFieldUpdateOperationsInput | string | null
-    isClosing?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    chemist?: ChemistUpdateOneRequiredWithoutFixedJournalNestedInput
-    depo?: DepoUpdateOneRequiredWithoutFixedJournalNestedInput
-    ledgerHead?: LedgerHeadUpdateOneRequiredWithoutFixedJournalNestedInput
-  }
-
-  export type FixedJournalUncheckedUpdateWithoutInventoryInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    voucherNo?: StringFieldUpdateOperationsInput | string
-    chemistId?: StringFieldUpdateOperationsInput | string
-    ledgerHeadId?: IntFieldUpdateOperationsInput | number
-    depoId?: IntFieldUpdateOperationsInput | number
-    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    narration?: NullableStringFieldUpdateOperationsInput | string | null
-    isClosing?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    providerTransactions?: DepoTransactionUncheckedUpdateManyWithoutProviderdepoNestedInput
+    receiverTransactions?: DepoTransactionUncheckedUpdateManyWithoutReceverdepoNestedInput
   }
 
   export type ProductUpsertWithoutInventoryInput = {
@@ -63025,6 +65682,7 @@ export namespace Prisma {
     Stakeholder?: StakeholderUpdateOneWithoutProductNestedInput
     subCategory?: SubCategoryUpdateOneRequiredWithoutProductNestedInput
     unit?: UnitUpdateOneRequiredWithoutProductNestedInput
+    depoInventories?: DepoInventoryUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutInventoryInput = {
@@ -63046,6 +65704,7 @@ export namespace Prisma {
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
     targetProductBatch?: TargetProductBatchUncheckedUpdateManyWithoutProductNestedInput
     orderItem?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    depoInventories?: DepoInventoryUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type TransactionInfoUpsertWithoutInventoryInput = {
@@ -63064,7 +65723,6 @@ export namespace Prisma {
     voucherNo?: StringFieldUpdateOperationsInput | string
     invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    paymentType?: NullableEnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -63087,7 +65745,6 @@ export namespace Prisma {
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     partyId?: NullableIntFieldUpdateOperationsInput | number | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    paymentType?: NullableEnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -63162,9 +65819,7 @@ export namespace Prisma {
     isClosing?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    isFixted?: boolean
     depo?: DepoCreateNestedOneWithoutInventoryInput
-    fixedJournal?: FixedJournalCreateNestedOneWithoutInventoryInput
     product: ProductCreateNestedOneWithoutInventoryInput
     user?: UserCreateNestedOneWithoutInventoriesInput
   }
@@ -63175,7 +65830,6 @@ export namespace Prisma {
     productId: number
     depoId?: number | null
     employeeId?: string | null
-    fixedJournalId?: number | null
     unitPrice?: number
     quantityAdd?: number | null
     quantityLess?: number | null
@@ -63184,7 +65838,6 @@ export namespace Prisma {
     isClosing?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    isFixted?: boolean
   }
 
   export type InventoryCreateOrConnectWithoutTransactionInfoInput = {
@@ -63249,7 +65902,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     depo: DepoCreateNestedOneWithoutChemistInput
     scopes?: ScopeCreateNestedManyWithoutChemistInput
-    FixedJournal?: FixedJournalCreateNestedManyWithoutChemistInput
     order?: OrderCreateNestedManyWithoutChemistInput
   }
 
@@ -63269,7 +65921,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     scopes?: ScopeUncheckedCreateNestedManyWithoutChemistInput
-    FixedJournal?: FixedJournalUncheckedCreateNestedManyWithoutChemistInput
     order?: OrderUncheckedCreateNestedManyWithoutChemistInput
   }
 
@@ -63486,7 +66137,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     depo?: DepoUpdateOneRequiredWithoutChemistNestedInput
     scopes?: ScopeUpdateManyWithoutChemistNestedInput
-    FixedJournal?: FixedJournalUpdateManyWithoutChemistNestedInput
     order?: OrderUpdateManyWithoutChemistNestedInput
   }
 
@@ -63506,7 +66156,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     scopes?: ScopeUncheckedUpdateManyWithoutChemistNestedInput
-    FixedJournal?: FixedJournalUncheckedUpdateManyWithoutChemistNestedInput
     order?: OrderUncheckedUpdateManyWithoutChemistNestedInput
   }
 
@@ -63692,10 +66341,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     chemist?: ChemistCreateNestedManyWithoutDepoInput
-    FixedJournal?: FixedJournalCreateNestedManyWithoutDepoInput
     inventory?: InventoryCreateNestedManyWithoutDepoInput
     jobPost?: JobPostCreateNestedManyWithoutDepoInput
     scopes?: ScopeCreateNestedManyWithoutDepoInput
+    providerTransactions?: DepoTransactionCreateNestedManyWithoutProviderdepoInput
+    receiverTransactions?: DepoTransactionCreateNestedManyWithoutReceverdepoInput
   }
 
   export type DepoUncheckedCreateWithoutJournalInput = {
@@ -63707,10 +66357,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     chemist?: ChemistUncheckedCreateNestedManyWithoutDepoInput
-    FixedJournal?: FixedJournalUncheckedCreateNestedManyWithoutDepoInput
     inventory?: InventoryUncheckedCreateNestedManyWithoutDepoInput
     jobPost?: JobPostUncheckedCreateNestedManyWithoutDepoInput
     scopes?: ScopeUncheckedCreateNestedManyWithoutDepoInput
+    providerTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutProviderdepoInput
+    receiverTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutReceverdepoInput
   }
 
   export type DepoCreateOrConnectWithoutJournalInput = {
@@ -63723,8 +66374,8 @@ export namespace Prisma {
     ledgerCode: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    fixedJournal?: FixedJournalCreateNestedManyWithoutLedgerHeadInput
     accountHead: AccountHeadCreateNestedOneWithoutLedgerHeadInput
+    depoJournals?: DepoJournalCreateNestedManyWithoutLedgerHeadInput
   }
 
   export type LedgerHeadUncheckedCreateWithoutJournalInput = {
@@ -63734,7 +66385,7 @@ export namespace Prisma {
     headCodeId: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    fixedJournal?: FixedJournalUncheckedCreateNestedManyWithoutLedgerHeadInput
+    depoJournals?: DepoJournalUncheckedCreateNestedManyWithoutLedgerHeadInput
   }
 
   export type LedgerHeadCreateOrConnectWithoutJournalInput = {
@@ -63747,7 +66398,6 @@ export namespace Prisma {
     voucherNo: string
     invoiceNo?: string | null
     voucherType: $Enums.VoucherType
-    paymentType?: $Enums.PaymentType | null
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -63770,7 +66420,6 @@ export namespace Prisma {
     employeeId?: string | null
     partyId?: number | null
     voucherType: $Enums.VoucherType
-    paymentType?: $Enums.PaymentType | null
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -63832,10 +66481,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chemist?: ChemistUpdateManyWithoutDepoNestedInput
-    FixedJournal?: FixedJournalUpdateManyWithoutDepoNestedInput
     inventory?: InventoryUpdateManyWithoutDepoNestedInput
     jobPost?: JobPostUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUpdateManyWithoutDepoNestedInput
+    providerTransactions?: DepoTransactionUpdateManyWithoutProviderdepoNestedInput
+    receiverTransactions?: DepoTransactionUpdateManyWithoutReceverdepoNestedInput
   }
 
   export type DepoUncheckedUpdateWithoutJournalInput = {
@@ -63847,10 +66497,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chemist?: ChemistUncheckedUpdateManyWithoutDepoNestedInput
-    FixedJournal?: FixedJournalUncheckedUpdateManyWithoutDepoNestedInput
     inventory?: InventoryUncheckedUpdateManyWithoutDepoNestedInput
     jobPost?: JobPostUncheckedUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUncheckedUpdateManyWithoutDepoNestedInput
+    providerTransactions?: DepoTransactionUncheckedUpdateManyWithoutProviderdepoNestedInput
+    receiverTransactions?: DepoTransactionUncheckedUpdateManyWithoutReceverdepoNestedInput
   }
 
   export type LedgerHeadUpsertWithoutJournalInput = {
@@ -63869,8 +66520,8 @@ export namespace Prisma {
     ledgerCode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    fixedJournal?: FixedJournalUpdateManyWithoutLedgerHeadNestedInput
     accountHead?: AccountHeadUpdateOneRequiredWithoutLedgerHeadNestedInput
+    depoJournals?: DepoJournalUpdateManyWithoutLedgerHeadNestedInput
   }
 
   export type LedgerHeadUncheckedUpdateWithoutJournalInput = {
@@ -63880,7 +66531,7 @@ export namespace Prisma {
     headCodeId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    fixedJournal?: FixedJournalUncheckedUpdateManyWithoutLedgerHeadNestedInput
+    depoJournals?: DepoJournalUncheckedUpdateManyWithoutLedgerHeadNestedInput
   }
 
   export type TransactionInfoUpsertWithoutJournalInput = {
@@ -63899,7 +66550,6 @@ export namespace Prisma {
     voucherNo?: StringFieldUpdateOperationsInput | string
     invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    paymentType?: NullableEnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -63922,7 +66572,6 @@ export namespace Prisma {
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     partyId?: NullableIntFieldUpdateOperationsInput | number | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    paymentType?: NullableEnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -63945,51 +66594,7 @@ export namespace Prisma {
     data: XOR<BankTransactionUpdateManyMutationInput, BankTransactionUncheckedUpdateManyWithoutJournalInput>
   }
 
-  export type ChemistCreateWithoutFixedJournalInput = {
-    chemistId: string
-    pharmacyName: string
-    contactPerson: string
-    contactNo: string
-    address: string
-    photo?: string | null
-    discountRate?: number | null
-    openingDueAmount?: number | null
-    openingDate?: Date | string
-    isDeleted?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    depo: DepoCreateNestedOneWithoutChemistInput
-    scopes?: ScopeCreateNestedManyWithoutChemistInput
-    order?: OrderCreateNestedManyWithoutChemistInput
-    transactionInfo?: TransactionInfoCreateNestedManyWithoutChemistInput
-  }
-
-  export type ChemistUncheckedCreateWithoutFixedJournalInput = {
-    id?: number
-    chemistId: string
-    depoId: number
-    pharmacyName: string
-    contactPerson: string
-    contactNo: string
-    address: string
-    photo?: string | null
-    discountRate?: number | null
-    openingDueAmount?: number | null
-    openingDate?: Date | string
-    isDeleted?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    scopes?: ScopeUncheckedCreateNestedManyWithoutChemistInput
-    order?: OrderUncheckedCreateNestedManyWithoutChemistInput
-    transactionInfo?: TransactionInfoUncheckedCreateNestedManyWithoutChemistInput
-  }
-
-  export type ChemistCreateOrConnectWithoutFixedJournalInput = {
-    where: ChemistWhereUniqueInput
-    create: XOR<ChemistCreateWithoutFixedJournalInput, ChemistUncheckedCreateWithoutFixedJournalInput>
-  }
-
-  export type DepoCreateWithoutFixedJournalInput = {
+  export type DepoCreateWithoutProviderTransactionsInput = {
     depoName: string
     location: string
     scopeId?: number | null
@@ -64001,9 +66606,10 @@ export namespace Prisma {
     jobPost?: JobPostCreateNestedManyWithoutDepoInput
     journal?: JournalCreateNestedManyWithoutDepoInput
     scopes?: ScopeCreateNestedManyWithoutDepoInput
+    receiverTransactions?: DepoTransactionCreateNestedManyWithoutReceverdepoInput
   }
 
-  export type DepoUncheckedCreateWithoutFixedJournalInput = {
+  export type DepoUncheckedCreateWithoutProviderTransactionsInput = {
     id?: number
     depoName: string
     location: string
@@ -64016,144 +66622,95 @@ export namespace Prisma {
     jobPost?: JobPostUncheckedCreateNestedManyWithoutDepoInput
     journal?: JournalUncheckedCreateNestedManyWithoutDepoInput
     scopes?: ScopeUncheckedCreateNestedManyWithoutDepoInput
+    receiverTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutReceverdepoInput
   }
 
-  export type DepoCreateOrConnectWithoutFixedJournalInput = {
+  export type DepoCreateOrConnectWithoutProviderTransactionsInput = {
     where: DepoWhereUniqueInput
-    create: XOR<DepoCreateWithoutFixedJournalInput, DepoUncheckedCreateWithoutFixedJournalInput>
+    create: XOR<DepoCreateWithoutProviderTransactionsInput, DepoUncheckedCreateWithoutProviderTransactionsInput>
   }
 
-  export type LedgerHeadCreateWithoutFixedJournalInput = {
-    ledgerName: string
-    ledgerCode: string
+  export type DepoCreateWithoutReceiverTransactionsInput = {
+    depoName: string
+    location: string
+    scopeId?: number | null
+    status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
-    journal?: JournalCreateNestedManyWithoutLedgerHeadInput
-    accountHead: AccountHeadCreateNestedOneWithoutLedgerHeadInput
+    chemist?: ChemistCreateNestedManyWithoutDepoInput
+    inventory?: InventoryCreateNestedManyWithoutDepoInput
+    jobPost?: JobPostCreateNestedManyWithoutDepoInput
+    journal?: JournalCreateNestedManyWithoutDepoInput
+    scopes?: ScopeCreateNestedManyWithoutDepoInput
+    providerTransactions?: DepoTransactionCreateNestedManyWithoutProviderdepoInput
   }
 
-  export type LedgerHeadUncheckedCreateWithoutFixedJournalInput = {
+  export type DepoUncheckedCreateWithoutReceiverTransactionsInput = {
     id?: number
-    ledgerName: string
-    ledgerCode: string
-    headCodeId: number
+    depoName: string
+    location: string
+    scopeId?: number | null
+    status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
-    journal?: JournalUncheckedCreateNestedManyWithoutLedgerHeadInput
+    chemist?: ChemistUncheckedCreateNestedManyWithoutDepoInput
+    inventory?: InventoryUncheckedCreateNestedManyWithoutDepoInput
+    jobPost?: JobPostUncheckedCreateNestedManyWithoutDepoInput
+    journal?: JournalUncheckedCreateNestedManyWithoutDepoInput
+    scopes?: ScopeUncheckedCreateNestedManyWithoutDepoInput
+    providerTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutProviderdepoInput
   }
 
-  export type LedgerHeadCreateOrConnectWithoutFixedJournalInput = {
-    where: LedgerHeadWhereUniqueInput
-    create: XOR<LedgerHeadCreateWithoutFixedJournalInput, LedgerHeadUncheckedCreateWithoutFixedJournalInput>
+  export type DepoCreateOrConnectWithoutReceiverTransactionsInput = {
+    where: DepoWhereUniqueInput
+    create: XOR<DepoCreateWithoutReceiverTransactionsInput, DepoUncheckedCreateWithoutReceiverTransactionsInput>
   }
 
-  export type InventoryCreateWithoutFixedJournalInput = {
+  export type DepoInventoryCreateWithoutDepoTransactionInput = {
     date: Date | string
-    unitPrice?: number
-    quantityAdd?: number | null
-    quantityLess?: number | null
-    debitAmount?: number | null
-    creditAmount?: number | null
-    isClosing?: boolean
+    reqQuantity?: number | null
+    acceptedQuantity?: number | null
+    unitePrice?: number | null
+    amount?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    isFixted?: boolean
-    depo?: DepoCreateNestedOneWithoutInventoryInput
-    product: ProductCreateNestedOneWithoutInventoryInput
-    transactionInfo?: TransactionInfoCreateNestedOneWithoutInventoryInput
-    user?: UserCreateNestedOneWithoutInventoriesInput
+    product: ProductCreateNestedOneWithoutDepoInventoriesInput
   }
 
-  export type InventoryUncheckedCreateWithoutFixedJournalInput = {
+  export type DepoInventoryUncheckedCreateWithoutDepoTransactionInput = {
     id?: number
     date: Date | string
     productId: number
-    depoId?: number | null
-    employeeId?: string | null
-    transactionId?: number | null
-    unitPrice?: number
-    quantityAdd?: number | null
-    quantityLess?: number | null
-    debitAmount?: number | null
-    creditAmount?: number | null
-    isClosing?: boolean
+    reqQuantity?: number | null
+    acceptedQuantity?: number | null
+    unitePrice?: number | null
+    amount?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    isFixted?: boolean
   }
 
-  export type InventoryCreateOrConnectWithoutFixedJournalInput = {
-    where: InventoryWhereUniqueInput
-    create: XOR<InventoryCreateWithoutFixedJournalInput, InventoryUncheckedCreateWithoutFixedJournalInput>
+  export type DepoInventoryCreateOrConnectWithoutDepoTransactionInput = {
+    where: DepoInventoryWhereUniqueInput
+    create: XOR<DepoInventoryCreateWithoutDepoTransactionInput, DepoInventoryUncheckedCreateWithoutDepoTransactionInput>
   }
 
-  export type InventoryCreateManyFixedJournalInputEnvelope = {
-    data: InventoryCreateManyFixedJournalInput | InventoryCreateManyFixedJournalInput[]
+  export type DepoInventoryCreateManyDepoTransactionInputEnvelope = {
+    data: DepoInventoryCreateManyDepoTransactionInput | DepoInventoryCreateManyDepoTransactionInput[]
     skipDuplicates?: boolean
   }
 
-  export type ChemistUpsertWithoutFixedJournalInput = {
-    update: XOR<ChemistUpdateWithoutFixedJournalInput, ChemistUncheckedUpdateWithoutFixedJournalInput>
-    create: XOR<ChemistCreateWithoutFixedJournalInput, ChemistUncheckedCreateWithoutFixedJournalInput>
-    where?: ChemistWhereInput
-  }
-
-  export type ChemistUpdateToOneWithWhereWithoutFixedJournalInput = {
-    where?: ChemistWhereInput
-    data: XOR<ChemistUpdateWithoutFixedJournalInput, ChemistUncheckedUpdateWithoutFixedJournalInput>
-  }
-
-  export type ChemistUpdateWithoutFixedJournalInput = {
-    chemistId?: StringFieldUpdateOperationsInput | string
-    pharmacyName?: StringFieldUpdateOperationsInput | string
-    contactPerson?: StringFieldUpdateOperationsInput | string
-    contactNo?: StringFieldUpdateOperationsInput | string
-    address?: StringFieldUpdateOperationsInput | string
-    photo?: NullableStringFieldUpdateOperationsInput | string | null
-    discountRate?: NullableIntFieldUpdateOperationsInput | number | null
-    openingDueAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    openingDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    depo?: DepoUpdateOneRequiredWithoutChemistNestedInput
-    scopes?: ScopeUpdateManyWithoutChemistNestedInput
-    order?: OrderUpdateManyWithoutChemistNestedInput
-    transactionInfo?: TransactionInfoUpdateManyWithoutChemistNestedInput
-  }
-
-  export type ChemistUncheckedUpdateWithoutFixedJournalInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    chemistId?: StringFieldUpdateOperationsInput | string
-    depoId?: IntFieldUpdateOperationsInput | number
-    pharmacyName?: StringFieldUpdateOperationsInput | string
-    contactPerson?: StringFieldUpdateOperationsInput | string
-    contactNo?: StringFieldUpdateOperationsInput | string
-    address?: StringFieldUpdateOperationsInput | string
-    photo?: NullableStringFieldUpdateOperationsInput | string | null
-    discountRate?: NullableIntFieldUpdateOperationsInput | number | null
-    openingDueAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    openingDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    scopes?: ScopeUncheckedUpdateManyWithoutChemistNestedInput
-    order?: OrderUncheckedUpdateManyWithoutChemistNestedInput
-    transactionInfo?: TransactionInfoUncheckedUpdateManyWithoutChemistNestedInput
-  }
-
-  export type DepoUpsertWithoutFixedJournalInput = {
-    update: XOR<DepoUpdateWithoutFixedJournalInput, DepoUncheckedUpdateWithoutFixedJournalInput>
-    create: XOR<DepoCreateWithoutFixedJournalInput, DepoUncheckedCreateWithoutFixedJournalInput>
+  export type DepoUpsertWithoutProviderTransactionsInput = {
+    update: XOR<DepoUpdateWithoutProviderTransactionsInput, DepoUncheckedUpdateWithoutProviderTransactionsInput>
+    create: XOR<DepoCreateWithoutProviderTransactionsInput, DepoUncheckedCreateWithoutProviderTransactionsInput>
     where?: DepoWhereInput
   }
 
-  export type DepoUpdateToOneWithWhereWithoutFixedJournalInput = {
+  export type DepoUpdateToOneWithWhereWithoutProviderTransactionsInput = {
     where?: DepoWhereInput
-    data: XOR<DepoUpdateWithoutFixedJournalInput, DepoUncheckedUpdateWithoutFixedJournalInput>
+    data: XOR<DepoUpdateWithoutProviderTransactionsInput, DepoUncheckedUpdateWithoutProviderTransactionsInput>
   }
 
-  export type DepoUpdateWithoutFixedJournalInput = {
+  export type DepoUpdateWithoutProviderTransactionsInput = {
     depoName?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
     scopeId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -64165,9 +66722,10 @@ export namespace Prisma {
     jobPost?: JobPostUpdateManyWithoutDepoNestedInput
     journal?: JournalUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUpdateManyWithoutDepoNestedInput
+    receiverTransactions?: DepoTransactionUpdateManyWithoutReceverdepoNestedInput
   }
 
-  export type DepoUncheckedUpdateWithoutFixedJournalInput = {
+  export type DepoUncheckedUpdateWithoutProviderTransactionsInput = {
     id?: IntFieldUpdateOperationsInput | number
     depoName?: StringFieldUpdateOperationsInput | string
     location?: StringFieldUpdateOperationsInput | string
@@ -64180,29 +66738,112 @@ export namespace Prisma {
     jobPost?: JobPostUncheckedUpdateManyWithoutDepoNestedInput
     journal?: JournalUncheckedUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUncheckedUpdateManyWithoutDepoNestedInput
+    receiverTransactions?: DepoTransactionUncheckedUpdateManyWithoutReceverdepoNestedInput
   }
 
-  export type LedgerHeadUpsertWithoutFixedJournalInput = {
-    update: XOR<LedgerHeadUpdateWithoutFixedJournalInput, LedgerHeadUncheckedUpdateWithoutFixedJournalInput>
-    create: XOR<LedgerHeadCreateWithoutFixedJournalInput, LedgerHeadUncheckedCreateWithoutFixedJournalInput>
+  export type DepoUpsertWithoutReceiverTransactionsInput = {
+    update: XOR<DepoUpdateWithoutReceiverTransactionsInput, DepoUncheckedUpdateWithoutReceiverTransactionsInput>
+    create: XOR<DepoCreateWithoutReceiverTransactionsInput, DepoUncheckedCreateWithoutReceiverTransactionsInput>
+    where?: DepoWhereInput
+  }
+
+  export type DepoUpdateToOneWithWhereWithoutReceiverTransactionsInput = {
+    where?: DepoWhereInput
+    data: XOR<DepoUpdateWithoutReceiverTransactionsInput, DepoUncheckedUpdateWithoutReceiverTransactionsInput>
+  }
+
+  export type DepoUpdateWithoutReceiverTransactionsInput = {
+    depoName?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    scopeId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chemist?: ChemistUpdateManyWithoutDepoNestedInput
+    inventory?: InventoryUpdateManyWithoutDepoNestedInput
+    jobPost?: JobPostUpdateManyWithoutDepoNestedInput
+    journal?: JournalUpdateManyWithoutDepoNestedInput
+    scopes?: ScopeUpdateManyWithoutDepoNestedInput
+    providerTransactions?: DepoTransactionUpdateManyWithoutProviderdepoNestedInput
+  }
+
+  export type DepoUncheckedUpdateWithoutReceiverTransactionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    depoName?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    scopeId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chemist?: ChemistUncheckedUpdateManyWithoutDepoNestedInput
+    inventory?: InventoryUncheckedUpdateManyWithoutDepoNestedInput
+    jobPost?: JobPostUncheckedUpdateManyWithoutDepoNestedInput
+    journal?: JournalUncheckedUpdateManyWithoutDepoNestedInput
+    scopes?: ScopeUncheckedUpdateManyWithoutDepoNestedInput
+    providerTransactions?: DepoTransactionUncheckedUpdateManyWithoutProviderdepoNestedInput
+  }
+
+  export type DepoInventoryUpsertWithWhereUniqueWithoutDepoTransactionInput = {
+    where: DepoInventoryWhereUniqueInput
+    update: XOR<DepoInventoryUpdateWithoutDepoTransactionInput, DepoInventoryUncheckedUpdateWithoutDepoTransactionInput>
+    create: XOR<DepoInventoryCreateWithoutDepoTransactionInput, DepoInventoryUncheckedCreateWithoutDepoTransactionInput>
+  }
+
+  export type DepoInventoryUpdateWithWhereUniqueWithoutDepoTransactionInput = {
+    where: DepoInventoryWhereUniqueInput
+    data: XOR<DepoInventoryUpdateWithoutDepoTransactionInput, DepoInventoryUncheckedUpdateWithoutDepoTransactionInput>
+  }
+
+  export type DepoInventoryUpdateManyWithWhereWithoutDepoTransactionInput = {
+    where: DepoInventoryScalarWhereInput
+    data: XOR<DepoInventoryUpdateManyMutationInput, DepoInventoryUncheckedUpdateManyWithoutDepoTransactionInput>
+  }
+
+  export type LedgerHeadCreateWithoutDepoJournalsInput = {
+    ledgerName: string
+    ledgerCode: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    accountHead: AccountHeadCreateNestedOneWithoutLedgerHeadInput
+    journal?: JournalCreateNestedManyWithoutLedgerHeadInput
+  }
+
+  export type LedgerHeadUncheckedCreateWithoutDepoJournalsInput = {
+    id?: number
+    ledgerName: string
+    ledgerCode: string
+    headCodeId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    journal?: JournalUncheckedCreateNestedManyWithoutLedgerHeadInput
+  }
+
+  export type LedgerHeadCreateOrConnectWithoutDepoJournalsInput = {
+    where: LedgerHeadWhereUniqueInput
+    create: XOR<LedgerHeadCreateWithoutDepoJournalsInput, LedgerHeadUncheckedCreateWithoutDepoJournalsInput>
+  }
+
+  export type LedgerHeadUpsertWithoutDepoJournalsInput = {
+    update: XOR<LedgerHeadUpdateWithoutDepoJournalsInput, LedgerHeadUncheckedUpdateWithoutDepoJournalsInput>
+    create: XOR<LedgerHeadCreateWithoutDepoJournalsInput, LedgerHeadUncheckedCreateWithoutDepoJournalsInput>
     where?: LedgerHeadWhereInput
   }
 
-  export type LedgerHeadUpdateToOneWithWhereWithoutFixedJournalInput = {
+  export type LedgerHeadUpdateToOneWithWhereWithoutDepoJournalsInput = {
     where?: LedgerHeadWhereInput
-    data: XOR<LedgerHeadUpdateWithoutFixedJournalInput, LedgerHeadUncheckedUpdateWithoutFixedJournalInput>
+    data: XOR<LedgerHeadUpdateWithoutDepoJournalsInput, LedgerHeadUncheckedUpdateWithoutDepoJournalsInput>
   }
 
-  export type LedgerHeadUpdateWithoutFixedJournalInput = {
+  export type LedgerHeadUpdateWithoutDepoJournalsInput = {
     ledgerName?: StringFieldUpdateOperationsInput | string
     ledgerCode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    journal?: JournalUpdateManyWithoutLedgerHeadNestedInput
     accountHead?: AccountHeadUpdateOneRequiredWithoutLedgerHeadNestedInput
+    journal?: JournalUpdateManyWithoutLedgerHeadNestedInput
   }
 
-  export type LedgerHeadUncheckedUpdateWithoutFixedJournalInput = {
+  export type LedgerHeadUncheckedUpdateWithoutDepoJournalsInput = {
     id?: IntFieldUpdateOperationsInput | number
     ledgerName?: StringFieldUpdateOperationsInput | string
     ledgerCode?: StringFieldUpdateOperationsInput | string
@@ -64212,20 +66853,164 @@ export namespace Prisma {
     journal?: JournalUncheckedUpdateManyWithoutLedgerHeadNestedInput
   }
 
-  export type InventoryUpsertWithWhereUniqueWithoutFixedJournalInput = {
-    where: InventoryWhereUniqueInput
-    update: XOR<InventoryUpdateWithoutFixedJournalInput, InventoryUncheckedUpdateWithoutFixedJournalInput>
-    create: XOR<InventoryCreateWithoutFixedJournalInput, InventoryUncheckedCreateWithoutFixedJournalInput>
+  export type ProductCreateWithoutDepoInventoriesInput = {
+    name: string
+    description: string
+    size: string
+    mrp?: number
+    tp?: number
+    balance: number
+    quantity: number
+    unitPrice?: number
+    date: Date | string
+    status?: $Enums.Status
+    createdAt?: Date | string
+    updateAt?: Date | string
+    targetProductBatch?: TargetProductBatchCreateNestedManyWithoutProductInput
+    inventory?: InventoryCreateNestedManyWithoutProductInput
+    orderItem?: OrderItemCreateNestedManyWithoutProductInput
+    Stakeholder?: StakeholderCreateNestedOneWithoutProductInput
+    subCategory: SubCategoryCreateNestedOneWithoutProductInput
+    unit: UnitCreateNestedOneWithoutProductInput
   }
 
-  export type InventoryUpdateWithWhereUniqueWithoutFixedJournalInput = {
-    where: InventoryWhereUniqueInput
-    data: XOR<InventoryUpdateWithoutFixedJournalInput, InventoryUncheckedUpdateWithoutFixedJournalInput>
+  export type ProductUncheckedCreateWithoutDepoInventoriesInput = {
+    id?: number
+    name: string
+    description: string
+    subCategoryId: number
+    stakeholderId?: number | null
+    size: string
+    unitId: number
+    mrp?: number
+    tp?: number
+    balance: number
+    quantity: number
+    unitPrice?: number
+    date: Date | string
+    status?: $Enums.Status
+    createdAt?: Date | string
+    updateAt?: Date | string
+    targetProductBatch?: TargetProductBatchUncheckedCreateNestedManyWithoutProductInput
+    inventory?: InventoryUncheckedCreateNestedManyWithoutProductInput
+    orderItem?: OrderItemUncheckedCreateNestedManyWithoutProductInput
   }
 
-  export type InventoryUpdateManyWithWhereWithoutFixedJournalInput = {
-    where: InventoryScalarWhereInput
-    data: XOR<InventoryUpdateManyMutationInput, InventoryUncheckedUpdateManyWithoutFixedJournalInput>
+  export type ProductCreateOrConnectWithoutDepoInventoriesInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutDepoInventoriesInput, ProductUncheckedCreateWithoutDepoInventoriesInput>
+  }
+
+  export type DepoTransactionCreateWithoutDepoInventoriesInput = {
+    date: Date | string
+    voucherNo: string
+    status?: $Enums.OrdStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    providerdepo: DepoCreateNestedOneWithoutProviderTransactionsInput
+    receverdepo: DepoCreateNestedOneWithoutReceiverTransactionsInput
+  }
+
+  export type DepoTransactionUncheckedCreateWithoutDepoInventoriesInput = {
+    id?: number
+    date: Date | string
+    providerdepoId: number
+    receverdepoId: number
+    voucherNo: string
+    status?: $Enums.OrdStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepoTransactionCreateOrConnectWithoutDepoInventoriesInput = {
+    where: DepoTransactionWhereUniqueInput
+    create: XOR<DepoTransactionCreateWithoutDepoInventoriesInput, DepoTransactionUncheckedCreateWithoutDepoInventoriesInput>
+  }
+
+  export type ProductUpsertWithoutDepoInventoriesInput = {
+    update: XOR<ProductUpdateWithoutDepoInventoriesInput, ProductUncheckedUpdateWithoutDepoInventoriesInput>
+    create: XOR<ProductCreateWithoutDepoInventoriesInput, ProductUncheckedCreateWithoutDepoInventoriesInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutDepoInventoriesInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutDepoInventoriesInput, ProductUncheckedUpdateWithoutDepoInventoriesInput>
+  }
+
+  export type ProductUpdateWithoutDepoInventoriesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    size?: StringFieldUpdateOperationsInput | string
+    mrp?: FloatFieldUpdateOperationsInput | number
+    tp?: FloatFieldUpdateOperationsInput | number
+    balance?: FloatFieldUpdateOperationsInput | number
+    quantity?: FloatFieldUpdateOperationsInput | number
+    unitPrice?: FloatFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    targetProductBatch?: TargetProductBatchUpdateManyWithoutProductNestedInput
+    inventory?: InventoryUpdateManyWithoutProductNestedInput
+    orderItem?: OrderItemUpdateManyWithoutProductNestedInput
+    Stakeholder?: StakeholderUpdateOneWithoutProductNestedInput
+    subCategory?: SubCategoryUpdateOneRequiredWithoutProductNestedInput
+    unit?: UnitUpdateOneRequiredWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutDepoInventoriesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    subCategoryId?: IntFieldUpdateOperationsInput | number
+    stakeholderId?: NullableIntFieldUpdateOperationsInput | number | null
+    size?: StringFieldUpdateOperationsInput | string
+    unitId?: IntFieldUpdateOperationsInput | number
+    mrp?: FloatFieldUpdateOperationsInput | number
+    tp?: FloatFieldUpdateOperationsInput | number
+    balance?: FloatFieldUpdateOperationsInput | number
+    quantity?: FloatFieldUpdateOperationsInput | number
+    unitPrice?: FloatFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    targetProductBatch?: TargetProductBatchUncheckedUpdateManyWithoutProductNestedInput
+    inventory?: InventoryUncheckedUpdateManyWithoutProductNestedInput
+    orderItem?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type DepoTransactionUpsertWithoutDepoInventoriesInput = {
+    update: XOR<DepoTransactionUpdateWithoutDepoInventoriesInput, DepoTransactionUncheckedUpdateWithoutDepoInventoriesInput>
+    create: XOR<DepoTransactionCreateWithoutDepoInventoriesInput, DepoTransactionUncheckedCreateWithoutDepoInventoriesInput>
+    where?: DepoTransactionWhereInput
+  }
+
+  export type DepoTransactionUpdateToOneWithWhereWithoutDepoInventoriesInput = {
+    where?: DepoTransactionWhereInput
+    data: XOR<DepoTransactionUpdateWithoutDepoInventoriesInput, DepoTransactionUncheckedUpdateWithoutDepoInventoriesInput>
+  }
+
+  export type DepoTransactionUpdateWithoutDepoInventoriesInput = {
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucherNo?: StringFieldUpdateOperationsInput | string
+    status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    providerdepo?: DepoUpdateOneRequiredWithoutProviderTransactionsNestedInput
+    receverdepo?: DepoUpdateOneRequiredWithoutReceiverTransactionsNestedInput
+  }
+
+  export type DepoTransactionUncheckedUpdateWithoutDepoInventoriesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    providerdepoId?: IntFieldUpdateOperationsInput | number
+    receverdepoId?: IntFieldUpdateOperationsInput | number
+    voucherNo?: StringFieldUpdateOperationsInput | string
+    status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OrderItemCreateWithoutOrderInput = {
@@ -64295,7 +67080,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     depo: DepoCreateNestedOneWithoutChemistInput
     scopes?: ScopeCreateNestedManyWithoutChemistInput
-    FixedJournal?: FixedJournalCreateNestedManyWithoutChemistInput
     transactionInfo?: TransactionInfoCreateNestedManyWithoutChemistInput
   }
 
@@ -64315,7 +67099,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     scopes?: ScopeUncheckedCreateNestedManyWithoutChemistInput
-    FixedJournal?: FixedJournalUncheckedCreateNestedManyWithoutChemistInput
     transactionInfo?: TransactionInfoUncheckedCreateNestedManyWithoutChemistInput
   }
 
@@ -64447,7 +67230,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     depo?: DepoUpdateOneRequiredWithoutChemistNestedInput
     scopes?: ScopeUpdateManyWithoutChemistNestedInput
-    FixedJournal?: FixedJournalUpdateManyWithoutChemistNestedInput
     transactionInfo?: TransactionInfoUpdateManyWithoutChemistNestedInput
   }
 
@@ -64467,7 +67249,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     scopes?: ScopeUncheckedUpdateManyWithoutChemistNestedInput
-    FixedJournal?: FixedJournalUncheckedUpdateManyWithoutChemistNestedInput
     transactionInfo?: TransactionInfoUncheckedUpdateManyWithoutChemistNestedInput
   }
 
@@ -64575,6 +67356,7 @@ export namespace Prisma {
     Stakeholder?: StakeholderCreateNestedOneWithoutProductInput
     subCategory: SubCategoryCreateNestedOneWithoutProductInput
     unit: UnitCreateNestedOneWithoutProductInput
+    depoInventories?: DepoInventoryCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutOrderItemInput = {
@@ -64596,6 +67378,7 @@ export namespace Prisma {
     updateAt?: Date | string
     targetProductBatch?: TargetProductBatchUncheckedCreateNestedManyWithoutProductInput
     inventory?: InventoryUncheckedCreateNestedManyWithoutProductInput
+    depoInventories?: DepoInventoryUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutOrderItemInput = {
@@ -64666,6 +67449,7 @@ export namespace Prisma {
     Stakeholder?: StakeholderUpdateOneWithoutProductNestedInput
     subCategory?: SubCategoryUpdateOneRequiredWithoutProductNestedInput
     unit?: UnitUpdateOneRequiredWithoutProductNestedInput
+    depoInventories?: DepoInventoryUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutOrderItemInput = {
@@ -64687,6 +67471,7 @@ export namespace Prisma {
     updateAt?: DateTimeFieldUpdateOperationsInput | Date | string
     targetProductBatch?: TargetProductBatchUncheckedUpdateManyWithoutProductNestedInput
     inventory?: InventoryUncheckedUpdateManyWithoutProductNestedInput
+    depoInventories?: DepoInventoryUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type OrderCreateWithoutOrderStatusInput = {
@@ -65459,7 +68244,6 @@ export namespace Prisma {
     stakeholderId?: string | null
     partyId?: number | null
     voucherType: $Enums.VoucherType
-    paymentType?: $Enums.PaymentType | null
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -65471,7 +68255,6 @@ export namespace Prisma {
     productId: number
     depoId?: number | null
     transactionId?: number | null
-    fixedJournalId?: number | null
     unitPrice?: number
     quantityAdd?: number | null
     quantityLess?: number | null
@@ -65480,7 +68263,6 @@ export namespace Prisma {
     isClosing?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    isFixted?: boolean
   }
 
   export type AttendanceUpdateWithoutUserInput = {
@@ -65693,7 +68475,6 @@ export namespace Prisma {
     voucherNo?: StringFieldUpdateOperationsInput | string
     invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    paymentType?: NullableEnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65715,7 +68496,6 @@ export namespace Prisma {
     stakeholderId?: NullableStringFieldUpdateOperationsInput | string | null
     partyId?: NullableIntFieldUpdateOperationsInput | number | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    paymentType?: NullableEnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65733,7 +68513,6 @@ export namespace Prisma {
     stakeholderId?: NullableStringFieldUpdateOperationsInput | string | null
     partyId?: NullableIntFieldUpdateOperationsInput | number | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    paymentType?: NullableEnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65749,9 +68528,7 @@ export namespace Prisma {
     isClosing?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isFixted?: BoolFieldUpdateOperationsInput | boolean
     depo?: DepoUpdateOneWithoutInventoryNestedInput
-    fixedJournal?: FixedJournalUpdateOneWithoutInventoryNestedInput
     product?: ProductUpdateOneRequiredWithoutInventoryNestedInput
     transactionInfo?: TransactionInfoUpdateOneWithoutInventoryNestedInput
   }
@@ -65762,7 +68539,6 @@ export namespace Prisma {
     productId?: IntFieldUpdateOperationsInput | number
     depoId?: NullableIntFieldUpdateOperationsInput | number | null
     transactionId?: NullableIntFieldUpdateOperationsInput | number | null
-    fixedJournalId?: NullableIntFieldUpdateOperationsInput | number | null
     unitPrice?: FloatFieldUpdateOperationsInput | number
     quantityAdd?: NullableFloatFieldUpdateOperationsInput | number | null
     quantityLess?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -65771,7 +68547,6 @@ export namespace Prisma {
     isClosing?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isFixted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type InventoryUncheckedUpdateManyWithoutUserInput = {
@@ -65780,7 +68555,6 @@ export namespace Prisma {
     productId?: IntFieldUpdateOperationsInput | number
     depoId?: NullableIntFieldUpdateOperationsInput | number | null
     transactionId?: NullableIntFieldUpdateOperationsInput | number | null
-    fixedJournalId?: NullableIntFieldUpdateOperationsInput | number | null
     unitPrice?: FloatFieldUpdateOperationsInput | number
     quantityAdd?: NullableFloatFieldUpdateOperationsInput | number | null
     quantityLess?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -65789,7 +68563,6 @@ export namespace Prisma {
     isClosing?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isFixted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ScopeCreateManyJobPostInput = {
@@ -65825,20 +68598,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type FixedJournalCreateManyChemistInput = {
-    id?: number
-    date: Date | string
-    voucherNo: string
-    ledgerHeadId: number
-    depoId: number
-    creditAmount?: number | null
-    debitAmount?: number | null
-    narration?: string | null
-    isClosing?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
   export type OrderCreateManyChemistInput = {
     id?: number
     employeeId: string
@@ -65859,7 +68618,6 @@ export namespace Prisma {
     employeeId?: string | null
     partyId?: number | null
     voucherType: $Enums.VoucherType
-    paymentType?: $Enums.PaymentType | null
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -65888,49 +68646,6 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     employeeId?: StringFieldUpdateOperationsInput | string
     postId?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type FixedJournalUpdateWithoutChemistInput = {
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    voucherNo?: StringFieldUpdateOperationsInput | string
-    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    narration?: NullableStringFieldUpdateOperationsInput | string | null
-    isClosing?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    depo?: DepoUpdateOneRequiredWithoutFixedJournalNestedInput
-    ledgerHead?: LedgerHeadUpdateOneRequiredWithoutFixedJournalNestedInput
-    inventory?: InventoryUpdateManyWithoutFixedJournalNestedInput
-  }
-
-  export type FixedJournalUncheckedUpdateWithoutChemistInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    voucherNo?: StringFieldUpdateOperationsInput | string
-    ledgerHeadId?: IntFieldUpdateOperationsInput | number
-    depoId?: IntFieldUpdateOperationsInput | number
-    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    narration?: NullableStringFieldUpdateOperationsInput | string | null
-    isClosing?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    inventory?: InventoryUncheckedUpdateManyWithoutFixedJournalNestedInput
-  }
-
-  export type FixedJournalUncheckedUpdateManyWithoutChemistInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    voucherNo?: StringFieldUpdateOperationsInput | string
-    ledgerHeadId?: IntFieldUpdateOperationsInput | number
-    depoId?: IntFieldUpdateOperationsInput | number
-    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    narration?: NullableStringFieldUpdateOperationsInput | string | null
-    isClosing?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -65973,7 +68688,6 @@ export namespace Prisma {
     voucherNo?: StringFieldUpdateOperationsInput | string
     invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    paymentType?: NullableEnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -65995,7 +68709,6 @@ export namespace Prisma {
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     partyId?: NullableIntFieldUpdateOperationsInput | number | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    paymentType?: NullableEnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66013,7 +68726,6 @@ export namespace Prisma {
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     partyId?: NullableIntFieldUpdateOperationsInput | number | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    paymentType?: NullableEnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66035,27 +68747,12 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type FixedJournalCreateManyDepoInput = {
-    id?: number
-    date: Date | string
-    voucherNo: string
-    chemistId: string
-    ledgerHeadId: number
-    creditAmount?: number | null
-    debitAmount?: number | null
-    narration?: string | null
-    isClosing?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
   export type InventoryCreateManyDepoInput = {
     id?: number
     date: Date | string
     productId: number
     employeeId?: string | null
     transactionId?: number | null
-    fixedJournalId?: number | null
     unitPrice?: number
     quantityAdd?: number | null
     quantityLess?: number | null
@@ -66064,7 +68761,6 @@ export namespace Prisma {
     isClosing?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    isFixted?: boolean
   }
 
   export type JobPostCreateManyDepoInput = {
@@ -66090,6 +68786,26 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type DepoTransactionCreateManyProviderdepoInput = {
+    id?: number
+    date: Date | string
+    receverdepoId: number
+    voucherNo: string
+    status?: $Enums.OrdStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepoTransactionCreateManyReceverdepoInput = {
+    id?: number
+    date: Date | string
+    providerdepoId: number
+    voucherNo: string
+    status?: $Enums.OrdStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type ChemistUpdateWithoutDepoInput = {
     chemistId?: StringFieldUpdateOperationsInput | string
     pharmacyName?: StringFieldUpdateOperationsInput | string
@@ -66104,7 +68820,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     scopes?: ScopeUpdateManyWithoutChemistNestedInput
-    FixedJournal?: FixedJournalUpdateManyWithoutChemistNestedInput
     order?: OrderUpdateManyWithoutChemistNestedInput
     transactionInfo?: TransactionInfoUpdateManyWithoutChemistNestedInput
   }
@@ -66124,7 +68839,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     scopes?: ScopeUncheckedUpdateManyWithoutChemistNestedInput
-    FixedJournal?: FixedJournalUncheckedUpdateManyWithoutChemistNestedInput
     order?: OrderUncheckedUpdateManyWithoutChemistNestedInput
     transactionInfo?: TransactionInfoUncheckedUpdateManyWithoutChemistNestedInput
   }
@@ -66145,49 +68859,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type FixedJournalUpdateWithoutDepoInput = {
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    voucherNo?: StringFieldUpdateOperationsInput | string
-    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    narration?: NullableStringFieldUpdateOperationsInput | string | null
-    isClosing?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    chemist?: ChemistUpdateOneRequiredWithoutFixedJournalNestedInput
-    ledgerHead?: LedgerHeadUpdateOneRequiredWithoutFixedJournalNestedInput
-    inventory?: InventoryUpdateManyWithoutFixedJournalNestedInput
-  }
-
-  export type FixedJournalUncheckedUpdateWithoutDepoInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    voucherNo?: StringFieldUpdateOperationsInput | string
-    chemistId?: StringFieldUpdateOperationsInput | string
-    ledgerHeadId?: IntFieldUpdateOperationsInput | number
-    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    narration?: NullableStringFieldUpdateOperationsInput | string | null
-    isClosing?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    inventory?: InventoryUncheckedUpdateManyWithoutFixedJournalNestedInput
-  }
-
-  export type FixedJournalUncheckedUpdateManyWithoutDepoInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    voucherNo?: StringFieldUpdateOperationsInput | string
-    chemistId?: StringFieldUpdateOperationsInput | string
-    ledgerHeadId?: IntFieldUpdateOperationsInput | number
-    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    narration?: NullableStringFieldUpdateOperationsInput | string | null
-    isClosing?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type InventoryUpdateWithoutDepoInput = {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     unitPrice?: FloatFieldUpdateOperationsInput | number
@@ -66198,8 +68869,6 @@ export namespace Prisma {
     isClosing?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isFixted?: BoolFieldUpdateOperationsInput | boolean
-    fixedJournal?: FixedJournalUpdateOneWithoutInventoryNestedInput
     product?: ProductUpdateOneRequiredWithoutInventoryNestedInput
     transactionInfo?: TransactionInfoUpdateOneWithoutInventoryNestedInput
     user?: UserUpdateOneWithoutInventoriesNestedInput
@@ -66211,7 +68880,6 @@ export namespace Prisma {
     productId?: IntFieldUpdateOperationsInput | number
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableIntFieldUpdateOperationsInput | number | null
-    fixedJournalId?: NullableIntFieldUpdateOperationsInput | number | null
     unitPrice?: FloatFieldUpdateOperationsInput | number
     quantityAdd?: NullableFloatFieldUpdateOperationsInput | number | null
     quantityLess?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -66220,7 +68888,6 @@ export namespace Prisma {
     isClosing?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isFixted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type InventoryUncheckedUpdateManyWithoutDepoInput = {
@@ -66229,7 +68896,6 @@ export namespace Prisma {
     productId?: IntFieldUpdateOperationsInput | number
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableIntFieldUpdateOperationsInput | number | null
-    fixedJournalId?: NullableIntFieldUpdateOperationsInput | number | null
     unitPrice?: FloatFieldUpdateOperationsInput | number
     quantityAdd?: NullableFloatFieldUpdateOperationsInput | number | null
     quantityLess?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -66238,7 +68904,6 @@ export namespace Prisma {
     isClosing?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isFixted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type JobPostUpdateWithoutDepoInput = {
@@ -66339,6 +69004,68 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DepoTransactionUpdateWithoutProviderdepoInput = {
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucherNo?: StringFieldUpdateOperationsInput | string
+    status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    receverdepo?: DepoUpdateOneRequiredWithoutReceiverTransactionsNestedInput
+    depoInventories?: DepoInventoryUpdateManyWithoutDepoTransactionNestedInput
+  }
+
+  export type DepoTransactionUncheckedUpdateWithoutProviderdepoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    receverdepoId?: IntFieldUpdateOperationsInput | number
+    voucherNo?: StringFieldUpdateOperationsInput | string
+    status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    depoInventories?: DepoInventoryUncheckedUpdateManyWithoutDepoTransactionNestedInput
+  }
+
+  export type DepoTransactionUncheckedUpdateManyWithoutProviderdepoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    receverdepoId?: IntFieldUpdateOperationsInput | number
+    voucherNo?: StringFieldUpdateOperationsInput | string
+    status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepoTransactionUpdateWithoutReceverdepoInput = {
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    voucherNo?: StringFieldUpdateOperationsInput | string
+    status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    providerdepo?: DepoUpdateOneRequiredWithoutProviderTransactionsNestedInput
+    depoInventories?: DepoInventoryUpdateManyWithoutDepoTransactionNestedInput
+  }
+
+  export type DepoTransactionUncheckedUpdateWithoutReceverdepoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    providerdepoId?: IntFieldUpdateOperationsInput | number
+    voucherNo?: StringFieldUpdateOperationsInput | string
+    status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    depoInventories?: DepoInventoryUncheckedUpdateManyWithoutDepoTransactionNestedInput
+  }
+
+  export type DepoTransactionUncheckedUpdateManyWithoutReceverdepoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    providerdepoId?: IntFieldUpdateOperationsInput | number
+    voucherNo?: StringFieldUpdateOperationsInput | string
+    status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type TransactionInfoCreateManyPartyInput = {
     id?: number
     date: Date | string
@@ -66349,7 +69076,6 @@ export namespace Prisma {
     stakeholderId?: string | null
     employeeId?: string | null
     voucherType: $Enums.VoucherType
-    paymentType?: $Enums.PaymentType | null
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -66360,7 +69086,6 @@ export namespace Prisma {
     voucherNo?: StringFieldUpdateOperationsInput | string
     invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    paymentType?: NullableEnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66382,7 +69107,6 @@ export namespace Prisma {
     stakeholderId?: NullableStringFieldUpdateOperationsInput | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    paymentType?: NullableEnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66400,7 +69124,6 @@ export namespace Prisma {
     stakeholderId?: NullableStringFieldUpdateOperationsInput | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    paymentType?: NullableEnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66454,7 +69177,6 @@ export namespace Prisma {
     employeeId?: string | null
     partyId?: number | null
     voucherType: $Enums.VoucherType
-    paymentType?: $Enums.PaymentType | null
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -66478,6 +69200,7 @@ export namespace Prisma {
     orderItem?: OrderItemUpdateManyWithoutProductNestedInput
     subCategory?: SubCategoryUpdateOneRequiredWithoutProductNestedInput
     unit?: UnitUpdateOneRequiredWithoutProductNestedInput
+    depoInventories?: DepoInventoryUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutStakeholderInput = {
@@ -66499,6 +69222,7 @@ export namespace Prisma {
     targetProductBatch?: TargetProductBatchUncheckedUpdateManyWithoutProductNestedInput
     inventory?: InventoryUncheckedUpdateManyWithoutProductNestedInput
     orderItem?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    depoInventories?: DepoInventoryUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutStakeholderInput = {
@@ -66609,7 +69333,6 @@ export namespace Prisma {
     voucherNo?: StringFieldUpdateOperationsInput | string
     invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    paymentType?: NullableEnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66631,7 +69354,6 @@ export namespace Prisma {
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     partyId?: NullableIntFieldUpdateOperationsInput | number | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    paymentType?: NullableEnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66649,7 +69371,6 @@ export namespace Prisma {
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     partyId?: NullableIntFieldUpdateOperationsInput | number | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    paymentType?: NullableEnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66811,7 +69532,6 @@ export namespace Prisma {
     employeeId?: string | null
     partyId?: number | null
     voucherType: $Enums.VoucherType
-    paymentType?: $Enums.PaymentType | null
     status?: $Enums.Status
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -66822,7 +69542,6 @@ export namespace Prisma {
     voucherNo?: StringFieldUpdateOperationsInput | string
     invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    paymentType?: NullableEnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66844,7 +69563,6 @@ export namespace Prisma {
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     partyId?: NullableIntFieldUpdateOperationsInput | number | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    paymentType?: NullableEnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66862,7 +69580,6 @@ export namespace Prisma {
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     partyId?: NullableIntFieldUpdateOperationsInput | number | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    paymentType?: NullableEnumPaymentTypeFieldUpdateOperationsInput | $Enums.PaymentType | null
     status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66882,7 +69599,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     depo?: DepoUpdateOneRequiredWithoutChemistNestedInput
-    FixedJournal?: FixedJournalUpdateManyWithoutChemistNestedInput
     order?: OrderUpdateManyWithoutChemistNestedInput
     transactionInfo?: TransactionInfoUpdateManyWithoutChemistNestedInput
   }
@@ -66902,7 +69618,6 @@ export namespace Prisma {
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    FixedJournal?: FixedJournalUncheckedUpdateManyWithoutChemistNestedInput
     order?: OrderUncheckedUpdateManyWithoutChemistNestedInput
     transactionInfo?: TransactionInfoUncheckedUpdateManyWithoutChemistNestedInput
   }
@@ -66932,10 +69647,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chemist?: ChemistUpdateManyWithoutDepoNestedInput
-    FixedJournal?: FixedJournalUpdateManyWithoutDepoNestedInput
     inventory?: InventoryUpdateManyWithoutDepoNestedInput
     jobPost?: JobPostUpdateManyWithoutDepoNestedInput
     journal?: JournalUpdateManyWithoutDepoNestedInput
+    providerTransactions?: DepoTransactionUpdateManyWithoutProviderdepoNestedInput
+    receiverTransactions?: DepoTransactionUpdateManyWithoutReceverdepoNestedInput
   }
 
   export type DepoUncheckedUpdateWithoutScopesInput = {
@@ -66947,10 +69663,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chemist?: ChemistUncheckedUpdateManyWithoutDepoNestedInput
-    FixedJournal?: FixedJournalUncheckedUpdateManyWithoutDepoNestedInput
     inventory?: InventoryUncheckedUpdateManyWithoutDepoNestedInput
     jobPost?: JobPostUncheckedUpdateManyWithoutDepoNestedInput
     journal?: JournalUncheckedUpdateManyWithoutDepoNestedInput
+    providerTransactions?: DepoTransactionUncheckedUpdateManyWithoutProviderdepoNestedInput
+    receiverTransactions?: DepoTransactionUncheckedUpdateManyWithoutReceverdepoNestedInput
   }
 
   export type DepoUncheckedUpdateManyWithoutScopesInput = {
@@ -67121,6 +69838,7 @@ export namespace Prisma {
     orderItem?: OrderItemUpdateManyWithoutProductNestedInput
     Stakeholder?: StakeholderUpdateOneWithoutProductNestedInput
     unit?: UnitUpdateOneRequiredWithoutProductNestedInput
+    depoInventories?: DepoInventoryUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutSubCategoryInput = {
@@ -67142,6 +69860,7 @@ export namespace Prisma {
     targetProductBatch?: TargetProductBatchUncheckedUpdateManyWithoutProductNestedInput
     inventory?: InventoryUncheckedUpdateManyWithoutProductNestedInput
     orderItem?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    depoInventories?: DepoInventoryUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutSubCategoryInput = {
@@ -67198,6 +69917,7 @@ export namespace Prisma {
     orderItem?: OrderItemUpdateManyWithoutProductNestedInput
     Stakeholder?: StakeholderUpdateOneWithoutProductNestedInput
     subCategory?: SubCategoryUpdateOneRequiredWithoutProductNestedInput
+    depoInventories?: DepoInventoryUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutUnitInput = {
@@ -67219,6 +69939,7 @@ export namespace Prisma {
     targetProductBatch?: TargetProductBatchUncheckedUpdateManyWithoutProductNestedInput
     inventory?: InventoryUncheckedUpdateManyWithoutProductNestedInput
     orderItem?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    depoInventories?: DepoInventoryUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutUnitInput = {
@@ -67252,8 +69973,8 @@ export namespace Prisma {
     ledgerCode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    fixedJournal?: FixedJournalUpdateManyWithoutLedgerHeadNestedInput
     journal?: JournalUpdateManyWithoutLedgerHeadNestedInput
+    depoJournals?: DepoJournalUpdateManyWithoutLedgerHeadNestedInput
   }
 
   export type LedgerHeadUncheckedUpdateWithoutAccountHeadInput = {
@@ -67262,8 +69983,8 @@ export namespace Prisma {
     ledgerCode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    fixedJournal?: FixedJournalUncheckedUpdateManyWithoutLedgerHeadNestedInput
     journal?: JournalUncheckedUpdateManyWithoutLedgerHeadNestedInput
+    depoJournals?: DepoJournalUncheckedUpdateManyWithoutLedgerHeadNestedInput
   }
 
   export type LedgerHeadUncheckedUpdateManyWithoutAccountHeadInput = {
@@ -67272,20 +69993,6 @@ export namespace Prisma {
     ledgerCode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type FixedJournalCreateManyLedgerHeadInput = {
-    id?: number
-    date: Date | string
-    voucherNo: string
-    chemistId: string
-    depoId: number
-    creditAmount?: number | null
-    debitAmount?: number | null
-    narration?: string | null
-    isClosing?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
   export type JournalCreateManyLedgerHeadInput = {
@@ -67301,47 +70008,12 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type FixedJournalUpdateWithoutLedgerHeadInput = {
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    voucherNo?: StringFieldUpdateOperationsInput | string
-    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    narration?: NullableStringFieldUpdateOperationsInput | string | null
-    isClosing?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    chemist?: ChemistUpdateOneRequiredWithoutFixedJournalNestedInput
-    depo?: DepoUpdateOneRequiredWithoutFixedJournalNestedInput
-    inventory?: InventoryUpdateManyWithoutFixedJournalNestedInput
-  }
-
-  export type FixedJournalUncheckedUpdateWithoutLedgerHeadInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    voucherNo?: StringFieldUpdateOperationsInput | string
-    chemistId?: StringFieldUpdateOperationsInput | string
-    depoId?: IntFieldUpdateOperationsInput | number
-    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    narration?: NullableStringFieldUpdateOperationsInput | string | null
-    isClosing?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    inventory?: InventoryUncheckedUpdateManyWithoutFixedJournalNestedInput
-  }
-
-  export type FixedJournalUncheckedUpdateManyWithoutLedgerHeadInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    voucherNo?: StringFieldUpdateOperationsInput | string
-    chemistId?: StringFieldUpdateOperationsInput | string
-    depoId?: IntFieldUpdateOperationsInput | number
-    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    narration?: NullableStringFieldUpdateOperationsInput | string | null
-    isClosing?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type DepoJournalCreateManyLedgerHeadInput = {
+    id?: number
+    date: Date | string
+    depoId: number
+    amount?: number | null
+    narration?: string | null
   }
 
   export type JournalUpdateWithoutLedgerHeadInput = {
@@ -67384,6 +70056,29 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DepoJournalUpdateWithoutLedgerHeadInput = {
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    depoId?: IntFieldUpdateOperationsInput | number
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    narration?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DepoJournalUncheckedUpdateWithoutLedgerHeadInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    depoId?: IntFieldUpdateOperationsInput | number
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    narration?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DepoJournalUncheckedUpdateManyWithoutLedgerHeadInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    depoId?: IntFieldUpdateOperationsInput | number
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    narration?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type TargetProductBatchCreateManyProductInput = {
     id?: number
     productTargetId: number
@@ -67399,7 +70094,6 @@ export namespace Prisma {
     depoId?: number | null
     employeeId?: string | null
     transactionId?: number | null
-    fixedJournalId?: number | null
     unitPrice?: number
     quantityAdd?: number | null
     quantityLess?: number | null
@@ -67408,7 +70102,6 @@ export namespace Prisma {
     isClosing?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    isFixted?: boolean
   }
 
   export type OrderItemCreateManyProductInput = {
@@ -67417,6 +70110,18 @@ export namespace Prisma {
     quintity: number
     tpRate: number
     amount: number
+  }
+
+  export type DepoInventoryCreateManyProductInput = {
+    id?: number
+    depoTransactionId?: number | null
+    date: Date | string
+    reqQuantity?: number | null
+    acceptedQuantity?: number | null
+    unitePrice?: number | null
+    amount?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type TargetProductBatchUpdateWithoutProductInput = {
@@ -67455,9 +70160,7 @@ export namespace Prisma {
     isClosing?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isFixted?: BoolFieldUpdateOperationsInput | boolean
     depo?: DepoUpdateOneWithoutInventoryNestedInput
-    fixedJournal?: FixedJournalUpdateOneWithoutInventoryNestedInput
     transactionInfo?: TransactionInfoUpdateOneWithoutInventoryNestedInput
     user?: UserUpdateOneWithoutInventoriesNestedInput
   }
@@ -67468,7 +70171,6 @@ export namespace Prisma {
     depoId?: NullableIntFieldUpdateOperationsInput | number | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableIntFieldUpdateOperationsInput | number | null
-    fixedJournalId?: NullableIntFieldUpdateOperationsInput | number | null
     unitPrice?: FloatFieldUpdateOperationsInput | number
     quantityAdd?: NullableFloatFieldUpdateOperationsInput | number | null
     quantityLess?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -67477,7 +70179,6 @@ export namespace Prisma {
     isClosing?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isFixted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type InventoryUncheckedUpdateManyWithoutProductInput = {
@@ -67486,7 +70187,6 @@ export namespace Prisma {
     depoId?: NullableIntFieldUpdateOperationsInput | number | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableIntFieldUpdateOperationsInput | number | null
-    fixedJournalId?: NullableIntFieldUpdateOperationsInput | number | null
     unitPrice?: FloatFieldUpdateOperationsInput | number
     quantityAdd?: NullableFloatFieldUpdateOperationsInput | number | null
     quantityLess?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -67495,7 +70195,6 @@ export namespace Prisma {
     isClosing?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isFixted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type OrderItemUpdateWithoutProductInput = {
@@ -67519,6 +70218,41 @@ export namespace Prisma {
     quintity?: IntFieldUpdateOperationsInput | number
     tpRate?: IntFieldUpdateOperationsInput | number
     amount?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type DepoInventoryUpdateWithoutProductInput = {
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    reqQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    acceptedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    unitePrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    depoTransaction?: DepoTransactionUpdateOneWithoutDepoInventoriesNestedInput
+  }
+
+  export type DepoInventoryUncheckedUpdateWithoutProductInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    depoTransactionId?: NullableIntFieldUpdateOperationsInput | number | null
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    reqQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    acceptedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    unitePrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepoInventoryUncheckedUpdateManyWithoutProductInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    depoTransactionId?: NullableIntFieldUpdateOperationsInput | number | null
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    reqQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    acceptedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    unitePrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BankTransactionCreateManyBankAccountInput = {
@@ -67570,7 +70304,6 @@ export namespace Prisma {
     productId: number
     depoId?: number | null
     employeeId?: string | null
-    fixedJournalId?: number | null
     unitPrice?: number
     quantityAdd?: number | null
     quantityLess?: number | null
@@ -67579,7 +70312,6 @@ export namespace Prisma {
     isClosing?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    isFixted?: boolean
   }
 
   export type JournalCreateManyTransactionInfoInput = {
@@ -67605,9 +70337,7 @@ export namespace Prisma {
     isClosing?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isFixted?: BoolFieldUpdateOperationsInput | boolean
     depo?: DepoUpdateOneWithoutInventoryNestedInput
-    fixedJournal?: FixedJournalUpdateOneWithoutInventoryNestedInput
     product?: ProductUpdateOneRequiredWithoutInventoryNestedInput
     user?: UserUpdateOneWithoutInventoriesNestedInput
   }
@@ -67618,7 +70348,6 @@ export namespace Prisma {
     productId?: IntFieldUpdateOperationsInput | number
     depoId?: NullableIntFieldUpdateOperationsInput | number | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
-    fixedJournalId?: NullableIntFieldUpdateOperationsInput | number | null
     unitPrice?: FloatFieldUpdateOperationsInput | number
     quantityAdd?: NullableFloatFieldUpdateOperationsInput | number | null
     quantityLess?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -67627,7 +70356,6 @@ export namespace Prisma {
     isClosing?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isFixted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type InventoryUncheckedUpdateManyWithoutTransactionInfoInput = {
@@ -67636,7 +70364,6 @@ export namespace Prisma {
     productId?: IntFieldUpdateOperationsInput | number
     depoId?: NullableIntFieldUpdateOperationsInput | number | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
-    fixedJournalId?: NullableIntFieldUpdateOperationsInput | number | null
     unitPrice?: FloatFieldUpdateOperationsInput | number
     quantityAdd?: NullableFloatFieldUpdateOperationsInput | number | null
     quantityLess?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -67645,7 +70372,6 @@ export namespace Prisma {
     isClosing?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isFixted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type JournalUpdateWithoutTransactionInfoInput = {
@@ -67731,75 +70457,51 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type InventoryCreateManyFixedJournalInput = {
+  export type DepoInventoryCreateManyDepoTransactionInput = {
     id?: number
     date: Date | string
     productId: number
-    depoId?: number | null
-    employeeId?: string | null
-    transactionId?: number | null
-    unitPrice?: number
-    quantityAdd?: number | null
-    quantityLess?: number | null
-    debitAmount?: number | null
-    creditAmount?: number | null
-    isClosing?: boolean
+    reqQuantity?: number | null
+    acceptedQuantity?: number | null
+    unitePrice?: number | null
+    amount?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    isFixted?: boolean
   }
 
-  export type InventoryUpdateWithoutFixedJournalInput = {
+  export type DepoInventoryUpdateWithoutDepoTransactionInput = {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    unitPrice?: FloatFieldUpdateOperationsInput | number
-    quantityAdd?: NullableFloatFieldUpdateOperationsInput | number | null
-    quantityLess?: NullableFloatFieldUpdateOperationsInput | number | null
-    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    isClosing?: BoolFieldUpdateOperationsInput | boolean
+    reqQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    acceptedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    unitePrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isFixted?: BoolFieldUpdateOperationsInput | boolean
-    depo?: DepoUpdateOneWithoutInventoryNestedInput
-    product?: ProductUpdateOneRequiredWithoutInventoryNestedInput
-    transactionInfo?: TransactionInfoUpdateOneWithoutInventoryNestedInput
-    user?: UserUpdateOneWithoutInventoriesNestedInput
+    product?: ProductUpdateOneRequiredWithoutDepoInventoriesNestedInput
   }
 
-  export type InventoryUncheckedUpdateWithoutFixedJournalInput = {
+  export type DepoInventoryUncheckedUpdateWithoutDepoTransactionInput = {
     id?: IntFieldUpdateOperationsInput | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     productId?: IntFieldUpdateOperationsInput | number
-    depoId?: NullableIntFieldUpdateOperationsInput | number | null
-    employeeId?: NullableStringFieldUpdateOperationsInput | string | null
-    transactionId?: NullableIntFieldUpdateOperationsInput | number | null
-    unitPrice?: FloatFieldUpdateOperationsInput | number
-    quantityAdd?: NullableFloatFieldUpdateOperationsInput | number | null
-    quantityLess?: NullableFloatFieldUpdateOperationsInput | number | null
-    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    isClosing?: BoolFieldUpdateOperationsInput | boolean
+    reqQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    acceptedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    unitePrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isFixted?: BoolFieldUpdateOperationsInput | boolean
   }
 
-  export type InventoryUncheckedUpdateManyWithoutFixedJournalInput = {
+  export type DepoInventoryUncheckedUpdateManyWithoutDepoTransactionInput = {
     id?: IntFieldUpdateOperationsInput | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     productId?: IntFieldUpdateOperationsInput | number
-    depoId?: NullableIntFieldUpdateOperationsInput | number | null
-    employeeId?: NullableStringFieldUpdateOperationsInput | string | null
-    transactionId?: NullableIntFieldUpdateOperationsInput | number | null
-    unitPrice?: FloatFieldUpdateOperationsInput | number
-    quantityAdd?: NullableFloatFieldUpdateOperationsInput | number | null
-    quantityLess?: NullableFloatFieldUpdateOperationsInput | number | null
-    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
-    isClosing?: BoolFieldUpdateOperationsInput | boolean
+    reqQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    acceptedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
+    unitePrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    amount?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isFixted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type OrderItemCreateManyOrderInput = {

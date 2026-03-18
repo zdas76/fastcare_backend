@@ -28,7 +28,7 @@ export interface DateRangeFilter {
 }
 
 const getMpoReportById = catchAsync(async (req, res) => {
-  const employeeId = req.params.employeeId;
+  const employeeId = req.params.employeeId as string;
 
   const startDate = req.query.startDate as string | undefined;
   const endDate = req.query.endDate as string | undefined;
@@ -85,7 +85,7 @@ const getDipoMpoReport = catchAsync(async (req, res) => {
 });
 
 const getDipoMpoReportById = catchAsync(async (req, res) => {
-  const employeeId = req.params.employeeId;
+  const employeeId = req.params.employeeId as string;
 
   const startDate = req.query.startDate as string | undefined;
   const endDate = req.query.endDate as string | undefined;

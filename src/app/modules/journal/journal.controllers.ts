@@ -135,19 +135,6 @@ const createJournalVoucher = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const createFixedJournalVoucher = catchAsync(
-  async (req: Request, res: Response) => {
-    const result = await JurnalService.createFixedVoucher(req.body);
-
-    sendResponse(res, {
-      statusCode: StatusCodes.OK,
-      success: true,
-      message: "Fixed created successfully",
-      data: result,
-    });
-  }
-);
-
 const createGiftVoucher = catchAsync(async (req: Request, res: Response) => {
   const result = await JurnalService.creategiftedVoucher(req.body);
 
@@ -170,6 +157,5 @@ export const JournalControllers = {
   createJournalVoucher,
   createPaymentdVoucher,
   createMoneyRecivedVoucher,
-  createFixedJournalVoucher,
-  createGiftVoucher,
+  createGiftVoucher
 };

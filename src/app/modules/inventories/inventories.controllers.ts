@@ -87,7 +87,7 @@ const getInventoryTotal = catchAsync(async (req: Request, res: Response) => {
 
 const getInventoryByVoucherNo = catchAsync(
   async (req: Request, res: Response) => {
-    const voucherNo = req.params.voucherNo;
+    const voucherNo = req.params.voucherNo as string;
     const result = await InventoryService.getInventoryByVoucherNo(voucherNo);
 
     sendResponse(res, {

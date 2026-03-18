@@ -22,6 +22,7 @@ import { UnitRoute } from "../modules/unit/unit.route";
 import { UserRoute } from "../modules/User/user.route";
 import { MpoTargetRouter } from "../modules/MpoTarget/target.route";
 import { InventoryProgressRoute } from "../modules/InventoryProgress/inventoryProgress.route";
+import { depoTransectionRoutes } from "../modules/DepoTransection/depoTransection.route";
 
 const router = express.Router();
 
@@ -117,6 +118,10 @@ const moduleroutes = [
   {
     path: "/inventoryProgress",
     route: InventoryProgressRoute,
+  },
+  {
+    path: "/depoTransection",
+    route: depoTransectionRoutes,
   }
 ];
 

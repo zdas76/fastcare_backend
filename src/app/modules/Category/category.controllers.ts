@@ -39,7 +39,7 @@ const getCategoryById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteCategoryById = catchAsync(async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id ?? "0");
+  const id = Number(req.params.id);
 
   const result = await CagetoryService.deleteCategorybyId(id);
 

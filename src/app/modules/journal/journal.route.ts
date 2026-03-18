@@ -44,12 +44,6 @@ route.post("/contra", JournalControllers.addPurcherReceived);
 route.post("/gift", JournalControllers.createGiftVoucher);
 
 route.post(
-  "/fixed",
-  auth(UserRole.ADMIN),
-  JournalControllers.createFixedJournalVoucher
-);
-
-route.post(
   "/money_received",
   auth(UserRole.ADMIN, UserRole.SR),
   JournalControllers.createMoneyRecivedVoucher

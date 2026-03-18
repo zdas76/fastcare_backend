@@ -29,7 +29,7 @@ const getAccountItem = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAccountItemById = catchAsync(async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id!);
+  const id = Number(req.params.id);
   const result = await LedgerHeadService.getAccountsItemByIdFromDB(id);
 
   sendResponse(res, {
@@ -42,7 +42,7 @@ const getAccountItemById = catchAsync(async (req: Request, res: Response) => {
 
 const updateAccountItemById = catchAsync(
   async (req: Request, res: Response) => {
-    const id = parseInt(req.params.id!);
+    const id = Number(req.params.id);
 
     const result = await LedgerHeadService.updateAccountsItemFromDBbyId(
       id,

@@ -40,7 +40,7 @@ const getDesignationById = catchAsync(async (req: Request, res: Response) => {
 
 const deleteDesignationById = catchAsync(
   async (req: Request, res: Response) => {
-    const id = parseInt(req.params.id ?? "0");
+    const id = Number(req.params.id);
 
     const result = await DesignationService.deleteDesignationbyId(id);
 

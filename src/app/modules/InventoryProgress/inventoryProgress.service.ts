@@ -212,7 +212,7 @@ const getInventoryProgressByMPOIds = async (employeeId: string, startDate?: stri
     return { getMPO, ProductWiseProgressReport };
 };
 
-const gerProductProgressByDepo = async (depoId?: number, startDate?: string, endDate?: string) => {
+const getProductProgressByDepo = async (depoId?: number, startDate?: string, endDate?: string) => {
 
     let fromDate: Date;
     let toDate: Date;
@@ -252,7 +252,6 @@ const gerProductProgressByDepo = async (depoId?: number, startDate?: string, end
                     lte: toDate,
                 },
                 productId: product.id,
-                employeeId: null,
                 ...(depoId && depoId > 0 ? { depoId: Number(depoId) } : {})
 
             },
@@ -269,6 +268,7 @@ const gerProductProgressByDepo = async (depoId?: number, startDate?: string, end
                     lte: toDate,
                 },
                 productId: product.id,
+                employeeId: null,
                 ...(depoId && depoId > 0 ? { depoId: Number(depoId) } : {})
             },
         });
@@ -291,5 +291,5 @@ const gerProductProgressByDepo = async (depoId?: number, startDate?: string, end
 export const InventoryProgressService = {
     getInventoryProgressByMPO,
     getInventoryProgressByMPOIds,
-    gerProductProgressByDepo
+    getProductProgressByDepo
 }

@@ -31,13 +31,13 @@ const getInventoryProgressByMPOId = catchAsync(async (req, res) => {
     });
 })
 
-const gerProductProgressByDepo = catchAsync(async (req, res) => {
+const getProductProgressByDepo = catchAsync(async (req, res) => {
 
     const depoId = Number(req.query.depoId) || undefined
     const startDate = req.query.startDate ? req.query.startDate as string : undefined
     const endDate = req.query.endDate ? req.query.endDate as string : undefined
 
-    const result = await InventoryProgressService.gerProductProgressByDepo(depoId, startDate, endDate);
+    const result = await InventoryProgressService.getProductProgressByDepo(depoId, startDate, endDate);
     sendResponse(res, {
         statusCode: StatusCodes.OK,
         success: true,
@@ -50,5 +50,5 @@ const gerProductProgressByDepo = catchAsync(async (req, res) => {
 export const InventoryProgressController = {
     getInventoryProgressByMPO,
     getInventoryProgressByMPOId,
-    gerProductProgressByDepo
+    getProductProgressByDepo
 }

@@ -24,12 +24,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 7.2.0
- * Query Engine version: 0c8ef2ce45c83248ab3df073180d5eda9e8be7a3
+ * Prisma Client JS version: 7.5.0
+ * Query Engine version: 280c870be64f457428992c43c1f6d557fab6e29e
  */
 Prisma.prismaVersion = {
-  client: "7.2.0",
-  engine: "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3"
+  client: "7.5.0",
+  engine: "280c870be64f457428992c43c1f6d557fab6e29e"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -390,7 +390,6 @@ exports.Prisma.InventoryScalarFieldEnum = {
   depoId: 'depoId',
   employeeId: 'employeeId',
   transactionId: 'transactionId',
-  fixedJournalId: 'fixedJournalId',
   unitPrice: 'unitPrice',
   quantityAdd: 'quantityAdd',
   quantityLess: 'quantityLess',
@@ -398,8 +397,7 @@ exports.Prisma.InventoryScalarFieldEnum = {
   creditAmount: 'creditAmount',
   isClosing: 'isClosing',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  isFixted: 'isFixted'
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.TransactionInfoScalarFieldEnum = {
@@ -413,7 +411,6 @@ exports.Prisma.TransactionInfoScalarFieldEnum = {
   employeeId: 'employeeId',
   partyId: 'partyId',
   voucherType: 'voucherType',
-  paymentType: 'paymentType',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -433,17 +430,35 @@ exports.Prisma.JournalScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.FixedJournalScalarFieldEnum = {
+exports.Prisma.DepoTransactionScalarFieldEnum = {
   id: 'id',
   date: 'date',
+  providerdepoId: 'providerdepoId',
+  receverdepoId: 'receverdepoId',
   voucherNo: 'voucherNo',
-  chemistId: 'chemistId',
-  ledgerHeadId: 'ledgerHeadId',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DepoJournalScalarFieldEnum = {
+  id: 'id',
+  date: 'date',
   depoId: 'depoId',
-  creditAmount: 'creditAmount',
-  debitAmount: 'debitAmount',
-  narration: 'narration',
-  isClosing: 'isClosing',
+  ledgerHeadId: 'ledgerHeadId',
+  amount: 'amount',
+  narration: 'narration'
+};
+
+exports.Prisma.DepoInventoryScalarFieldEnum = {
+  id: 'id',
+  depoTransactionId: 'depoTransactionId',
+  date: 'date',
+  productId: 'productId',
+  reqQuantity: 'reqQuantity',
+  acceptedQuantity: 'acceptedQuantity',
+  unitePrice: 'unitePrice',
+  amount: 'amount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -730,9 +745,11 @@ exports.Prisma.JournalOrderByRelevanceFieldEnum = {
   narration: 'narration'
 };
 
-exports.Prisma.FixedJournalOrderByRelevanceFieldEnum = {
-  voucherNo: 'voucherNo',
-  chemistId: 'chemistId',
+exports.Prisma.DepoTransactionOrderByRelevanceFieldEnum = {
+  voucherNo: 'voucherNo'
+};
+
+exports.Prisma.DepoJournalOrderByRelevanceFieldEnum = {
   narration: 'narration'
 };
 
@@ -829,12 +846,6 @@ exports.VoucherType = exports.$Enums.VoucherType = {
   WHOLESALE: 'WHOLESALE'
 };
 
-exports.PaymentType = exports.$Enums.PaymentType = {
-  PAID: 'PAID',
-  DUE: 'DUE',
-  PARTIAL: 'PARTIAL'
-};
-
 exports.OrdStatus = exports.$Enums.OrdStatus = {
   PENDING: 'PENDING',
   REVIEWING: 'REVIEWING',
@@ -873,7 +884,9 @@ exports.Prisma.ModelName = {
   Inventory: 'Inventory',
   TransactionInfo: 'TransactionInfo',
   Journal: 'Journal',
-  FixedJournal: 'FixedJournal',
+  DepoTransaction: 'DepoTransaction',
+  DepoJournal: 'DepoJournal',
+  DepoInventory: 'DepoInventory',
   Order: 'Order',
   OrderItem: 'OrderItem',
   OrderStatus: 'OrderStatus',

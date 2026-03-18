@@ -38,7 +38,7 @@ const getAllChemist = catchAsync(
 );
 
 const getChemistById = catchAsync(async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id!);
+  const id = Number(req.params.id);
 
   const result = await ChemistService.getChemistById(id);
 
@@ -51,7 +51,7 @@ const getChemistById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateChemistById = catchAsync(async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id!);
+  const id = Number(req.params.id);
 
   const result = await ChemistService.updateChemistById(id, req.body);
 
@@ -64,7 +64,7 @@ const updateChemistById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteChemistById = catchAsync(async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id!);
+  const id = Number(req.params.id);
 
   const result = await ChemistService.deleteChemistById(id);
 

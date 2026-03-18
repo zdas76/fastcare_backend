@@ -17,6 +17,10 @@ router.post(
     UserRole.MPO,
     UserRole.ACCOUNTS,
     UserRole.SR,
+    UserRole.ASM,
+    UserRole.RSM,
+    UserRole.AM,
+    UserRole.GM,
   ),
   AuthControllers.changePassword,
 );

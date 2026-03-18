@@ -27,7 +27,7 @@ const getAllUnit = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getUnitById = catchAsync(async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id!);
+  const id = Number(req.params.id);
   const result = await UnitService.getUnitById(id);
 
   sendResponse(res, {
@@ -50,7 +50,7 @@ const updateUnit = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteUnit = catchAsync(async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id!);
+  const id = Number(req.params.id);
 
   const result = await UnitService.deleteUnit(id);
 

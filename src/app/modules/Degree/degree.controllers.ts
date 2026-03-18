@@ -38,7 +38,7 @@ const getDegreeById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteDegreeById = catchAsync(async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id ?? "0");
+  const id = Number(req.params.id);
 
   const result = await DegreeService.deleteDegreebyId(id);
 
@@ -51,7 +51,7 @@ const deleteDegreeById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateDegree = catchAsync(async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
+  const id = Number(req.params.id);
   const result = await DegreeService.updateDegree(id, req.body);
 
   sendResponse(res, {

@@ -71,25 +71,25 @@ model JobPost {
 }
 
 model Chemist {
-  id               Int               @id @default(autoincrement())
-  chemistId        String            @unique @db.VarChar(13)
+  id               Int      @id @default(autoincrement())
+  chemistId        String   @unique @db.VarChar(13)
   depoId           Int
-  pharmacyName     String            @db.VarChar(50)
-  contactPerson    String            @db.VarChar(50)
-  contactNo        String            @db.VarChar(50)
-  address          String            @db.VarChar(300)
-  photo            String?           @db.VarChar(200)
+  pharmacyName     String   @db.VarChar(50)
+  contactPerson    String   @db.VarChar(50)
+  contactNo        String   @db.VarChar(50)
+  address          String   @db.VarChar(300)
+  photo            String?  @db.VarChar(200)
   discountRate     Int?
-  openingDueAmount Float?            @default(0)
-  openingDate      DateTime          @default(now())
-  isDeleted        Boolean           @default(false)
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
-  depo             Depo              @relation(fields: [depoId], references: [id])
-  scopes           Scope[]           @relation("ScopeChemists")
-  FixedJournal     FixedJournal[]
-  order            Order[]
-  transactionInfo  TransactionInfo[]
+  openingDueAmount Float?   @default(0)
+  openingDate      DateTime @default(now())
+  isDeleted        Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  depo             Depo     @relation(fields: [depoId], references: [id])
+  scopes           Scope[]  @relation("ScopeChemists")
+
+  order           Order[]
+  transactionInfo TransactionInfo[]
 
   @@index([chemistId])
   @@index([depoId], map: "chemistes_depoId_fkey")
@@ -97,19 +97,20 @@ model Chemist {
 }
 
 model Depo {
-  id           Int            @id @default(autoincrement())
-  depoName     String         @unique
-  location     String
-  scopeId      Int?
-  status       Status         @default(ACTIVE)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  chemist      Chemist[]
-  FixedJournal FixedJournal[]
-  inventory    Inventory[]
-  jobPost      JobPost[]
-  journal      Journal[]
-  scopes       Scope[]        @relation("ScopeDepos")
+  id                   Int               @id @default(autoincrement())
+  depoName             String            @unique
+  location             String
+  scopeId              Int?
+  status               Status            @default(ACTIVE)
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  chemist              Chemist[]
+  inventory            Inventory[]
+  jobPost              JobPost[]
+  journal              Journal[]
+  scopes               Scope[]           @relation("ScopeDepos")
+  providerTransactions DepoTransaction[] @relation("ProviderDepo")
+  receiverTransactions DepoTransaction[] @relation("ReceiverDepo")
 
   @@index([scopeId], map: "depos_scopeId_fkey")
   @@map("depos")
@@ -259,6 +260,8 @@ model ProductWiseTarget {
   updatedAt          DateTime             @updatedAt
   user               User                 @relation(fields: [employeeId], references: [employeeId])
   targetProductBatch TargetProductBatch[]
+
+  @@map("product_wise_target")
 }
 
 model TargetProductBatch {
@@ -274,6 +277,7 @@ model TargetProductBatch {
 
   @@index([productId], map: "TargetProductBatch_productId_fkey")
   @@index([productTargetId], map: "TargetProductBatch_productTargetId_fkey")
+  @@map("target_product_batch")
 }
 
 model Category {
@@ -321,15 +325,15 @@ model AccountHead {
 }
 
 model LedgerHead {
-  id           Int            @id @default(autoincrement())
+  id           Int           @id @default(autoincrement())
   ledgerName   String
-  ledgerCode   String         @db.VarChar(6)
+  ledgerCode   String        @db.VarChar(6)
   headCodeId   Int
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  fixedJournal FixedJournal[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  accountHead  AccountHead   @relation(fields: [headCodeId], references: [id])
   journal      Journal[]
-  accountHead  AccountHead    @relation(fields: [headCodeId], references: [id])
+  depoJournals DepoJournal[]
 
   @@index([headCodeId], map: "ledger_head_headCodeId_fkey")
   @@map("ledger_head")
@@ -358,6 +362,7 @@ model Product {
   Stakeholder        Stakeholder?         @relation(fields: [stakeholderId], references: [id])
   subCategory        SubCategory          @relation(fields: [subCategoryId], references: [id])
   unit               Unit                 @relation(fields: [unitId], references: [id])
+  depoInventories    DepoInventory[]
 
   @@index([subCategoryId, name])
   @@index([stakeholderId], map: "products_stakeholderId_fkey")
@@ -403,7 +408,6 @@ model Inventory {
   depoId          Int?
   employeeId      String?
   transactionId   Int?
-  fixedJournalId  Int?
   unitPrice       Float            @default(0)
   quantityAdd     Float?           @default(0)
   quantityLess    Float?           @default(0)
@@ -412,9 +416,7 @@ model Inventory {
   isClosing       Boolean          @default(false)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
-  isFixted        Boolean          @default(false)
   depo            Depo?            @relation(fields: [depoId], references: [id])
-  fixedJournal    FixedJournal?    @relation(fields: [fixedJournalId], references: [id])
   product         Product          @relation(fields: [productId], references: [id])
   transactionInfo TransactionInfo? @relation(fields: [transactionId], references: [id])
   user            User?            @relation(fields: [employeeId], references: [employeeId])
@@ -422,7 +424,6 @@ model Inventory {
   @@index([productId])
   @@index([depoId], map: "inventories_depoId_fkey")
   @@index([transactionId], map: "inventories_transactionId_fkey")
-  @@index([fixedJournalId], map: "inventories_fixedJournalId_fkey")
   @@map("inventories")
 }
 
@@ -437,7 +438,6 @@ model TransactionInfo {
   employeeId    String?
   partyId       Int?
   voucherType   VoucherType
-  paymentType   PaymentType?
   status        Status       @default(PENDING)
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
@@ -480,28 +480,53 @@ model Journal {
   @@map("journals")
 }
 
-model FixedJournal {
+model DepoTransaction {
+  id              Int             @id @default(autoincrement())
+  date            DateTime
+  providerdepoId  Int
+  receverdepoId   Int
+  voucherNo       String
+  status          OrdStatus       @default(PENDING)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  providerdepo    Depo            @relation("ProviderDepo", fields: [providerdepoId], references: [id])
+  receverdepo     Depo            @relation("ReceiverDepo", fields: [receverdepoId], references: [id])
+  depoInventories DepoInventory[]
+
+  @@index([providerdepoId], map: "depo_transactions_providerdepoId_fkey")
+  @@index([receverdepoId], map: "depo_transactions_receverdepoId_fkey")
+  @@map("depo_transactions")
+}
+
+model DepoJournal {
   id           Int         @id @default(autoincrement())
   date         DateTime
-  voucherNo    String
-  chemistId    String
-  ledgerHeadId Int
   depoId       Int
-  creditAmount Float?      @default(0)
-  debitAmount  Float?      @default(0)
+  ledgerHeadId Int?
+  amount       Float?
   narration    String?
-  isClosing    Boolean     @default(false)
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  chemist      Chemist     @relation(fields: [chemistId], references: [chemistId])
-  depo         Depo        @relation(fields: [depoId], references: [id])
-  ledgerHead   LedgerHead  @relation(fields: [ledgerHeadId], references: [id])
-  inventory    Inventory[]
+  ledgerHead   LedgerHead? @relation(fields: [ledgerHeadId], references: [id])
 
-  @@index([chemistId], map: "transaction_info_chemistId_fkey")
-  @@index([depoId], map: "journals_depoId_fkey")
-  @@index([ledgerHeadId], map: "journals_ledgerHeadId_fkey")
-  @@map("fixed_journals")
+  @@index([ledgerHeadId], map: "depo_transactions_ledgerHeadId_fkey")
+  @@map("depo_journal")
+}
+
+model DepoInventory {
+  id                Int              @id @default(autoincrement())
+  depoTransactionId Int?
+  date              DateTime
+  productId         Int
+  reqQuantity       Int?             @default(0)
+  acceptedQuantity  Int?             @default(0)
+  unitePrice        Float?           @default(0)
+  amount            Float?           @default(0)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  product           Product          @relation(fields: [productId], references: [id])
+  depoTransaction   DepoTransaction? @relation(fields: [depoTransactionId], references: [id])
+
+  @@index([productId])
+  @@map("depoinventories")
 }
 
 model Order {
@@ -677,12 +702,6 @@ enum Status {
   BLOCK
   PENDING
   CHECKED
-}
-
-enum PaymentType {
-  PAID
-  DUE
-  PARTIAL
 }
 
 enum VoucherType {

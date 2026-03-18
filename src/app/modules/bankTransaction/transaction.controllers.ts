@@ -16,7 +16,7 @@ const getAllBankAccount = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getBankAccountById = catchAsync(async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id!);
+  const id = Number(req.params.id);
   const result = await BankTransactionService.getTransactionById(id);
 
   sendResponse(res, {

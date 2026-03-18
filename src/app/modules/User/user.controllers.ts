@@ -32,7 +32,7 @@ const getUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getUserById = catchAsync(async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id!);
+  const id = Number(req.params.id);
   const result = await UserService.getUserById(id);
 
   sendResponse(res, {
@@ -44,7 +44,7 @@ const getUserById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateUserById = catchAsync(async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id!);
+  const id = Number(req.params.id);
 
   const result = await UserService.updateUserById(id, req.body);
 
@@ -57,7 +57,7 @@ const updateUserById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteUserById = catchAsync(async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id!);
+  const id = Number(req.params.id);
   const result = await UserService.deleteUserById(id);
 
   sendResponse(res, {

@@ -21,15 +21,6 @@ const getLastVoucherNumber = async (vcode: string) => {
         },
       });
       return orderResult;
-
-    case "FV":
-      const fixedVoucher = await prisma.fixedJournal.findFirst({
-        orderBy: {
-          id: "desc",
-        },
-      });
-      return fixedVoucher;
-
     case "ALV":
       voucherType = VoucherType.ALLOCATION;
       break;

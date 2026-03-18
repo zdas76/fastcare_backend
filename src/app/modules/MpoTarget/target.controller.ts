@@ -67,7 +67,7 @@ const getAllMpoProgressReport = catchAsync(async (req, res) => {
 });
 
 const getAllMpoProgressReportById = catchAsync(async (req, res) => {
-    const employeeId = req.params.employeeId;
+    const employeeId = req.params.employeeId as string;
     const startDate = req.query.startDate as string | undefined;
     const endDate = req.query.endDate as string | undefined;
 
