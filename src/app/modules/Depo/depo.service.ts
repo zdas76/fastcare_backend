@@ -21,7 +21,7 @@ const createDepo = async (payload: Depo) => {
   return result;
 };
 
-const getAllDepo = async () => {
+const getAllDepo = async (user: any) => {
   const result = await prisma.depo.findMany({});
 
   return result;

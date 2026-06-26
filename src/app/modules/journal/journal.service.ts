@@ -499,9 +499,10 @@ const createSalesVoucher = async (payload: any) => {
   return salseVoucher;
 };
 const createHoleSalesVoucher = async (payload: any) => {
-  const result = await prisma.$transaction(async (tx) => {
-    // 1️⃣ Validate Party / Chemist
 
+  const result = await prisma.$transaction(async (tx) => {
+
+    // 1️⃣ Validate Party
     if (payload.partyId) {
       const partyExists = await tx.party.findUnique({
         where: { id: payload.partyId },
@@ -517,9 +518,8 @@ const createHoleSalesVoucher = async (payload: any) => {
     const createTransaction = await tx.transactionInfo.create({
       data: {
         date: new Date(payload.date),
-        invoiceNo: payload.orderNo || null,
         voucherNo: voucherNo,
-        voucherType: VoucherType.OTHER,
+        voucherType: VoucherType.WHOLESALE,
         partyId: payload.partyId,
       },
     });
@@ -901,31 +901,38 @@ const createSalesReturnVoucherByOffice = async (payload: any, user: any) => {
     });
     if (!inventoryLedger) throw new Error("inventory Ledger Head Not Found");
 
-    const totalSalseReturntAmount = await payload.productItems.reduce(
-      async (sum: number, p: any) => {
+    const SalseReturntAmount = await Promise.all(payload.productItems.map(
+      async (p: any) => {
         const product = await tx.product.findFirst({
           where: { id: p.productId },
         });
         if (!product) {
           throw new Error(`Invalid productId: ${p.productId}`);
         }
-        return sum + product.tp * p.quantity;
-      },
-      0,
-    );
+        const amount = product.tp * p.quantity;
+        return amount;
+      }
+    ));
 
-    const totalSalseDiscountReversalAmount = await payload.productItems.reduce(
-      async (sum: number, p: any) => {
+    const totalSalseReturntAmount = SalseReturntAmount.reduce((sum, item) => sum + item, 0);
+
+    const SalseDiscountReversalAmount = await Promise.all(payload.productItems.map(
+      async (p: any) => {
+
         const product = await tx.product.findFirst({
           where: { id: p.productId },
         });
+
         if (!product) {
           throw new Error(`Invalid productId: ${p.productId}`);
         }
-        return sum + (product.tp * p.quantity - p.quantity * p.unitPrice);
-      },
-      0,
-    );
+        const amount = (product.tp * p.quantity) - (p.quantity * p.unitPrice);
+        return amount;
+      }
+    ));
+
+    const totalSalseDiscountReversalAmount = SalseDiscountReversalAmount.reduce((sum, item) => sum + item, 0);
+
 
     journalEntries.push({
       transactionId: createTransaction.id,
@@ -949,8 +956,6 @@ const createSalesReturnVoucherByOffice = async (payload: any, user: any) => {
       creditAmount: totalSalseDiscountReversalAmount,
       narration: "Sales return transaction",
     });
-
-
 
     // 8️⃣ Validate Journal Balance (Debit = Credit)
     const totalDebit = journalEntries.reduce(

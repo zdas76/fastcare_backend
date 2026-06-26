@@ -3,6 +3,7 @@ import AppError from "../../errors/AppError";
 import prisma from "../../shared/prisma";
 
 const createScope = async (payload: any) => {
+
   const employee = await prisma.user.findFirst({
     where: {
       employeeId: payload.employeeId,
@@ -32,19 +33,56 @@ const createScope = async (payload: any) => {
       depo: {
         connect: payload.depos.map((id: number) => ({ id: id })) || [],
       },
-      chemist: {
-        connect: payload.chemist.map((id: string) => ({ chemistId: id })) || [],
-      },
-      stakeholder: {
-        connect:
-          payload.stakeholders?.map((id: string) => ({ stakeId: id })) || [],
-      },
+      ...(payload.chemist && { chemist: { connect: payload.chemist.map((id: string) => ({ chemistId: id })) } }),
+      ...(payload.stakeholders && { stakeholder: { connect: payload.stakeholders.map((id: string) => ({ stakeId: id })) } }),
     },
   });
 };
 
 const getallScopes = async () => {
   const result = await prisma.scope.findMany({
+    include: {
+      stakeholder: {
+        select: {
+          name: true,
+          stakeId: true,
+        },
+      },
+      depo: {
+        select: {
+          depoName: true,
+          id: true,
+        },
+      },
+      chemist: {
+        select: {
+          pharmacyName: true,
+          chemistId: true,
+        },
+      },
+      user: {
+        select: {
+          name: true,
+          employeeId: true,
+        },
+      },
+      jobPost: {
+        select: {
+          postName: true,
+          id: true,
+        },
+      },
+    },
+  });
+
+  return result;
+};
+
+const getScopeByEmployeeId = async (employeeId: string) => {
+  const result = await prisma.scope.findFirst({
+    where: {
+      employeeId: employeeId,
+    },
     include: {
       stakeholder: {
         select: {
@@ -143,4 +181,5 @@ export const ScopeService = {
   createScope,
   getallScopes,
   updateScope,
+  getScopeByEmployeeId
 };

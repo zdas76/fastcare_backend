@@ -23,7 +23,7 @@ model User {
   attendance        Attendance[]
   employeeProfile   EmployeeProfile?
   leves             Leves[]
-  mpoTarget         MpoTarget?
+  mpoTarget         MpoTarget[]
   order             Order[]
   overtime          Overtime[]
   payroll           Payroll[]
@@ -210,18 +210,6 @@ model StakeholderOcation {
   @@map("stakeholder_falily_info")
 }
 
-model Customers {
-  id              Int               @id @default(autoincrement())
-  name            String?
-  contactNo       String
-  address         String?
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  transactionInfo TransactionInfo[]
-
-  @@map("customers")
-}
-
 model Scope {
   id          Int           @id @default(autoincrement())
   employeeId  String        @unique
@@ -240,7 +228,7 @@ model Scope {
 
 model MpoTarget {
   id           Int      @id @default(autoincrement())
-  employeeId   String   @unique
+  employeeId   String
   month        String
   targetAmount Int
   createdAt    DateTime @default(now())
@@ -422,8 +410,8 @@ model Inventory {
   user            User?            @relation(fields: [employeeId], references: [employeeId])
 
   @@index([productId])
-  @@index([depoId], map: "inventories_depoId_fkey")
-  @@index([transactionId], map: "inventories_transactionId_fkey")
+  @@index([depoId])
+  @@index([transactionId])
   @@map("inventories")
 }
 
@@ -433,7 +421,6 @@ model TransactionInfo {
   voucherNo     String       @unique
   invoiceNo     String?
   chemistId     String?
-  customerId    Int?
   stakeholderId String?
   employeeId    String?
   partyId       Int?
@@ -444,16 +431,14 @@ model TransactionInfo {
   inventory     Inventory[]
   journal       Journal[]
   chemist       Chemist?     @relation(fields: [chemistId], references: [chemistId])
-  customers     Customers?   @relation(fields: [customerId], references: [id])
   user          User?        @relation(fields: [employeeId], references: [employeeId])
   party         Party?       @relation(fields: [partyId], references: [id])
   stakeholder   Stakeholder? @relation(fields: [stakeholderId], references: [stakeId])
 
-  @@index([chemistId], map: "transaction_info_chemistId_fkey")
-  @@index([customerId], map: "transaction_info_customerId_fkey")
-  @@index([stakeholderId], map: "transaction_info_stakeholerId_fkey")
-  @@index([partyId], map: "transaction_info_partyId_fkey")
-  @@index([employeeId], map: "transaction_info_employeeId_fkey")
+  @@index([chemistId])
+  @@index([stakeholderId])
+  @@index([partyId])
+  @@index([employeeId])
   @@map("transaction_info")
 }
 
@@ -474,9 +459,9 @@ model Journal {
   transactionInfo TransactionInfo?  @relation(fields: [transactionId], references: [id])
   bankTransaction BankTransaction[]
 
-  @@index([depoId], map: "journals_depoId_fkey")
-  @@index([ledgerHeadId], map: "journals_ledgerHeadId_fkey")
-  @@index([transactionId], map: "journals_transactionId_fkey")
+  @@index([depoId])
+  @@index([ledgerHeadId])
+  @@index([transactionId])
   @@map("journals")
 }
 
@@ -484,30 +469,38 @@ model DepoTransaction {
   id              Int             @id @default(autoincrement())
   date            DateTime
   providerdepoId  Int
-  receverdepoId   Int
+  receiverdepoId  Int
+  invoiceNo       String?
   voucherNo       String
+  voucherType     VoucherType     @default(ALLOCATION)
   status          OrdStatus       @default(PENDING)
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   providerdepo    Depo            @relation("ProviderDepo", fields: [providerdepoId], references: [id])
-  receverdepo     Depo            @relation("ReceiverDepo", fields: [receverdepoId], references: [id])
+  receiverdepo    Depo            @relation("ReceiverDepo", fields: [receiverdepoId], references: [id])
   depoInventories DepoInventory[]
+  depoJournals    DepoJournal[]
 
-  @@index([providerdepoId], map: "depo_transactions_providerdepoId_fkey")
-  @@index([receverdepoId], map: "depo_transactions_receverdepoId_fkey")
+  @@index([providerdepoId])
+  @@index([receiverdepoId])
   @@map("depo_transactions")
 }
 
 model DepoJournal {
-  id           Int         @id @default(autoincrement())
-  date         DateTime
-  depoId       Int
-  ledgerHeadId Int?
-  amount       Float?
-  narration    String?
-  ledgerHead   LedgerHead? @relation(fields: [ledgerHeadId], references: [id])
+  id                Int              @id @default(autoincrement())
+  depoTransactionId Int?
+  date              DateTime
+  ledgerHeadId      Int
+  creditAmount      Float?           @default(0)
+  debitAmount       Float?           @default(0)
+  narration         String?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  depoTransaction   DepoTransaction? @relation(fields: [depoTransactionId], references: [id])
+  ledgerHead        LedgerHead?      @relation(fields: [ledgerHeadId], references: [id])
 
-  @@index([ledgerHeadId], map: "depo_transactions_ledgerHeadId_fkey")
+  @@index([ledgerHeadId])
+  @@index([depoTransactionId])
   @@map("depo_journal")
 }
 
@@ -728,6 +721,7 @@ enum OrdStatus {
   DELIVERED
   CANCELLED
   RETURNED
+  RECEIVED
 }
 
 enum PartyType {

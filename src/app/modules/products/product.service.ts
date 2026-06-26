@@ -62,17 +62,14 @@ const getProduct = async (employeeId?: string) => {
   const result = await prisma.product.findMany({
     where: {
       status: Status.ACTIVE,
-      OR: [
-        {
-          inventory: {
-            some: {
-              employeeId: employeeId || undefined,
-              ...(employeeId && { quantityAdd: { gt: 0 } })
-            }
+      ...(employeeId && {
+        inventory: {
+          some: {
+            employeeId: employeeId,
+            quantityAdd: { gt: 0 }
           }
-        },
-
-      ]
+        }
+      })
     },
     orderBy: {
       name: "asc",
@@ -82,6 +79,7 @@ const getProduct = async (employeeId?: string) => {
       unit: true,
     },
   });
+
 
   return result;
 };

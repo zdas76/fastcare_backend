@@ -135,6 +135,12 @@ const getAllVoucher = async ({
           name: true,
         },
       },
+      stakeholder: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
     },
   });
 
@@ -153,6 +159,20 @@ const getReportByVoucherNo = async (voucherNo: string) => {
         voucherNo: true,
         voucherType: true,
         invoiceNo: true,
+        stakeholder: {
+          select: {
+            id: true,
+            name: true,
+          }
+        },
+        party: {
+          select: {
+            id: true,
+            partyName: true,
+            address: true,
+            contactNo: true,
+          }
+        },
         chemist: {
           select: {
             chemistId: true,
@@ -395,6 +415,17 @@ const getpartyLadgertoBdById = async (params: any) => {
             chemist: {
               select: {
                 pharmacyName: true
+              }
+            },
+            inventory: {
+              select: {
+                product: {
+                  select: {
+                    name: true
+                  }
+                },
+                quantityAdd: true,
+                quantityLess: true
               }
             }
           },

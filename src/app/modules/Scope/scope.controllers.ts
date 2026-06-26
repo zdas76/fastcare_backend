@@ -26,6 +26,19 @@ const getAllScope = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getScopeByEmployeeId = catchAsync(async (req: Request, res: Response) => {
+  const employeeId = req.params.employeeId as string;
+  const result = await ScopeService.getScopeByEmployeeId(employeeId);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Scopes retrives  Successfully",
+    data: result,
+  });
+});
+
+
 const updateScope = catchAsync(async (req: Request, res: Response) => {
   const result = await ScopeService.updateScope(req.body);
 
@@ -41,4 +54,5 @@ export const ScopeControllers = {
   createScope,
   getAllScope,
   updateScope,
+  getScopeByEmployeeId,
 };

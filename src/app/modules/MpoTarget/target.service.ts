@@ -107,11 +107,13 @@ const deleteMPOTarget = async (id: number) => {
 const getAllMpoProgressReport = async ({
     startDate,
     endDate,
-    depoId
+    depoId,
+    month
 }: {
     startDate?: string;
     endDate?: string;
     depoId?: number;
+    month?: string
 }) => {
     let fromDate: Date;
     let toDate: Date;
@@ -157,7 +159,6 @@ const getAllMpoProgressReport = async ({
         throw new Error("Ledger head not found");
     }
 
-
     let mpoProgressReport: any = [];
 
     for (const mpo of getMPO) {
@@ -175,10 +176,10 @@ const getAllMpoProgressReport = async ({
             continue;
         }
 
-
         const target = await prisma.mpoTarget.findFirst({
             where: {
                 employeeId: mpo.employeeId,
+                month
             },
         });
 
@@ -217,9 +218,11 @@ const getAllMpoProgressReport = async ({
 const getAllMpoProgressReportById = async (employeeId: string, {
     startDate,
     endDate,
+    month
 }: {
     startDate?: string;
     endDate?: string;
+    month: string
 }) => {
     let fromDate: Date;
     let toDate: Date;
@@ -266,8 +269,6 @@ const getAllMpoProgressReportById = async (employeeId: string, {
         throw new Error("Ledger head not found");
     }
 
-
-
     const scope = await prisma.scope.findFirst({
         where: {
             employeeId: mpo?.employeeId,
@@ -281,10 +282,10 @@ const getAllMpoProgressReportById = async (employeeId: string, {
         throw new Error("Scope not found")
     }
 
-
     const target = await prisma.mpoTarget.findFirst({
         where: {
             employeeId: mpo?.employeeId,
+            month
         },
     });
 

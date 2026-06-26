@@ -15,8 +15,8 @@ const AddDepo = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getAllDepo = catchAsync(async (req: Request, res: Response) => {
-  const result = await DepoService.getAllDepo();
+const getAllDepo = catchAsync(async (req: Request & { user?: any }, res: Response) => {
+  const result = await DepoService.getAllDepo(req.user);
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,

@@ -24,12 +24,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 7.5.0
- * Query Engine version: 280c870be64f457428992c43c1f6d557fab6e29e
+ * Prisma Client JS version: 7.7.0
+ * Query Engine version: 75cbdc1eb7150937890ad5465d861175c6624711
  */
 Prisma.prismaVersion = {
-  client: "7.5.0",
-  engine: "280c870be64f457428992c43c1f6d557fab6e29e"
+  client: "7.7.0",
+  engine: "75cbdc1eb7150937890ad5465d861175c6624711"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -257,15 +257,6 @@ exports.Prisma.StakeholderOcationScalarFieldEnum = {
   otherInfo: 'otherInfo'
 };
 
-exports.Prisma.CustomersScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  contactNo: 'contactNo',
-  address: 'address',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.ScopeScalarFieldEnum = {
   id: 'id',
   employeeId: 'employeeId',
@@ -406,7 +397,6 @@ exports.Prisma.TransactionInfoScalarFieldEnum = {
   voucherNo: 'voucherNo',
   invoiceNo: 'invoiceNo',
   chemistId: 'chemistId',
-  customerId: 'customerId',
   stakeholderId: 'stakeholderId',
   employeeId: 'employeeId',
   partyId: 'partyId',
@@ -434,8 +424,10 @@ exports.Prisma.DepoTransactionScalarFieldEnum = {
   id: 'id',
   date: 'date',
   providerdepoId: 'providerdepoId',
-  receverdepoId: 'receverdepoId',
+  receiverdepoId: 'receiverdepoId',
+  invoiceNo: 'invoiceNo',
   voucherNo: 'voucherNo',
+  voucherType: 'voucherType',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -443,11 +435,14 @@ exports.Prisma.DepoTransactionScalarFieldEnum = {
 
 exports.Prisma.DepoJournalScalarFieldEnum = {
   id: 'id',
+  depoTransactionId: 'depoTransactionId',
   date: 'date',
-  depoId: 'depoId',
   ledgerHeadId: 'ledgerHeadId',
-  amount: 'amount',
-  narration: 'narration'
+  creditAmount: 'creditAmount',
+  debitAmount: 'debitAmount',
+  narration: 'narration',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.DepoInventoryScalarFieldEnum = {
@@ -676,12 +671,6 @@ exports.Prisma.StakeholderOcationOrderByRelevanceFieldEnum = {
   otherInfo: 'otherInfo'
 };
 
-exports.Prisma.CustomersOrderByRelevanceFieldEnum = {
-  name: 'name',
-  contactNo: 'contactNo',
-  address: 'address'
-};
-
 exports.Prisma.ScopeOrderByRelevanceFieldEnum = {
   employeeId: 'employeeId'
 };
@@ -746,6 +735,7 @@ exports.Prisma.JournalOrderByRelevanceFieldEnum = {
 };
 
 exports.Prisma.DepoTransactionOrderByRelevanceFieldEnum = {
+  invoiceNo: 'invoiceNo',
   voucherNo: 'voucherNo'
 };
 
@@ -853,7 +843,8 @@ exports.OrdStatus = exports.$Enums.OrdStatus = {
   ON_THE_WAY: 'ON_THE_WAY',
   DELIVERED: 'DELIVERED',
   CANCELLED: 'CANCELLED',
-  RETURNED: 'RETURNED'
+  RETURNED: 'RETURNED',
+  RECEIVED: 'RECEIVED'
 };
 
 exports.Prisma.ModelName = {
@@ -868,7 +859,6 @@ exports.Prisma.ModelName = {
   StakeholderDegree: 'StakeholderDegree',
   stakeholderChember: 'stakeholderChember',
   StakeholderOcation: 'StakeholderOcation',
-  Customers: 'Customers',
   Scope: 'Scope',
   MpoTarget: 'MpoTarget',
   ProductWiseTarget: 'ProductWiseTarget',

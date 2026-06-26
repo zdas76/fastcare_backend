@@ -13,6 +13,8 @@ route.post(
 
 route.get("/", ScopeControllers.getAllScope);
 
+route.get("/:employeeId", ScopeControllers.getScopeByEmployeeId);
+
 route.put("/", ScopeControllers.updateScope);
 
 export const scopeRoute = route;

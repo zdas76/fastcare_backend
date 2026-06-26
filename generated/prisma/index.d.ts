@@ -69,11 +69,6 @@ export type stakeholderChember = $Result.DefaultSelection<Prisma.$stakeholderChe
  */
 export type StakeholderOcation = $Result.DefaultSelection<Prisma.$StakeholderOcationPayload>
 /**
- * Model Customers
- * 
- */
-export type Customers = $Result.DefaultSelection<Prisma.$CustomersPayload>
-/**
  * Model Scope
  * 
  */
@@ -278,7 +273,8 @@ export const OrdStatus: {
   ON_THE_WAY: 'ON_THE_WAY',
   DELIVERED: 'DELIVERED',
   CANCELLED: 'CANCELLED',
-  RETURNED: 'RETURNED'
+  RETURNED: 'RETURNED',
+  RECEIVED: 'RECEIVED'
 };
 
 export type OrdStatus = (typeof OrdStatus)[keyof typeof OrdStatus]
@@ -567,16 +563,6 @@ export class PrismaClient<
     * ```
     */
   get stakeholderOcation(): Prisma.StakeholderOcationDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.customers`: Exposes CRUD operations for the **Customers** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Customers
-    * const customers = await prisma.customers.findMany()
-    * ```
-    */
-  get customers(): Prisma.CustomersDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.scope`: Exposes CRUD operations for the **Scope** model.
@@ -907,8 +893,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 7.5.0
-   * Query Engine version: 280c870be64f457428992c43c1f6d557fab6e29e
+   * Prisma Client JS version: 7.7.0
+   * Query Engine version: 75cbdc1eb7150937890ad5465d861175c6624711
    */
   export type PrismaVersion = {
     client: string
@@ -1302,7 +1288,6 @@ export namespace Prisma {
     StakeholderDegree: 'StakeholderDegree',
     stakeholderChember: 'stakeholderChember',
     StakeholderOcation: 'StakeholderOcation',
-    Customers: 'Customers',
     Scope: 'Scope',
     MpoTarget: 'MpoTarget',
     ProductWiseTarget: 'ProductWiseTarget',
@@ -1346,7 +1331,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "employeeProfile" | "jobPost" | "chemist" | "depo" | "party" | "stakeholder" | "stakeholderDeisgnation" | "stakeholderDegree" | "stakeholderChember" | "stakeholderOcation" | "customers" | "scope" | "mpoTarget" | "productWiseTarget" | "targetProductBatch" | "category" | "subCategory" | "unit" | "accountHead" | "ledgerHead" | "product" | "bankAccount" | "bankTransaction" | "inventory" | "transactionInfo" | "journal" | "depoTransaction" | "depoJournal" | "depoInventory" | "order" | "orderItem" | "orderStatus" | "attendance" | "overtime" | "leaveType" | "leves" | "employeeBankDetails" | "salaryInfo" | "payroll"
+      modelProps: "user" | "employeeProfile" | "jobPost" | "chemist" | "depo" | "party" | "stakeholder" | "stakeholderDeisgnation" | "stakeholderDegree" | "stakeholderChember" | "stakeholderOcation" | "scope" | "mpoTarget" | "productWiseTarget" | "targetProductBatch" | "category" | "subCategory" | "unit" | "accountHead" | "ledgerHead" | "product" | "bankAccount" | "bankTransaction" | "inventory" | "transactionInfo" | "journal" | "depoTransaction" | "depoJournal" | "depoInventory" | "order" | "orderItem" | "orderStatus" | "attendance" | "overtime" | "leaveType" | "leves" | "employeeBankDetails" | "salaryInfo" | "payroll"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2073,72 +2058,6 @@ export namespace Prisma {
           count: {
             args: Prisma.StakeholderOcationCountArgs<ExtArgs>
             result: $Utils.Optional<StakeholderOcationCountAggregateOutputType> | number
-          }
-        }
-      }
-      Customers: {
-        payload: Prisma.$CustomersPayload<ExtArgs>
-        fields: Prisma.CustomersFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.CustomersFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CustomersPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.CustomersFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CustomersPayload>
-          }
-          findFirst: {
-            args: Prisma.CustomersFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CustomersPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.CustomersFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CustomersPayload>
-          }
-          findMany: {
-            args: Prisma.CustomersFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CustomersPayload>[]
-          }
-          create: {
-            args: Prisma.CustomersCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CustomersPayload>
-          }
-          createMany: {
-            args: Prisma.CustomersCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          delete: {
-            args: Prisma.CustomersDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CustomersPayload>
-          }
-          update: {
-            args: Prisma.CustomersUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CustomersPayload>
-          }
-          deleteMany: {
-            args: Prisma.CustomersDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.CustomersUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          upsert: {
-            args: Prisma.CustomersUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CustomersPayload>
-          }
-          aggregate: {
-            args: Prisma.CustomersAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateCustomers>
-          }
-          groupBy: {
-            args: Prisma.CustomersGroupByArgs<ExtArgs>
-            result: $Utils.Optional<CustomersGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.CustomersCountArgs<ExtArgs>
-            result: $Utils.Optional<CustomersCountAggregateOutputType> | number
           }
         }
       }
@@ -4109,7 +4028,6 @@ export namespace Prisma {
     stakeholderDegree?: StakeholderDegreeOmit
     stakeholderChember?: stakeholderChemberOmit
     stakeholderOcation?: StakeholderOcationOmit
-    customers?: CustomersOmit
     scope?: ScopeOmit
     mpoTarget?: MpoTargetOmit
     productWiseTarget?: ProductWiseTargetOmit
@@ -4220,6 +4138,7 @@ export namespace Prisma {
   export type UserCountOutputType = {
     attendance: number
     leves: number
+    mpoTarget: number
     order: number
     overtime: number
     payroll: number
@@ -4231,6 +4150,7 @@ export namespace Prisma {
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     attendance?: boolean | UserCountOutputTypeCountAttendanceArgs
     leves?: boolean | UserCountOutputTypeCountLevesArgs
+    mpoTarget?: boolean | UserCountOutputTypeCountMpoTargetArgs
     order?: boolean | UserCountOutputTypeCountOrderArgs
     overtime?: boolean | UserCountOutputTypeCountOvertimeArgs
     payroll?: boolean | UserCountOutputTypeCountPayrollArgs
@@ -4262,6 +4182,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountLevesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: LevesWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountMpoTargetArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MpoTargetWhereInput
   }
 
   /**
@@ -4629,37 +4556,6 @@ export namespace Prisma {
    */
   export type StakeholderDegreeCountOutputTypeCountStakeholderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: StakeholderWhereInput
-  }
-
-
-  /**
-   * Count Type CustomersCountOutputType
-   */
-
-  export type CustomersCountOutputType = {
-    transactionInfo: number
-  }
-
-  export type CustomersCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    transactionInfo?: boolean | CustomersCountOutputTypeCountTransactionInfoArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * CustomersCountOutputType without action
-   */
-  export type CustomersCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CustomersCountOutputType
-     */
-    select?: CustomersCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * CustomersCountOutputType without action
-   */
-  export type CustomersCountOutputTypeCountTransactionInfoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: TransactionInfoWhereInput
   }
 
 
@@ -5073,10 +4969,12 @@ export namespace Prisma {
 
   export type DepoTransactionCountOutputType = {
     depoInventories: number
+    depoJournals: number
   }
 
   export type DepoTransactionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     depoInventories?: boolean | DepoTransactionCountOutputTypeCountDepoInventoriesArgs
+    depoJournals?: boolean | DepoTransactionCountOutputTypeCountDepoJournalsArgs
   }
 
   // Custom InputTypes
@@ -5095,6 +4993,13 @@ export namespace Prisma {
    */
   export type DepoTransactionCountOutputTypeCountDepoInventoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DepoInventoryWhereInput
+  }
+
+  /**
+   * DepoTransactionCountOutputType without action
+   */
+  export type DepoTransactionCountOutputTypeCountDepoJournalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepoJournalWhereInput
   }
 
 
@@ -5461,7 +5366,7 @@ export namespace Prisma {
       attendance: Prisma.$AttendancePayload<ExtArgs>[]
       employeeProfile: Prisma.$EmployeeProfilePayload<ExtArgs> | null
       leves: Prisma.$LevesPayload<ExtArgs>[]
-      mpoTarget: Prisma.$MpoTargetPayload<ExtArgs> | null
+      mpoTarget: Prisma.$MpoTargetPayload<ExtArgs>[]
       order: Prisma.$OrderPayload<ExtArgs>[]
       overtime: Prisma.$OvertimePayload<ExtArgs>[]
       payroll: Prisma.$PayrollPayload<ExtArgs>[]
@@ -5825,7 +5730,7 @@ export namespace Prisma {
     attendance<T extends User$attendanceArgs<ExtArgs> = {}>(args?: Subset<T, User$attendanceArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     employeeProfile<T extends User$employeeProfileArgs<ExtArgs> = {}>(args?: Subset<T, User$employeeProfileArgs<ExtArgs>>): Prisma__EmployeeProfileClient<$Result.GetResult<Prisma.$EmployeeProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     leves<T extends User$levesArgs<ExtArgs> = {}>(args?: Subset<T, User$levesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LevesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    mpoTarget<T extends User$mpoTargetArgs<ExtArgs> = {}>(args?: Subset<T, User$mpoTargetArgs<ExtArgs>>): Prisma__MpoTargetClient<$Result.GetResult<Prisma.$MpoTargetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    mpoTarget<T extends User$mpoTargetArgs<ExtArgs> = {}>(args?: Subset<T, User$mpoTargetArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MpoTargetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     order<T extends User$orderArgs<ExtArgs> = {}>(args?: Subset<T, User$orderArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     overtime<T extends User$overtimeArgs<ExtArgs> = {}>(args?: Subset<T, User$overtimeArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OvertimePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     payroll<T extends User$payrollArgs<ExtArgs> = {}>(args?: Subset<T, User$payrollArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PayrollPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -6322,6 +6227,11 @@ export namespace Prisma {
      */
     include?: MpoTargetInclude<ExtArgs> | null
     where?: MpoTargetWhereInput
+    orderBy?: MpoTargetOrderByWithRelationInput | MpoTargetOrderByWithRelationInput[]
+    cursor?: MpoTargetWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MpoTargetScalarFieldEnum | MpoTargetScalarFieldEnum[]
   }
 
   /**
@@ -17264,1011 +17174,6 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: StakeholderOcationInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model Customers
-   */
-
-  export type AggregateCustomers = {
-    _count: CustomersCountAggregateOutputType | null
-    _avg: CustomersAvgAggregateOutputType | null
-    _sum: CustomersSumAggregateOutputType | null
-    _min: CustomersMinAggregateOutputType | null
-    _max: CustomersMaxAggregateOutputType | null
-  }
-
-  export type CustomersAvgAggregateOutputType = {
-    id: number | null
-  }
-
-  export type CustomersSumAggregateOutputType = {
-    id: number | null
-  }
-
-  export type CustomersMinAggregateOutputType = {
-    id: number | null
-    name: string | null
-    contactNo: string | null
-    address: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type CustomersMaxAggregateOutputType = {
-    id: number | null
-    name: string | null
-    contactNo: string | null
-    address: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type CustomersCountAggregateOutputType = {
-    id: number
-    name: number
-    contactNo: number
-    address: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type CustomersAvgAggregateInputType = {
-    id?: true
-  }
-
-  export type CustomersSumAggregateInputType = {
-    id?: true
-  }
-
-  export type CustomersMinAggregateInputType = {
-    id?: true
-    name?: true
-    contactNo?: true
-    address?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type CustomersMaxAggregateInputType = {
-    id?: true
-    name?: true
-    contactNo?: true
-    address?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type CustomersCountAggregateInputType = {
-    id?: true
-    name?: true
-    contactNo?: true
-    address?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type CustomersAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Customers to aggregate.
-     */
-    where?: CustomersWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Customers to fetch.
-     */
-    orderBy?: CustomersOrderByWithRelationInput | CustomersOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: CustomersWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Customers from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Customers.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Customers
-    **/
-    _count?: true | CustomersCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: CustomersAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: CustomersSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: CustomersMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: CustomersMaxAggregateInputType
-  }
-
-  export type GetCustomersAggregateType<T extends CustomersAggregateArgs> = {
-        [P in keyof T & keyof AggregateCustomers]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateCustomers[P]>
-      : GetScalarType<T[P], AggregateCustomers[P]>
-  }
-
-
-
-
-  export type CustomersGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: CustomersWhereInput
-    orderBy?: CustomersOrderByWithAggregationInput | CustomersOrderByWithAggregationInput[]
-    by: CustomersScalarFieldEnum[] | CustomersScalarFieldEnum
-    having?: CustomersScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: CustomersCountAggregateInputType | true
-    _avg?: CustomersAvgAggregateInputType
-    _sum?: CustomersSumAggregateInputType
-    _min?: CustomersMinAggregateInputType
-    _max?: CustomersMaxAggregateInputType
-  }
-
-  export type CustomersGroupByOutputType = {
-    id: number
-    name: string | null
-    contactNo: string
-    address: string | null
-    createdAt: Date
-    updatedAt: Date
-    _count: CustomersCountAggregateOutputType | null
-    _avg: CustomersAvgAggregateOutputType | null
-    _sum: CustomersSumAggregateOutputType | null
-    _min: CustomersMinAggregateOutputType | null
-    _max: CustomersMaxAggregateOutputType | null
-  }
-
-  type GetCustomersGroupByPayload<T extends CustomersGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<CustomersGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof CustomersGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], CustomersGroupByOutputType[P]>
-            : GetScalarType<T[P], CustomersGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type CustomersSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    contactNo?: boolean
-    address?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    transactionInfo?: boolean | Customers$transactionInfoArgs<ExtArgs>
-    _count?: boolean | CustomersCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["customers"]>
-
-
-
-  export type CustomersSelectScalar = {
-    id?: boolean
-    name?: boolean
-    contactNo?: boolean
-    address?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type CustomersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "contactNo" | "address" | "createdAt" | "updatedAt", ExtArgs["result"]["customers"]>
-  export type CustomersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    transactionInfo?: boolean | Customers$transactionInfoArgs<ExtArgs>
-    _count?: boolean | CustomersCountOutputTypeDefaultArgs<ExtArgs>
-  }
-
-  export type $CustomersPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Customers"
-    objects: {
-      transactionInfo: Prisma.$TransactionInfoPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      name: string | null
-      contactNo: string
-      address: string | null
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["customers"]>
-    composites: {}
-  }
-
-  type CustomersGetPayload<S extends boolean | null | undefined | CustomersDefaultArgs> = $Result.GetResult<Prisma.$CustomersPayload, S>
-
-  type CustomersCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<CustomersFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: CustomersCountAggregateInputType | true
-    }
-
-  export interface CustomersDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Customers'], meta: { name: 'Customers' } }
-    /**
-     * Find zero or one Customers that matches the filter.
-     * @param {CustomersFindUniqueArgs} args - Arguments to find a Customers
-     * @example
-     * // Get one Customers
-     * const customers = await prisma.customers.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends CustomersFindUniqueArgs>(args: SelectSubset<T, CustomersFindUniqueArgs<ExtArgs>>): Prisma__CustomersClient<$Result.GetResult<Prisma.$CustomersPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Customers that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {CustomersFindUniqueOrThrowArgs} args - Arguments to find a Customers
-     * @example
-     * // Get one Customers
-     * const customers = await prisma.customers.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends CustomersFindUniqueOrThrowArgs>(args: SelectSubset<T, CustomersFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CustomersClient<$Result.GetResult<Prisma.$CustomersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Customers that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CustomersFindFirstArgs} args - Arguments to find a Customers
-     * @example
-     * // Get one Customers
-     * const customers = await prisma.customers.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends CustomersFindFirstArgs>(args?: SelectSubset<T, CustomersFindFirstArgs<ExtArgs>>): Prisma__CustomersClient<$Result.GetResult<Prisma.$CustomersPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Customers that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CustomersFindFirstOrThrowArgs} args - Arguments to find a Customers
-     * @example
-     * // Get one Customers
-     * const customers = await prisma.customers.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends CustomersFindFirstOrThrowArgs>(args?: SelectSubset<T, CustomersFindFirstOrThrowArgs<ExtArgs>>): Prisma__CustomersClient<$Result.GetResult<Prisma.$CustomersPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Customers that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CustomersFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Customers
-     * const customers = await prisma.customers.findMany()
-     * 
-     * // Get first 10 Customers
-     * const customers = await prisma.customers.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const customersWithIdOnly = await prisma.customers.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends CustomersFindManyArgs>(args?: SelectSubset<T, CustomersFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomersPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Customers.
-     * @param {CustomersCreateArgs} args - Arguments to create a Customers.
-     * @example
-     * // Create one Customers
-     * const Customers = await prisma.customers.create({
-     *   data: {
-     *     // ... data to create a Customers
-     *   }
-     * })
-     * 
-     */
-    create<T extends CustomersCreateArgs>(args: SelectSubset<T, CustomersCreateArgs<ExtArgs>>): Prisma__CustomersClient<$Result.GetResult<Prisma.$CustomersPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Customers.
-     * @param {CustomersCreateManyArgs} args - Arguments to create many Customers.
-     * @example
-     * // Create many Customers
-     * const customers = await prisma.customers.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends CustomersCreateManyArgs>(args?: SelectSubset<T, CustomersCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Delete a Customers.
-     * @param {CustomersDeleteArgs} args - Arguments to delete one Customers.
-     * @example
-     * // Delete one Customers
-     * const Customers = await prisma.customers.delete({
-     *   where: {
-     *     // ... filter to delete one Customers
-     *   }
-     * })
-     * 
-     */
-    delete<T extends CustomersDeleteArgs>(args: SelectSubset<T, CustomersDeleteArgs<ExtArgs>>): Prisma__CustomersClient<$Result.GetResult<Prisma.$CustomersPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Customers.
-     * @param {CustomersUpdateArgs} args - Arguments to update one Customers.
-     * @example
-     * // Update one Customers
-     * const customers = await prisma.customers.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends CustomersUpdateArgs>(args: SelectSubset<T, CustomersUpdateArgs<ExtArgs>>): Prisma__CustomersClient<$Result.GetResult<Prisma.$CustomersPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Customers.
-     * @param {CustomersDeleteManyArgs} args - Arguments to filter Customers to delete.
-     * @example
-     * // Delete a few Customers
-     * const { count } = await prisma.customers.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends CustomersDeleteManyArgs>(args?: SelectSubset<T, CustomersDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Customers.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CustomersUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Customers
-     * const customers = await prisma.customers.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends CustomersUpdateManyArgs>(args: SelectSubset<T, CustomersUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one Customers.
-     * @param {CustomersUpsertArgs} args - Arguments to update or create a Customers.
-     * @example
-     * // Update or create a Customers
-     * const customers = await prisma.customers.upsert({
-     *   create: {
-     *     // ... data to create a Customers
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Customers we want to update
-     *   }
-     * })
-     */
-    upsert<T extends CustomersUpsertArgs>(args: SelectSubset<T, CustomersUpsertArgs<ExtArgs>>): Prisma__CustomersClient<$Result.GetResult<Prisma.$CustomersPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Customers.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CustomersCountArgs} args - Arguments to filter Customers to count.
-     * @example
-     * // Count the number of Customers
-     * const count = await prisma.customers.count({
-     *   where: {
-     *     // ... the filter for the Customers we want to count
-     *   }
-     * })
-    **/
-    count<T extends CustomersCountArgs>(
-      args?: Subset<T, CustomersCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], CustomersCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Customers.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CustomersAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends CustomersAggregateArgs>(args: Subset<T, CustomersAggregateArgs>): Prisma.PrismaPromise<GetCustomersAggregateType<T>>
-
-    /**
-     * Group by Customers.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CustomersGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends CustomersGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: CustomersGroupByArgs['orderBy'] }
-        : { orderBy?: CustomersGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, CustomersGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCustomersGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Customers model
-   */
-  readonly fields: CustomersFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Customers.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__CustomersClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    transactionInfo<T extends Customers$transactionInfoArgs<ExtArgs> = {}>(args?: Subset<T, Customers$transactionInfoArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionInfoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Customers model
-   */
-  interface CustomersFieldRefs {
-    readonly id: FieldRef<"Customers", 'Int'>
-    readonly name: FieldRef<"Customers", 'String'>
-    readonly contactNo: FieldRef<"Customers", 'String'>
-    readonly address: FieldRef<"Customers", 'String'>
-    readonly createdAt: FieldRef<"Customers", 'DateTime'>
-    readonly updatedAt: FieldRef<"Customers", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Customers findUnique
-   */
-  export type CustomersFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Customers
-     */
-    select?: CustomersSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Customers
-     */
-    omit?: CustomersOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CustomersInclude<ExtArgs> | null
-    /**
-     * Filter, which Customers to fetch.
-     */
-    where: CustomersWhereUniqueInput
-  }
-
-  /**
-   * Customers findUniqueOrThrow
-   */
-  export type CustomersFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Customers
-     */
-    select?: CustomersSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Customers
-     */
-    omit?: CustomersOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CustomersInclude<ExtArgs> | null
-    /**
-     * Filter, which Customers to fetch.
-     */
-    where: CustomersWhereUniqueInput
-  }
-
-  /**
-   * Customers findFirst
-   */
-  export type CustomersFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Customers
-     */
-    select?: CustomersSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Customers
-     */
-    omit?: CustomersOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CustomersInclude<ExtArgs> | null
-    /**
-     * Filter, which Customers to fetch.
-     */
-    where?: CustomersWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Customers to fetch.
-     */
-    orderBy?: CustomersOrderByWithRelationInput | CustomersOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Customers.
-     */
-    cursor?: CustomersWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Customers from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Customers.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Customers.
-     */
-    distinct?: CustomersScalarFieldEnum | CustomersScalarFieldEnum[]
-  }
-
-  /**
-   * Customers findFirstOrThrow
-   */
-  export type CustomersFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Customers
-     */
-    select?: CustomersSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Customers
-     */
-    omit?: CustomersOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CustomersInclude<ExtArgs> | null
-    /**
-     * Filter, which Customers to fetch.
-     */
-    where?: CustomersWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Customers to fetch.
-     */
-    orderBy?: CustomersOrderByWithRelationInput | CustomersOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Customers.
-     */
-    cursor?: CustomersWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Customers from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Customers.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Customers.
-     */
-    distinct?: CustomersScalarFieldEnum | CustomersScalarFieldEnum[]
-  }
-
-  /**
-   * Customers findMany
-   */
-  export type CustomersFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Customers
-     */
-    select?: CustomersSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Customers
-     */
-    omit?: CustomersOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CustomersInclude<ExtArgs> | null
-    /**
-     * Filter, which Customers to fetch.
-     */
-    where?: CustomersWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Customers to fetch.
-     */
-    orderBy?: CustomersOrderByWithRelationInput | CustomersOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Customers.
-     */
-    cursor?: CustomersWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Customers from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Customers.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Customers.
-     */
-    distinct?: CustomersScalarFieldEnum | CustomersScalarFieldEnum[]
-  }
-
-  /**
-   * Customers create
-   */
-  export type CustomersCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Customers
-     */
-    select?: CustomersSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Customers
-     */
-    omit?: CustomersOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CustomersInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Customers.
-     */
-    data: XOR<CustomersCreateInput, CustomersUncheckedCreateInput>
-  }
-
-  /**
-   * Customers createMany
-   */
-  export type CustomersCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Customers.
-     */
-    data: CustomersCreateManyInput | CustomersCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Customers update
-   */
-  export type CustomersUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Customers
-     */
-    select?: CustomersSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Customers
-     */
-    omit?: CustomersOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CustomersInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Customers.
-     */
-    data: XOR<CustomersUpdateInput, CustomersUncheckedUpdateInput>
-    /**
-     * Choose, which Customers to update.
-     */
-    where: CustomersWhereUniqueInput
-  }
-
-  /**
-   * Customers updateMany
-   */
-  export type CustomersUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Customers.
-     */
-    data: XOR<CustomersUpdateManyMutationInput, CustomersUncheckedUpdateManyInput>
-    /**
-     * Filter which Customers to update
-     */
-    where?: CustomersWhereInput
-    /**
-     * Limit how many Customers to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Customers upsert
-   */
-  export type CustomersUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Customers
-     */
-    select?: CustomersSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Customers
-     */
-    omit?: CustomersOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CustomersInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Customers to update in case it exists.
-     */
-    where: CustomersWhereUniqueInput
-    /**
-     * In case the Customers found by the `where` argument doesn't exist, create a new Customers with this data.
-     */
-    create: XOR<CustomersCreateInput, CustomersUncheckedCreateInput>
-    /**
-     * In case the Customers was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<CustomersUpdateInput, CustomersUncheckedUpdateInput>
-  }
-
-  /**
-   * Customers delete
-   */
-  export type CustomersDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Customers
-     */
-    select?: CustomersSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Customers
-     */
-    omit?: CustomersOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CustomersInclude<ExtArgs> | null
-    /**
-     * Filter which Customers to delete.
-     */
-    where: CustomersWhereUniqueInput
-  }
-
-  /**
-   * Customers deleteMany
-   */
-  export type CustomersDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Customers to delete
-     */
-    where?: CustomersWhereInput
-    /**
-     * Limit how many Customers to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Customers.transactionInfo
-   */
-  export type Customers$transactionInfoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the TransactionInfo
-     */
-    select?: TransactionInfoSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the TransactionInfo
-     */
-    omit?: TransactionInfoOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TransactionInfoInclude<ExtArgs> | null
-    where?: TransactionInfoWhereInput
-    orderBy?: TransactionInfoOrderByWithRelationInput | TransactionInfoOrderByWithRelationInput[]
-    cursor?: TransactionInfoWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: TransactionInfoScalarFieldEnum | TransactionInfoScalarFieldEnum[]
-  }
-
-  /**
-   * Customers without action
-   */
-  export type CustomersDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Customers
-     */
-    select?: CustomersSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Customers
-     */
-    omit?: CustomersOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CustomersInclude<ExtArgs> | null
   }
 
 
@@ -31861,13 +30766,11 @@ export namespace Prisma {
 
   export type TransactionInfoAvgAggregateOutputType = {
     id: number | null
-    customerId: number | null
     partyId: number | null
   }
 
   export type TransactionInfoSumAggregateOutputType = {
     id: number | null
-    customerId: number | null
     partyId: number | null
   }
 
@@ -31877,7 +30780,6 @@ export namespace Prisma {
     voucherNo: string | null
     invoiceNo: string | null
     chemistId: string | null
-    customerId: number | null
     stakeholderId: string | null
     employeeId: string | null
     partyId: number | null
@@ -31893,7 +30795,6 @@ export namespace Prisma {
     voucherNo: string | null
     invoiceNo: string | null
     chemistId: string | null
-    customerId: number | null
     stakeholderId: string | null
     employeeId: string | null
     partyId: number | null
@@ -31909,7 +30810,6 @@ export namespace Prisma {
     voucherNo: number
     invoiceNo: number
     chemistId: number
-    customerId: number
     stakeholderId: number
     employeeId: number
     partyId: number
@@ -31923,13 +30823,11 @@ export namespace Prisma {
 
   export type TransactionInfoAvgAggregateInputType = {
     id?: true
-    customerId?: true
     partyId?: true
   }
 
   export type TransactionInfoSumAggregateInputType = {
     id?: true
-    customerId?: true
     partyId?: true
   }
 
@@ -31939,7 +30837,6 @@ export namespace Prisma {
     voucherNo?: true
     invoiceNo?: true
     chemistId?: true
-    customerId?: true
     stakeholderId?: true
     employeeId?: true
     partyId?: true
@@ -31955,7 +30852,6 @@ export namespace Prisma {
     voucherNo?: true
     invoiceNo?: true
     chemistId?: true
-    customerId?: true
     stakeholderId?: true
     employeeId?: true
     partyId?: true
@@ -31971,7 +30867,6 @@ export namespace Prisma {
     voucherNo?: true
     invoiceNo?: true
     chemistId?: true
-    customerId?: true
     stakeholderId?: true
     employeeId?: true
     partyId?: true
@@ -32074,7 +30969,6 @@ export namespace Prisma {
     voucherNo: string
     invoiceNo: string | null
     chemistId: string | null
-    customerId: number | null
     stakeholderId: string | null
     employeeId: string | null
     partyId: number | null
@@ -32109,7 +31003,6 @@ export namespace Prisma {
     voucherNo?: boolean
     invoiceNo?: boolean
     chemistId?: boolean
-    customerId?: boolean
     stakeholderId?: boolean
     employeeId?: boolean
     partyId?: boolean
@@ -32120,7 +31013,6 @@ export namespace Prisma {
     inventory?: boolean | TransactionInfo$inventoryArgs<ExtArgs>
     journal?: boolean | TransactionInfo$journalArgs<ExtArgs>
     chemist?: boolean | TransactionInfo$chemistArgs<ExtArgs>
-    customers?: boolean | TransactionInfo$customersArgs<ExtArgs>
     user?: boolean | TransactionInfo$userArgs<ExtArgs>
     party?: boolean | TransactionInfo$partyArgs<ExtArgs>
     stakeholder?: boolean | TransactionInfo$stakeholderArgs<ExtArgs>
@@ -32135,7 +31027,6 @@ export namespace Prisma {
     voucherNo?: boolean
     invoiceNo?: boolean
     chemistId?: boolean
-    customerId?: boolean
     stakeholderId?: boolean
     employeeId?: boolean
     partyId?: boolean
@@ -32145,12 +31036,11 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type TransactionInfoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "voucherNo" | "invoiceNo" | "chemistId" | "customerId" | "stakeholderId" | "employeeId" | "partyId" | "voucherType" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["transactionInfo"]>
+  export type TransactionInfoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "voucherNo" | "invoiceNo" | "chemistId" | "stakeholderId" | "employeeId" | "partyId" | "voucherType" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["transactionInfo"]>
   export type TransactionInfoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     inventory?: boolean | TransactionInfo$inventoryArgs<ExtArgs>
     journal?: boolean | TransactionInfo$journalArgs<ExtArgs>
     chemist?: boolean | TransactionInfo$chemistArgs<ExtArgs>
-    customers?: boolean | TransactionInfo$customersArgs<ExtArgs>
     user?: boolean | TransactionInfo$userArgs<ExtArgs>
     party?: boolean | TransactionInfo$partyArgs<ExtArgs>
     stakeholder?: boolean | TransactionInfo$stakeholderArgs<ExtArgs>
@@ -32163,7 +31053,6 @@ export namespace Prisma {
       inventory: Prisma.$InventoryPayload<ExtArgs>[]
       journal: Prisma.$JournalPayload<ExtArgs>[]
       chemist: Prisma.$ChemistPayload<ExtArgs> | null
-      customers: Prisma.$CustomersPayload<ExtArgs> | null
       user: Prisma.$UserPayload<ExtArgs> | null
       party: Prisma.$PartyPayload<ExtArgs> | null
       stakeholder: Prisma.$StakeholderPayload<ExtArgs> | null
@@ -32174,7 +31063,6 @@ export namespace Prisma {
       voucherNo: string
       invoiceNo: string | null
       chemistId: string | null
-      customerId: number | null
       stakeholderId: string | null
       employeeId: string | null
       partyId: number | null
@@ -32525,7 +31413,6 @@ export namespace Prisma {
     inventory<T extends TransactionInfo$inventoryArgs<ExtArgs> = {}>(args?: Subset<T, TransactionInfo$inventoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     journal<T extends TransactionInfo$journalArgs<ExtArgs> = {}>(args?: Subset<T, TransactionInfo$journalArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JournalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     chemist<T extends TransactionInfo$chemistArgs<ExtArgs> = {}>(args?: Subset<T, TransactionInfo$chemistArgs<ExtArgs>>): Prisma__ChemistClient<$Result.GetResult<Prisma.$ChemistPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    customers<T extends TransactionInfo$customersArgs<ExtArgs> = {}>(args?: Subset<T, TransactionInfo$customersArgs<ExtArgs>>): Prisma__CustomersClient<$Result.GetResult<Prisma.$CustomersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     user<T extends TransactionInfo$userArgs<ExtArgs> = {}>(args?: Subset<T, TransactionInfo$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     party<T extends TransactionInfo$partyArgs<ExtArgs> = {}>(args?: Subset<T, TransactionInfo$partyArgs<ExtArgs>>): Prisma__PartyClient<$Result.GetResult<Prisma.$PartyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     stakeholder<T extends TransactionInfo$stakeholderArgs<ExtArgs> = {}>(args?: Subset<T, TransactionInfo$stakeholderArgs<ExtArgs>>): Prisma__StakeholderClient<$Result.GetResult<Prisma.$StakeholderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -32563,7 +31450,6 @@ export namespace Prisma {
     readonly voucherNo: FieldRef<"TransactionInfo", 'String'>
     readonly invoiceNo: FieldRef<"TransactionInfo", 'String'>
     readonly chemistId: FieldRef<"TransactionInfo", 'String'>
-    readonly customerId: FieldRef<"TransactionInfo", 'Int'>
     readonly stakeholderId: FieldRef<"TransactionInfo", 'String'>
     readonly employeeId: FieldRef<"TransactionInfo", 'String'>
     readonly partyId: FieldRef<"TransactionInfo", 'Int'>
@@ -32983,25 +31869,6 @@ export namespace Prisma {
      */
     include?: ChemistInclude<ExtArgs> | null
     where?: ChemistWhereInput
-  }
-
-  /**
-   * TransactionInfo.customers
-   */
-  export type TransactionInfo$customersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Customers
-     */
-    select?: CustomersSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Customers
-     */
-    omit?: CustomersOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CustomersInclude<ExtArgs> | null
-    where?: CustomersWhereInput
   }
 
   /**
@@ -34244,21 +33111,23 @@ export namespace Prisma {
   export type DepoTransactionAvgAggregateOutputType = {
     id: number | null
     providerdepoId: number | null
-    receverdepoId: number | null
+    receiverdepoId: number | null
   }
 
   export type DepoTransactionSumAggregateOutputType = {
     id: number | null
     providerdepoId: number | null
-    receverdepoId: number | null
+    receiverdepoId: number | null
   }
 
   export type DepoTransactionMinAggregateOutputType = {
     id: number | null
     date: Date | null
     providerdepoId: number | null
-    receverdepoId: number | null
+    receiverdepoId: number | null
+    invoiceNo: string | null
     voucherNo: string | null
+    voucherType: $Enums.VoucherType | null
     status: $Enums.OrdStatus | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -34268,8 +33137,10 @@ export namespace Prisma {
     id: number | null
     date: Date | null
     providerdepoId: number | null
-    receverdepoId: number | null
+    receiverdepoId: number | null
+    invoiceNo: string | null
     voucherNo: string | null
+    voucherType: $Enums.VoucherType | null
     status: $Enums.OrdStatus | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -34279,8 +33150,10 @@ export namespace Prisma {
     id: number
     date: number
     providerdepoId: number
-    receverdepoId: number
+    receiverdepoId: number
+    invoiceNo: number
     voucherNo: number
+    voucherType: number
     status: number
     createdAt: number
     updatedAt: number
@@ -34291,21 +33164,23 @@ export namespace Prisma {
   export type DepoTransactionAvgAggregateInputType = {
     id?: true
     providerdepoId?: true
-    receverdepoId?: true
+    receiverdepoId?: true
   }
 
   export type DepoTransactionSumAggregateInputType = {
     id?: true
     providerdepoId?: true
-    receverdepoId?: true
+    receiverdepoId?: true
   }
 
   export type DepoTransactionMinAggregateInputType = {
     id?: true
     date?: true
     providerdepoId?: true
-    receverdepoId?: true
+    receiverdepoId?: true
+    invoiceNo?: true
     voucherNo?: true
+    voucherType?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -34315,8 +33190,10 @@ export namespace Prisma {
     id?: true
     date?: true
     providerdepoId?: true
-    receverdepoId?: true
+    receiverdepoId?: true
+    invoiceNo?: true
     voucherNo?: true
+    voucherType?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -34326,8 +33203,10 @@ export namespace Prisma {
     id?: true
     date?: true
     providerdepoId?: true
-    receverdepoId?: true
+    receiverdepoId?: true
+    invoiceNo?: true
     voucherNo?: true
+    voucherType?: true
     status?: true
     createdAt?: true
     updatedAt?: true
@@ -34424,8 +33303,10 @@ export namespace Prisma {
     id: number
     date: Date
     providerdepoId: number
-    receverdepoId: number
+    receiverdepoId: number
+    invoiceNo: string | null
     voucherNo: string
+    voucherType: $Enums.VoucherType
     status: $Enums.OrdStatus
     createdAt: Date
     updatedAt: Date
@@ -34454,14 +33335,17 @@ export namespace Prisma {
     id?: boolean
     date?: boolean
     providerdepoId?: boolean
-    receverdepoId?: boolean
+    receiverdepoId?: boolean
+    invoiceNo?: boolean
     voucherNo?: boolean
+    voucherType?: boolean
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     providerdepo?: boolean | DepoDefaultArgs<ExtArgs>
-    receverdepo?: boolean | DepoDefaultArgs<ExtArgs>
+    receiverdepo?: boolean | DepoDefaultArgs<ExtArgs>
     depoInventories?: boolean | DepoTransaction$depoInventoriesArgs<ExtArgs>
+    depoJournals?: boolean | DepoTransaction$depoJournalsArgs<ExtArgs>
     _count?: boolean | DepoTransactionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["depoTransaction"]>
 
@@ -34471,18 +33355,21 @@ export namespace Prisma {
     id?: boolean
     date?: boolean
     providerdepoId?: boolean
-    receverdepoId?: boolean
+    receiverdepoId?: boolean
+    invoiceNo?: boolean
     voucherNo?: boolean
+    voucherType?: boolean
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type DepoTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "providerdepoId" | "receverdepoId" | "voucherNo" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["depoTransaction"]>
+  export type DepoTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "providerdepoId" | "receiverdepoId" | "invoiceNo" | "voucherNo" | "voucherType" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["depoTransaction"]>
   export type DepoTransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     providerdepo?: boolean | DepoDefaultArgs<ExtArgs>
-    receverdepo?: boolean | DepoDefaultArgs<ExtArgs>
+    receiverdepo?: boolean | DepoDefaultArgs<ExtArgs>
     depoInventories?: boolean | DepoTransaction$depoInventoriesArgs<ExtArgs>
+    depoJournals?: boolean | DepoTransaction$depoJournalsArgs<ExtArgs>
     _count?: boolean | DepoTransactionCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -34490,15 +33377,18 @@ export namespace Prisma {
     name: "DepoTransaction"
     objects: {
       providerdepo: Prisma.$DepoPayload<ExtArgs>
-      receverdepo: Prisma.$DepoPayload<ExtArgs>
+      receiverdepo: Prisma.$DepoPayload<ExtArgs>
       depoInventories: Prisma.$DepoInventoryPayload<ExtArgs>[]
+      depoJournals: Prisma.$DepoJournalPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       date: Date
       providerdepoId: number
-      receverdepoId: number
+      receiverdepoId: number
+      invoiceNo: string | null
       voucherNo: string
+      voucherType: $Enums.VoucherType
       status: $Enums.OrdStatus
       createdAt: Date
       updatedAt: Date
@@ -34843,8 +33733,9 @@ export namespace Prisma {
   export interface Prisma__DepoTransactionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     providerdepo<T extends DepoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DepoDefaultArgs<ExtArgs>>): Prisma__DepoClient<$Result.GetResult<Prisma.$DepoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    receverdepo<T extends DepoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DepoDefaultArgs<ExtArgs>>): Prisma__DepoClient<$Result.GetResult<Prisma.$DepoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    receiverdepo<T extends DepoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DepoDefaultArgs<ExtArgs>>): Prisma__DepoClient<$Result.GetResult<Prisma.$DepoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     depoInventories<T extends DepoTransaction$depoInventoriesArgs<ExtArgs> = {}>(args?: Subset<T, DepoTransaction$depoInventoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepoInventoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    depoJournals<T extends DepoTransaction$depoJournalsArgs<ExtArgs> = {}>(args?: Subset<T, DepoTransaction$depoJournalsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepoJournalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -34877,8 +33768,10 @@ export namespace Prisma {
     readonly id: FieldRef<"DepoTransaction", 'Int'>
     readonly date: FieldRef<"DepoTransaction", 'DateTime'>
     readonly providerdepoId: FieldRef<"DepoTransaction", 'Int'>
-    readonly receverdepoId: FieldRef<"DepoTransaction", 'Int'>
+    readonly receiverdepoId: FieldRef<"DepoTransaction", 'Int'>
+    readonly invoiceNo: FieldRef<"DepoTransaction", 'String'>
     readonly voucherNo: FieldRef<"DepoTransaction", 'String'>
+    readonly voucherType: FieldRef<"DepoTransaction", 'VoucherType'>
     readonly status: FieldRef<"DepoTransaction", 'OrdStatus'>
     readonly createdAt: FieldRef<"DepoTransaction", 'DateTime'>
     readonly updatedAt: FieldRef<"DepoTransaction", 'DateTime'>
@@ -35254,6 +34147,30 @@ export namespace Prisma {
   }
 
   /**
+   * DepoTransaction.depoJournals
+   */
+  export type DepoTransaction$depoJournalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoJournal
+     */
+    select?: DepoJournalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoJournal
+     */
+    omit?: DepoJournalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoJournalInclude<ExtArgs> | null
+    where?: DepoJournalWhereInput
+    orderBy?: DepoJournalOrderByWithRelationInput | DepoJournalOrderByWithRelationInput[]
+    cursor?: DepoJournalWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DepoJournalScalarFieldEnum | DepoJournalScalarFieldEnum[]
+  }
+
+  /**
    * DepoTransaction without action
    */
   export type DepoTransactionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -35286,86 +34203,108 @@ export namespace Prisma {
 
   export type DepoJournalAvgAggregateOutputType = {
     id: number | null
-    depoId: number | null
+    depoTransactionId: number | null
     ledgerHeadId: number | null
-    amount: number | null
+    creditAmount: number | null
+    debitAmount: number | null
   }
 
   export type DepoJournalSumAggregateOutputType = {
     id: number | null
-    depoId: number | null
+    depoTransactionId: number | null
     ledgerHeadId: number | null
-    amount: number | null
+    creditAmount: number | null
+    debitAmount: number | null
   }
 
   export type DepoJournalMinAggregateOutputType = {
     id: number | null
+    depoTransactionId: number | null
     date: Date | null
-    depoId: number | null
     ledgerHeadId: number | null
-    amount: number | null
+    creditAmount: number | null
+    debitAmount: number | null
     narration: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type DepoJournalMaxAggregateOutputType = {
     id: number | null
+    depoTransactionId: number | null
     date: Date | null
-    depoId: number | null
     ledgerHeadId: number | null
-    amount: number | null
+    creditAmount: number | null
+    debitAmount: number | null
     narration: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type DepoJournalCountAggregateOutputType = {
     id: number
+    depoTransactionId: number
     date: number
-    depoId: number
     ledgerHeadId: number
-    amount: number
+    creditAmount: number
+    debitAmount: number
     narration: number
+    createdAt: number
+    updatedAt: number
     _all: number
   }
 
 
   export type DepoJournalAvgAggregateInputType = {
     id?: true
-    depoId?: true
+    depoTransactionId?: true
     ledgerHeadId?: true
-    amount?: true
+    creditAmount?: true
+    debitAmount?: true
   }
 
   export type DepoJournalSumAggregateInputType = {
     id?: true
-    depoId?: true
+    depoTransactionId?: true
     ledgerHeadId?: true
-    amount?: true
+    creditAmount?: true
+    debitAmount?: true
   }
 
   export type DepoJournalMinAggregateInputType = {
     id?: true
+    depoTransactionId?: true
     date?: true
-    depoId?: true
     ledgerHeadId?: true
-    amount?: true
+    creditAmount?: true
+    debitAmount?: true
     narration?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type DepoJournalMaxAggregateInputType = {
     id?: true
+    depoTransactionId?: true
     date?: true
-    depoId?: true
     ledgerHeadId?: true
-    amount?: true
+    creditAmount?: true
+    debitAmount?: true
     narration?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type DepoJournalCountAggregateInputType = {
     id?: true
+    depoTransactionId?: true
     date?: true
-    depoId?: true
     ledgerHeadId?: true
-    amount?: true
+    creditAmount?: true
+    debitAmount?: true
     narration?: true
+    createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -35457,11 +34396,14 @@ export namespace Prisma {
 
   export type DepoJournalGroupByOutputType = {
     id: number
+    depoTransactionId: number | null
     date: Date
-    depoId: number
-    ledgerHeadId: number | null
-    amount: number | null
+    ledgerHeadId: number
+    creditAmount: number | null
+    debitAmount: number | null
     narration: string | null
+    createdAt: Date
+    updatedAt: Date
     _count: DepoJournalCountAggregateOutputType | null
     _avg: DepoJournalAvgAggregateOutputType | null
     _sum: DepoJournalSumAggregateOutputType | null
@@ -35485,11 +34427,15 @@ export namespace Prisma {
 
   export type DepoJournalSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    depoTransactionId?: boolean
     date?: boolean
-    depoId?: boolean
     ledgerHeadId?: boolean
-    amount?: boolean
+    creditAmount?: boolean
+    debitAmount?: boolean
     narration?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    depoTransaction?: boolean | DepoJournal$depoTransactionArgs<ExtArgs>
     ledgerHead?: boolean | DepoJournal$ledgerHeadArgs<ExtArgs>
   }, ExtArgs["result"]["depoJournal"]>
 
@@ -35497,30 +34443,38 @@ export namespace Prisma {
 
   export type DepoJournalSelectScalar = {
     id?: boolean
+    depoTransactionId?: boolean
     date?: boolean
-    depoId?: boolean
     ledgerHeadId?: boolean
-    amount?: boolean
+    creditAmount?: boolean
+    debitAmount?: boolean
     narration?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type DepoJournalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "depoId" | "ledgerHeadId" | "amount" | "narration", ExtArgs["result"]["depoJournal"]>
+  export type DepoJournalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "depoTransactionId" | "date" | "ledgerHeadId" | "creditAmount" | "debitAmount" | "narration" | "createdAt" | "updatedAt", ExtArgs["result"]["depoJournal"]>
   export type DepoJournalInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    depoTransaction?: boolean | DepoJournal$depoTransactionArgs<ExtArgs>
     ledgerHead?: boolean | DepoJournal$ledgerHeadArgs<ExtArgs>
   }
 
   export type $DepoJournalPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "DepoJournal"
     objects: {
+      depoTransaction: Prisma.$DepoTransactionPayload<ExtArgs> | null
       ledgerHead: Prisma.$LedgerHeadPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
+      depoTransactionId: number | null
       date: Date
-      depoId: number
-      ledgerHeadId: number | null
-      amount: number | null
+      ledgerHeadId: number
+      creditAmount: number | null
+      debitAmount: number | null
       narration: string | null
+      createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["depoJournal"]>
     composites: {}
   }
@@ -35861,6 +34815,7 @@ export namespace Prisma {
    */
   export interface Prisma__DepoJournalClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    depoTransaction<T extends DepoJournal$depoTransactionArgs<ExtArgs> = {}>(args?: Subset<T, DepoJournal$depoTransactionArgs<ExtArgs>>): Prisma__DepoTransactionClient<$Result.GetResult<Prisma.$DepoTransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     ledgerHead<T extends DepoJournal$ledgerHeadArgs<ExtArgs> = {}>(args?: Subset<T, DepoJournal$ledgerHeadArgs<ExtArgs>>): Prisma__LedgerHeadClient<$Result.GetResult<Prisma.$LedgerHeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -35892,11 +34847,14 @@ export namespace Prisma {
    */
   interface DepoJournalFieldRefs {
     readonly id: FieldRef<"DepoJournal", 'Int'>
+    readonly depoTransactionId: FieldRef<"DepoJournal", 'Int'>
     readonly date: FieldRef<"DepoJournal", 'DateTime'>
-    readonly depoId: FieldRef<"DepoJournal", 'Int'>
     readonly ledgerHeadId: FieldRef<"DepoJournal", 'Int'>
-    readonly amount: FieldRef<"DepoJournal", 'Float'>
+    readonly creditAmount: FieldRef<"DepoJournal", 'Float'>
+    readonly debitAmount: FieldRef<"DepoJournal", 'Float'>
     readonly narration: FieldRef<"DepoJournal", 'String'>
+    readonly createdAt: FieldRef<"DepoJournal", 'DateTime'>
+    readonly updatedAt: FieldRef<"DepoJournal", 'DateTime'>
   }
     
 
@@ -36242,6 +35200,25 @@ export namespace Prisma {
      * Limit how many DepoJournals to delete.
      */
     limit?: number
+  }
+
+  /**
+   * DepoJournal.depoTransaction
+   */
+  export type DepoJournal$depoTransactionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DepoTransaction
+     */
+    select?: DepoTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DepoTransaction
+     */
+    omit?: DepoTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepoTransactionInclude<ExtArgs> | null
+    where?: DepoTransactionWhereInput
   }
 
   /**
@@ -47677,18 +46654,6 @@ export namespace Prisma {
   export type StakeholderOcationScalarFieldEnum = (typeof StakeholderOcationScalarFieldEnum)[keyof typeof StakeholderOcationScalarFieldEnum]
 
 
-  export const CustomersScalarFieldEnum: {
-    id: 'id',
-    name: 'name',
-    contactNo: 'contactNo',
-    address: 'address',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type CustomersScalarFieldEnum = (typeof CustomersScalarFieldEnum)[keyof typeof CustomersScalarFieldEnum]
-
-
   export const ScopeScalarFieldEnum: {
     id: 'id',
     employeeId: 'employeeId',
@@ -47868,7 +46833,6 @@ export namespace Prisma {
     voucherNo: 'voucherNo',
     invoiceNo: 'invoiceNo',
     chemistId: 'chemistId',
-    customerId: 'customerId',
     stakeholderId: 'stakeholderId',
     employeeId: 'employeeId',
     partyId: 'partyId',
@@ -47902,8 +46866,10 @@ export namespace Prisma {
     id: 'id',
     date: 'date',
     providerdepoId: 'providerdepoId',
-    receverdepoId: 'receverdepoId',
+    receiverdepoId: 'receiverdepoId',
+    invoiceNo: 'invoiceNo',
     voucherNo: 'voucherNo',
+    voucherType: 'voucherType',
     status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -47914,11 +46880,14 @@ export namespace Prisma {
 
   export const DepoJournalScalarFieldEnum: {
     id: 'id',
+    depoTransactionId: 'depoTransactionId',
     date: 'date',
-    depoId: 'depoId',
     ledgerHeadId: 'ledgerHeadId',
-    amount: 'amount',
-    narration: 'narration'
+    creditAmount: 'creditAmount',
+    debitAmount: 'debitAmount',
+    narration: 'narration',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type DepoJournalScalarFieldEnum = (typeof DepoJournalScalarFieldEnum)[keyof typeof DepoJournalScalarFieldEnum]
@@ -48231,15 +47200,6 @@ export namespace Prisma {
   export type StakeholderOcationOrderByRelevanceFieldEnum = (typeof StakeholderOcationOrderByRelevanceFieldEnum)[keyof typeof StakeholderOcationOrderByRelevanceFieldEnum]
 
 
-  export const CustomersOrderByRelevanceFieldEnum: {
-    name: 'name',
-    contactNo: 'contactNo',
-    address: 'address'
-  };
-
-  export type CustomersOrderByRelevanceFieldEnum = (typeof CustomersOrderByRelevanceFieldEnum)[keyof typeof CustomersOrderByRelevanceFieldEnum]
-
-
   export const ScopeOrderByRelevanceFieldEnum: {
     employeeId: 'employeeId'
   };
@@ -48343,6 +47303,7 @@ export namespace Prisma {
 
 
   export const DepoTransactionOrderByRelevanceFieldEnum: {
+    invoiceNo: 'invoiceNo',
     voucherNo: 'voucherNo'
   };
 
@@ -48548,7 +47509,7 @@ export namespace Prisma {
     attendance?: AttendanceListRelationFilter
     employeeProfile?: XOR<EmployeeProfileNullableScalarRelationFilter, EmployeeProfileWhereInput> | null
     leves?: LevesListRelationFilter
-    mpoTarget?: XOR<MpoTargetNullableScalarRelationFilter, MpoTargetWhereInput> | null
+    mpoTarget?: MpoTargetListRelationFilter
     order?: OrderListRelationFilter
     overtime?: OvertimeListRelationFilter
     payroll?: PayrollListRelationFilter
@@ -48573,7 +47534,7 @@ export namespace Prisma {
     attendance?: AttendanceOrderByRelationAggregateInput
     employeeProfile?: EmployeeProfileOrderByWithRelationInput
     leves?: LevesOrderByRelationAggregateInput
-    mpoTarget?: MpoTargetOrderByWithRelationInput
+    mpoTarget?: MpoTargetOrderByRelationAggregateInput
     order?: OrderOrderByRelationAggregateInput
     overtime?: OvertimeOrderByRelationAggregateInput
     payroll?: PayrollOrderByRelationAggregateInput
@@ -48602,7 +47563,7 @@ export namespace Prisma {
     attendance?: AttendanceListRelationFilter
     employeeProfile?: XOR<EmployeeProfileNullableScalarRelationFilter, EmployeeProfileWhereInput> | null
     leves?: LevesListRelationFilter
-    mpoTarget?: XOR<MpoTargetNullableScalarRelationFilter, MpoTargetWhereInput> | null
+    mpoTarget?: MpoTargetListRelationFilter
     order?: OrderListRelationFilter
     overtime?: OvertimeListRelationFilter
     payroll?: PayrollListRelationFilter
@@ -49494,69 +48455,6 @@ export namespace Prisma {
     otherInfo?: StringNullableWithAggregatesFilter<"StakeholderOcation"> | string | null
   }
 
-  export type CustomersWhereInput = {
-    AND?: CustomersWhereInput | CustomersWhereInput[]
-    OR?: CustomersWhereInput[]
-    NOT?: CustomersWhereInput | CustomersWhereInput[]
-    id?: IntFilter<"Customers"> | number
-    name?: StringNullableFilter<"Customers"> | string | null
-    contactNo?: StringFilter<"Customers"> | string
-    address?: StringNullableFilter<"Customers"> | string | null
-    createdAt?: DateTimeFilter<"Customers"> | Date | string
-    updatedAt?: DateTimeFilter<"Customers"> | Date | string
-    transactionInfo?: TransactionInfoListRelationFilter
-  }
-
-  export type CustomersOrderByWithRelationInput = {
-    id?: SortOrder
-    name?: SortOrderInput | SortOrder
-    contactNo?: SortOrder
-    address?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    transactionInfo?: TransactionInfoOrderByRelationAggregateInput
-    _relevance?: CustomersOrderByRelevanceInput
-  }
-
-  export type CustomersWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: CustomersWhereInput | CustomersWhereInput[]
-    OR?: CustomersWhereInput[]
-    NOT?: CustomersWhereInput | CustomersWhereInput[]
-    name?: StringNullableFilter<"Customers"> | string | null
-    contactNo?: StringFilter<"Customers"> | string
-    address?: StringNullableFilter<"Customers"> | string | null
-    createdAt?: DateTimeFilter<"Customers"> | Date | string
-    updatedAt?: DateTimeFilter<"Customers"> | Date | string
-    transactionInfo?: TransactionInfoListRelationFilter
-  }, "id">
-
-  export type CustomersOrderByWithAggregationInput = {
-    id?: SortOrder
-    name?: SortOrderInput | SortOrder
-    contactNo?: SortOrder
-    address?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: CustomersCountOrderByAggregateInput
-    _avg?: CustomersAvgOrderByAggregateInput
-    _max?: CustomersMaxOrderByAggregateInput
-    _min?: CustomersMinOrderByAggregateInput
-    _sum?: CustomersSumOrderByAggregateInput
-  }
-
-  export type CustomersScalarWhereWithAggregatesInput = {
-    AND?: CustomersScalarWhereWithAggregatesInput | CustomersScalarWhereWithAggregatesInput[]
-    OR?: CustomersScalarWhereWithAggregatesInput[]
-    NOT?: CustomersScalarWhereWithAggregatesInput | CustomersScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"Customers"> | number
-    name?: StringNullableWithAggregatesFilter<"Customers"> | string | null
-    contactNo?: StringWithAggregatesFilter<"Customers"> | string
-    address?: StringNullableWithAggregatesFilter<"Customers"> | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"Customers"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Customers"> | Date | string
-  }
-
   export type ScopeWhereInput = {
     AND?: ScopeWhereInput | ScopeWhereInput[]
     OR?: ScopeWhereInput[]
@@ -49653,16 +48551,16 @@ export namespace Prisma {
 
   export type MpoTargetWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    employeeId?: string
     AND?: MpoTargetWhereInput | MpoTargetWhereInput[]
     OR?: MpoTargetWhereInput[]
     NOT?: MpoTargetWhereInput | MpoTargetWhereInput[]
+    employeeId?: StringFilter<"MpoTarget"> | string
     month?: StringFilter<"MpoTarget"> | string
     targetAmount?: IntFilter<"MpoTarget"> | number
     createdAt?: DateTimeFilter<"MpoTarget"> | Date | string
     updatedAt?: DateTimeFilter<"MpoTarget"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "id" | "employeeId">
+  }, "id">
 
   export type MpoTargetOrderByWithAggregationInput = {
     id?: SortOrder
@@ -50526,7 +49424,6 @@ export namespace Prisma {
     voucherNo?: StringFilter<"TransactionInfo"> | string
     invoiceNo?: StringNullableFilter<"TransactionInfo"> | string | null
     chemistId?: StringNullableFilter<"TransactionInfo"> | string | null
-    customerId?: IntNullableFilter<"TransactionInfo"> | number | null
     stakeholderId?: StringNullableFilter<"TransactionInfo"> | string | null
     employeeId?: StringNullableFilter<"TransactionInfo"> | string | null
     partyId?: IntNullableFilter<"TransactionInfo"> | number | null
@@ -50537,7 +49434,6 @@ export namespace Prisma {
     inventory?: InventoryListRelationFilter
     journal?: JournalListRelationFilter
     chemist?: XOR<ChemistNullableScalarRelationFilter, ChemistWhereInput> | null
-    customers?: XOR<CustomersNullableScalarRelationFilter, CustomersWhereInput> | null
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     party?: XOR<PartyNullableScalarRelationFilter, PartyWhereInput> | null
     stakeholder?: XOR<StakeholderNullableScalarRelationFilter, StakeholderWhereInput> | null
@@ -50549,7 +49445,6 @@ export namespace Prisma {
     voucherNo?: SortOrder
     invoiceNo?: SortOrderInput | SortOrder
     chemistId?: SortOrderInput | SortOrder
-    customerId?: SortOrderInput | SortOrder
     stakeholderId?: SortOrderInput | SortOrder
     employeeId?: SortOrderInput | SortOrder
     partyId?: SortOrderInput | SortOrder
@@ -50560,7 +49455,6 @@ export namespace Prisma {
     inventory?: InventoryOrderByRelationAggregateInput
     journal?: JournalOrderByRelationAggregateInput
     chemist?: ChemistOrderByWithRelationInput
-    customers?: CustomersOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
     party?: PartyOrderByWithRelationInput
     stakeholder?: StakeholderOrderByWithRelationInput
@@ -50576,7 +49470,6 @@ export namespace Prisma {
     date?: DateTimeFilter<"TransactionInfo"> | Date | string
     invoiceNo?: StringNullableFilter<"TransactionInfo"> | string | null
     chemistId?: StringNullableFilter<"TransactionInfo"> | string | null
-    customerId?: IntNullableFilter<"TransactionInfo"> | number | null
     stakeholderId?: StringNullableFilter<"TransactionInfo"> | string | null
     employeeId?: StringNullableFilter<"TransactionInfo"> | string | null
     partyId?: IntNullableFilter<"TransactionInfo"> | number | null
@@ -50587,7 +49480,6 @@ export namespace Prisma {
     inventory?: InventoryListRelationFilter
     journal?: JournalListRelationFilter
     chemist?: XOR<ChemistNullableScalarRelationFilter, ChemistWhereInput> | null
-    customers?: XOR<CustomersNullableScalarRelationFilter, CustomersWhereInput> | null
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     party?: XOR<PartyNullableScalarRelationFilter, PartyWhereInput> | null
     stakeholder?: XOR<StakeholderNullableScalarRelationFilter, StakeholderWhereInput> | null
@@ -50599,7 +49491,6 @@ export namespace Prisma {
     voucherNo?: SortOrder
     invoiceNo?: SortOrderInput | SortOrder
     chemistId?: SortOrderInput | SortOrder
-    customerId?: SortOrderInput | SortOrder
     stakeholderId?: SortOrderInput | SortOrder
     employeeId?: SortOrderInput | SortOrder
     partyId?: SortOrderInput | SortOrder
@@ -50623,7 +49514,6 @@ export namespace Prisma {
     voucherNo?: StringWithAggregatesFilter<"TransactionInfo"> | string
     invoiceNo?: StringNullableWithAggregatesFilter<"TransactionInfo"> | string | null
     chemistId?: StringNullableWithAggregatesFilter<"TransactionInfo"> | string | null
-    customerId?: IntNullableWithAggregatesFilter<"TransactionInfo"> | number | null
     stakeholderId?: StringNullableWithAggregatesFilter<"TransactionInfo"> | string | null
     employeeId?: StringNullableWithAggregatesFilter<"TransactionInfo"> | string | null
     partyId?: IntNullableWithAggregatesFilter<"TransactionInfo"> | number | null
@@ -50737,28 +49627,34 @@ export namespace Prisma {
     id?: IntFilter<"DepoTransaction"> | number
     date?: DateTimeFilter<"DepoTransaction"> | Date | string
     providerdepoId?: IntFilter<"DepoTransaction"> | number
-    receverdepoId?: IntFilter<"DepoTransaction"> | number
+    receiverdepoId?: IntFilter<"DepoTransaction"> | number
+    invoiceNo?: StringNullableFilter<"DepoTransaction"> | string | null
     voucherNo?: StringFilter<"DepoTransaction"> | string
+    voucherType?: EnumVoucherTypeFilter<"DepoTransaction"> | $Enums.VoucherType
     status?: EnumOrdStatusFilter<"DepoTransaction"> | $Enums.OrdStatus
     createdAt?: DateTimeFilter<"DepoTransaction"> | Date | string
     updatedAt?: DateTimeFilter<"DepoTransaction"> | Date | string
     providerdepo?: XOR<DepoScalarRelationFilter, DepoWhereInput>
-    receverdepo?: XOR<DepoScalarRelationFilter, DepoWhereInput>
+    receiverdepo?: XOR<DepoScalarRelationFilter, DepoWhereInput>
     depoInventories?: DepoInventoryListRelationFilter
+    depoJournals?: DepoJournalListRelationFilter
   }
 
   export type DepoTransactionOrderByWithRelationInput = {
     id?: SortOrder
     date?: SortOrder
     providerdepoId?: SortOrder
-    receverdepoId?: SortOrder
+    receiverdepoId?: SortOrder
+    invoiceNo?: SortOrderInput | SortOrder
     voucherNo?: SortOrder
+    voucherType?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     providerdepo?: DepoOrderByWithRelationInput
-    receverdepo?: DepoOrderByWithRelationInput
+    receiverdepo?: DepoOrderByWithRelationInput
     depoInventories?: DepoInventoryOrderByRelationAggregateInput
+    depoJournals?: DepoJournalOrderByRelationAggregateInput
     _relevance?: DepoTransactionOrderByRelevanceInput
   }
 
@@ -50769,22 +49665,27 @@ export namespace Prisma {
     NOT?: DepoTransactionWhereInput | DepoTransactionWhereInput[]
     date?: DateTimeFilter<"DepoTransaction"> | Date | string
     providerdepoId?: IntFilter<"DepoTransaction"> | number
-    receverdepoId?: IntFilter<"DepoTransaction"> | number
+    receiverdepoId?: IntFilter<"DepoTransaction"> | number
+    invoiceNo?: StringNullableFilter<"DepoTransaction"> | string | null
     voucherNo?: StringFilter<"DepoTransaction"> | string
+    voucherType?: EnumVoucherTypeFilter<"DepoTransaction"> | $Enums.VoucherType
     status?: EnumOrdStatusFilter<"DepoTransaction"> | $Enums.OrdStatus
     createdAt?: DateTimeFilter<"DepoTransaction"> | Date | string
     updatedAt?: DateTimeFilter<"DepoTransaction"> | Date | string
     providerdepo?: XOR<DepoScalarRelationFilter, DepoWhereInput>
-    receverdepo?: XOR<DepoScalarRelationFilter, DepoWhereInput>
+    receiverdepo?: XOR<DepoScalarRelationFilter, DepoWhereInput>
     depoInventories?: DepoInventoryListRelationFilter
+    depoJournals?: DepoJournalListRelationFilter
   }, "id">
 
   export type DepoTransactionOrderByWithAggregationInput = {
     id?: SortOrder
     date?: SortOrder
     providerdepoId?: SortOrder
-    receverdepoId?: SortOrder
+    receiverdepoId?: SortOrder
+    invoiceNo?: SortOrderInput | SortOrder
     voucherNo?: SortOrder
+    voucherType?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -50802,8 +49703,10 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"DepoTransaction"> | number
     date?: DateTimeWithAggregatesFilter<"DepoTransaction"> | Date | string
     providerdepoId?: IntWithAggregatesFilter<"DepoTransaction"> | number
-    receverdepoId?: IntWithAggregatesFilter<"DepoTransaction"> | number
+    receiverdepoId?: IntWithAggregatesFilter<"DepoTransaction"> | number
+    invoiceNo?: StringNullableWithAggregatesFilter<"DepoTransaction"> | string | null
     voucherNo?: StringWithAggregatesFilter<"DepoTransaction"> | string
+    voucherType?: EnumVoucherTypeWithAggregatesFilter<"DepoTransaction"> | $Enums.VoucherType
     status?: EnumOrdStatusWithAggregatesFilter<"DepoTransaction"> | $Enums.OrdStatus
     createdAt?: DateTimeWithAggregatesFilter<"DepoTransaction"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"DepoTransaction"> | Date | string
@@ -50814,21 +49717,29 @@ export namespace Prisma {
     OR?: DepoJournalWhereInput[]
     NOT?: DepoJournalWhereInput | DepoJournalWhereInput[]
     id?: IntFilter<"DepoJournal"> | number
+    depoTransactionId?: IntNullableFilter<"DepoJournal"> | number | null
     date?: DateTimeFilter<"DepoJournal"> | Date | string
-    depoId?: IntFilter<"DepoJournal"> | number
-    ledgerHeadId?: IntNullableFilter<"DepoJournal"> | number | null
-    amount?: FloatNullableFilter<"DepoJournal"> | number | null
+    ledgerHeadId?: IntFilter<"DepoJournal"> | number
+    creditAmount?: FloatNullableFilter<"DepoJournal"> | number | null
+    debitAmount?: FloatNullableFilter<"DepoJournal"> | number | null
     narration?: StringNullableFilter<"DepoJournal"> | string | null
+    createdAt?: DateTimeFilter<"DepoJournal"> | Date | string
+    updatedAt?: DateTimeFilter<"DepoJournal"> | Date | string
+    depoTransaction?: XOR<DepoTransactionNullableScalarRelationFilter, DepoTransactionWhereInput> | null
     ledgerHead?: XOR<LedgerHeadNullableScalarRelationFilter, LedgerHeadWhereInput> | null
   }
 
   export type DepoJournalOrderByWithRelationInput = {
     id?: SortOrder
+    depoTransactionId?: SortOrderInput | SortOrder
     date?: SortOrder
-    depoId?: SortOrder
-    ledgerHeadId?: SortOrderInput | SortOrder
-    amount?: SortOrderInput | SortOrder
+    ledgerHeadId?: SortOrder
+    creditAmount?: SortOrderInput | SortOrder
+    debitAmount?: SortOrderInput | SortOrder
     narration?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    depoTransaction?: DepoTransactionOrderByWithRelationInput
     ledgerHead?: LedgerHeadOrderByWithRelationInput
     _relevance?: DepoJournalOrderByRelevanceInput
   }
@@ -50838,21 +49749,28 @@ export namespace Prisma {
     AND?: DepoJournalWhereInput | DepoJournalWhereInput[]
     OR?: DepoJournalWhereInput[]
     NOT?: DepoJournalWhereInput | DepoJournalWhereInput[]
+    depoTransactionId?: IntNullableFilter<"DepoJournal"> | number | null
     date?: DateTimeFilter<"DepoJournal"> | Date | string
-    depoId?: IntFilter<"DepoJournal"> | number
-    ledgerHeadId?: IntNullableFilter<"DepoJournal"> | number | null
-    amount?: FloatNullableFilter<"DepoJournal"> | number | null
+    ledgerHeadId?: IntFilter<"DepoJournal"> | number
+    creditAmount?: FloatNullableFilter<"DepoJournal"> | number | null
+    debitAmount?: FloatNullableFilter<"DepoJournal"> | number | null
     narration?: StringNullableFilter<"DepoJournal"> | string | null
+    createdAt?: DateTimeFilter<"DepoJournal"> | Date | string
+    updatedAt?: DateTimeFilter<"DepoJournal"> | Date | string
+    depoTransaction?: XOR<DepoTransactionNullableScalarRelationFilter, DepoTransactionWhereInput> | null
     ledgerHead?: XOR<LedgerHeadNullableScalarRelationFilter, LedgerHeadWhereInput> | null
   }, "id">
 
   export type DepoJournalOrderByWithAggregationInput = {
     id?: SortOrder
+    depoTransactionId?: SortOrderInput | SortOrder
     date?: SortOrder
-    depoId?: SortOrder
-    ledgerHeadId?: SortOrderInput | SortOrder
-    amount?: SortOrderInput | SortOrder
+    ledgerHeadId?: SortOrder
+    creditAmount?: SortOrderInput | SortOrder
+    debitAmount?: SortOrderInput | SortOrder
     narration?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: DepoJournalCountOrderByAggregateInput
     _avg?: DepoJournalAvgOrderByAggregateInput
     _max?: DepoJournalMaxOrderByAggregateInput
@@ -50865,11 +49783,14 @@ export namespace Prisma {
     OR?: DepoJournalScalarWhereWithAggregatesInput[]
     NOT?: DepoJournalScalarWhereWithAggregatesInput | DepoJournalScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"DepoJournal"> | number
+    depoTransactionId?: IntNullableWithAggregatesFilter<"DepoJournal"> | number | null
     date?: DateTimeWithAggregatesFilter<"DepoJournal"> | Date | string
-    depoId?: IntWithAggregatesFilter<"DepoJournal"> | number
-    ledgerHeadId?: IntNullableWithAggregatesFilter<"DepoJournal"> | number | null
-    amount?: FloatNullableWithAggregatesFilter<"DepoJournal"> | number | null
+    ledgerHeadId?: IntWithAggregatesFilter<"DepoJournal"> | number
+    creditAmount?: FloatNullableWithAggregatesFilter<"DepoJournal"> | number | null
+    debitAmount?: FloatNullableWithAggregatesFilter<"DepoJournal"> | number | null
     narration?: StringNullableWithAggregatesFilter<"DepoJournal"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"DepoJournal"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DepoJournal"> | Date | string
   }
 
   export type DepoInventoryWhereInput = {
@@ -51697,7 +50618,7 @@ export namespace Prisma {
     attendance?: AttendanceCreateNestedManyWithoutUserInput
     employeeProfile?: EmployeeProfileCreateNestedOneWithoutUserInput
     leves?: LevesCreateNestedManyWithoutUserInput
-    mpoTarget?: MpoTargetCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetCreateNestedManyWithoutUserInput
     order?: OrderCreateNestedManyWithoutUserInput
     overtime?: OvertimeCreateNestedManyWithoutUserInput
     payroll?: PayrollCreateNestedManyWithoutUserInput
@@ -51722,7 +50643,7 @@ export namespace Prisma {
     attendance?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     employeeProfile?: EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
     leves?: LevesUncheckedCreateNestedManyWithoutUserInput
-    mpoTarget?: MpoTargetUncheckedCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetUncheckedCreateNestedManyWithoutUserInput
     order?: OrderUncheckedCreateNestedManyWithoutUserInput
     overtime?: OvertimeUncheckedCreateNestedManyWithoutUserInput
     payroll?: PayrollUncheckedCreateNestedManyWithoutUserInput
@@ -51746,7 +50667,7 @@ export namespace Prisma {
     attendance?: AttendanceUpdateManyWithoutUserNestedInput
     employeeProfile?: EmployeeProfileUpdateOneWithoutUserNestedInput
     leves?: LevesUpdateManyWithoutUserNestedInput
-    mpoTarget?: MpoTargetUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUpdateManyWithoutUserNestedInput
     order?: OrderUpdateManyWithoutUserNestedInput
     overtime?: OvertimeUpdateManyWithoutUserNestedInput
     payroll?: PayrollUpdateManyWithoutUserNestedInput
@@ -51771,7 +50692,7 @@ export namespace Prisma {
     attendance?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     employeeProfile?: EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
     leves?: LevesUncheckedUpdateManyWithoutUserNestedInput
-    mpoTarget?: MpoTargetUncheckedUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUncheckedUpdateManyWithoutUserNestedInput
     order?: OrderUncheckedUpdateManyWithoutUserNestedInput
     overtime?: OvertimeUncheckedUpdateManyWithoutUserNestedInput
     payroll?: PayrollUncheckedUpdateManyWithoutUserNestedInput
@@ -52144,7 +51065,7 @@ export namespace Prisma {
     journal?: JournalCreateNestedManyWithoutDepoInput
     scopes?: ScopeCreateNestedManyWithoutDepoInput
     providerTransactions?: DepoTransactionCreateNestedManyWithoutProviderdepoInput
-    receiverTransactions?: DepoTransactionCreateNestedManyWithoutReceverdepoInput
+    receiverTransactions?: DepoTransactionCreateNestedManyWithoutReceiverdepoInput
   }
 
   export type DepoUncheckedCreateInput = {
@@ -52161,7 +51082,7 @@ export namespace Prisma {
     journal?: JournalUncheckedCreateNestedManyWithoutDepoInput
     scopes?: ScopeUncheckedCreateNestedManyWithoutDepoInput
     providerTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutProviderdepoInput
-    receiverTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutReceverdepoInput
+    receiverTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutReceiverdepoInput
   }
 
   export type DepoUpdateInput = {
@@ -52177,7 +51098,7 @@ export namespace Prisma {
     journal?: JournalUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUpdateManyWithoutDepoNestedInput
     providerTransactions?: DepoTransactionUpdateManyWithoutProviderdepoNestedInput
-    receiverTransactions?: DepoTransactionUpdateManyWithoutReceverdepoNestedInput
+    receiverTransactions?: DepoTransactionUpdateManyWithoutReceiverdepoNestedInput
   }
 
   export type DepoUncheckedUpdateInput = {
@@ -52194,7 +51115,7 @@ export namespace Prisma {
     journal?: JournalUncheckedUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUncheckedUpdateManyWithoutDepoNestedInput
     providerTransactions?: DepoTransactionUncheckedUpdateManyWithoutProviderdepoNestedInput
-    receiverTransactions?: DepoTransactionUncheckedUpdateManyWithoutReceverdepoNestedInput
+    receiverTransactions?: DepoTransactionUncheckedUpdateManyWithoutReceiverdepoNestedInput
   }
 
   export type DepoCreateManyInput = {
@@ -52724,70 +51645,6 @@ export namespace Prisma {
     personName?: NullableStringFieldUpdateOperationsInput | string | null
     dob?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     otherInfo?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type CustomersCreateInput = {
-    name?: string | null
-    contactNo: string
-    address?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    transactionInfo?: TransactionInfoCreateNestedManyWithoutCustomersInput
-  }
-
-  export type CustomersUncheckedCreateInput = {
-    id?: number
-    name?: string | null
-    contactNo: string
-    address?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    transactionInfo?: TransactionInfoUncheckedCreateNestedManyWithoutCustomersInput
-  }
-
-  export type CustomersUpdateInput = {
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    contactNo?: StringFieldUpdateOperationsInput | string
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    transactionInfo?: TransactionInfoUpdateManyWithoutCustomersNestedInput
-  }
-
-  export type CustomersUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    contactNo?: StringFieldUpdateOperationsInput | string
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    transactionInfo?: TransactionInfoUncheckedUpdateManyWithoutCustomersNestedInput
-  }
-
-  export type CustomersCreateManyInput = {
-    id?: number
-    name?: string | null
-    contactNo: string
-    address?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type CustomersUpdateManyMutationInput = {
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    contactNo?: StringFieldUpdateOperationsInput | string
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type CustomersUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    contactNo?: StringFieldUpdateOperationsInput | string
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ScopeCreateInput = {
@@ -53743,7 +52600,6 @@ export namespace Prisma {
     inventory?: InventoryCreateNestedManyWithoutTransactionInfoInput
     journal?: JournalCreateNestedManyWithoutTransactionInfoInput
     chemist?: ChemistCreateNestedOneWithoutTransactionInfoInput
-    customers?: CustomersCreateNestedOneWithoutTransactionInfoInput
     user?: UserCreateNestedOneWithoutTransactionInfoInput
     party?: PartyCreateNestedOneWithoutTransactionInfoInput
     stakeholder?: StakeholderCreateNestedOneWithoutTransactionInfoInput
@@ -53755,7 +52611,6 @@ export namespace Prisma {
     voucherNo: string
     invoiceNo?: string | null
     chemistId?: string | null
-    customerId?: number | null
     stakeholderId?: string | null
     employeeId?: string | null
     partyId?: number | null
@@ -53778,7 +52633,6 @@ export namespace Prisma {
     inventory?: InventoryUpdateManyWithoutTransactionInfoNestedInput
     journal?: JournalUpdateManyWithoutTransactionInfoNestedInput
     chemist?: ChemistUpdateOneWithoutTransactionInfoNestedInput
-    customers?: CustomersUpdateOneWithoutTransactionInfoNestedInput
     user?: UserUpdateOneWithoutTransactionInfoNestedInput
     party?: PartyUpdateOneWithoutTransactionInfoNestedInput
     stakeholder?: StakeholderUpdateOneWithoutTransactionInfoNestedInput
@@ -53790,7 +52644,6 @@ export namespace Prisma {
     voucherNo?: StringFieldUpdateOperationsInput | string
     invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     chemistId?: NullableStringFieldUpdateOperationsInput | string | null
-    customerId?: NullableIntFieldUpdateOperationsInput | number | null
     stakeholderId?: NullableStringFieldUpdateOperationsInput | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     partyId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -53808,7 +52661,6 @@ export namespace Prisma {
     voucherNo: string
     invoiceNo?: string | null
     chemistId?: string | null
-    customerId?: number | null
     stakeholderId?: string | null
     employeeId?: string | null
     partyId?: number | null
@@ -53834,7 +52686,6 @@ export namespace Prisma {
     voucherNo?: StringFieldUpdateOperationsInput | string
     invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     chemistId?: NullableStringFieldUpdateOperationsInput | string | null
-    customerId?: NullableIntFieldUpdateOperationsInput | number | null
     stakeholderId?: NullableStringFieldUpdateOperationsInput | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     partyId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -53942,56 +52793,70 @@ export namespace Prisma {
 
   export type DepoTransactionCreateInput = {
     date: Date | string
+    invoiceNo?: string | null
     voucherNo: string
+    voucherType?: $Enums.VoucherType
     status?: $Enums.OrdStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     providerdepo: DepoCreateNestedOneWithoutProviderTransactionsInput
-    receverdepo: DepoCreateNestedOneWithoutReceiverTransactionsInput
+    receiverdepo: DepoCreateNestedOneWithoutReceiverTransactionsInput
     depoInventories?: DepoInventoryCreateNestedManyWithoutDepoTransactionInput
+    depoJournals?: DepoJournalCreateNestedManyWithoutDepoTransactionInput
   }
 
   export type DepoTransactionUncheckedCreateInput = {
     id?: number
     date: Date | string
     providerdepoId: number
-    receverdepoId: number
+    receiverdepoId: number
+    invoiceNo?: string | null
     voucherNo: string
+    voucherType?: $Enums.VoucherType
     status?: $Enums.OrdStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     depoInventories?: DepoInventoryUncheckedCreateNestedManyWithoutDepoTransactionInput
+    depoJournals?: DepoJournalUncheckedCreateNestedManyWithoutDepoTransactionInput
   }
 
   export type DepoTransactionUpdateInput = {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucherNo?: StringFieldUpdateOperationsInput | string
+    voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
     status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     providerdepo?: DepoUpdateOneRequiredWithoutProviderTransactionsNestedInput
-    receverdepo?: DepoUpdateOneRequiredWithoutReceiverTransactionsNestedInput
+    receiverdepo?: DepoUpdateOneRequiredWithoutReceiverTransactionsNestedInput
     depoInventories?: DepoInventoryUpdateManyWithoutDepoTransactionNestedInput
+    depoJournals?: DepoJournalUpdateManyWithoutDepoTransactionNestedInput
   }
 
   export type DepoTransactionUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     providerdepoId?: IntFieldUpdateOperationsInput | number
-    receverdepoId?: IntFieldUpdateOperationsInput | number
+    receiverdepoId?: IntFieldUpdateOperationsInput | number
+    invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucherNo?: StringFieldUpdateOperationsInput | string
+    voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
     status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     depoInventories?: DepoInventoryUncheckedUpdateManyWithoutDepoTransactionNestedInput
+    depoJournals?: DepoJournalUncheckedUpdateManyWithoutDepoTransactionNestedInput
   }
 
   export type DepoTransactionCreateManyInput = {
     id?: number
     date: Date | string
     providerdepoId: number
-    receverdepoId: number
+    receiverdepoId: number
+    invoiceNo?: string | null
     voucherNo: string
+    voucherType?: $Enums.VoucherType
     status?: $Enums.OrdStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -53999,7 +52864,9 @@ export namespace Prisma {
 
   export type DepoTransactionUpdateManyMutationInput = {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucherNo?: StringFieldUpdateOperationsInput | string
+    voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
     status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54009,8 +52876,10 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     providerdepoId?: IntFieldUpdateOperationsInput | number
-    receverdepoId?: IntFieldUpdateOperationsInput | number
+    receiverdepoId?: IntFieldUpdateOperationsInput | number
+    invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucherNo?: StringFieldUpdateOperationsInput | string
+    voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
     status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54018,61 +52887,81 @@ export namespace Prisma {
 
   export type DepoJournalCreateInput = {
     date: Date | string
-    depoId: number
-    amount?: number | null
+    creditAmount?: number | null
+    debitAmount?: number | null
     narration?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    depoTransaction?: DepoTransactionCreateNestedOneWithoutDepoJournalsInput
     ledgerHead?: LedgerHeadCreateNestedOneWithoutDepoJournalsInput
   }
 
   export type DepoJournalUncheckedCreateInput = {
     id?: number
+    depoTransactionId?: number | null
     date: Date | string
-    depoId: number
-    ledgerHeadId?: number | null
-    amount?: number | null
+    ledgerHeadId: number
+    creditAmount?: number | null
+    debitAmount?: number | null
     narration?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type DepoJournalUpdateInput = {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    depoId?: IntFieldUpdateOperationsInput | number
-    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     narration?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    depoTransaction?: DepoTransactionUpdateOneWithoutDepoJournalsNestedInput
     ledgerHead?: LedgerHeadUpdateOneWithoutDepoJournalsNestedInput
   }
 
   export type DepoJournalUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
+    depoTransactionId?: NullableIntFieldUpdateOperationsInput | number | null
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    depoId?: IntFieldUpdateOperationsInput | number
-    ledgerHeadId?: NullableIntFieldUpdateOperationsInput | number | null
-    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    ledgerHeadId?: IntFieldUpdateOperationsInput | number
+    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     narration?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DepoJournalCreateManyInput = {
     id?: number
+    depoTransactionId?: number | null
     date: Date | string
-    depoId: number
-    ledgerHeadId?: number | null
-    amount?: number | null
+    ledgerHeadId: number
+    creditAmount?: number | null
+    debitAmount?: number | null
     narration?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type DepoJournalUpdateManyMutationInput = {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    depoId?: IntFieldUpdateOperationsInput | number
-    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     narration?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DepoJournalUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
+    depoTransactionId?: NullableIntFieldUpdateOperationsInput | number | null
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    depoId?: IntFieldUpdateOperationsInput | number
-    ledgerHeadId?: NullableIntFieldUpdateOperationsInput | number | null
-    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    ledgerHeadId?: IntFieldUpdateOperationsInput | number
+    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     narration?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DepoInventoryCreateInput = {
@@ -54985,9 +53874,10 @@ export namespace Prisma {
     none?: LevesWhereInput
   }
 
-  export type MpoTargetNullableScalarRelationFilter = {
-    is?: MpoTargetWhereInput | null
-    isNot?: MpoTargetWhereInput | null
+  export type MpoTargetListRelationFilter = {
+    every?: MpoTargetWhereInput
+    some?: MpoTargetWhereInput
+    none?: MpoTargetWhereInput
   }
 
   export type OrderListRelationFilter = {
@@ -55041,6 +53931,10 @@ export namespace Prisma {
   }
 
   export type LevesOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MpoTargetOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -56001,47 +54895,6 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
-  export type CustomersOrderByRelevanceInput = {
-    fields: CustomersOrderByRelevanceFieldEnum | CustomersOrderByRelevanceFieldEnum[]
-    sort: SortOrder
-    search: string
-  }
-
-  export type CustomersCountOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    contactNo?: SortOrder
-    address?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type CustomersAvgOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
-  export type CustomersMaxOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    contactNo?: SortOrder
-    address?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type CustomersMinOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    contactNo?: SortOrder
-    address?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type CustomersSumOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
   export type DepoListRelationFilter = {
     every?: DepoWhereInput
     some?: DepoWhereInput
@@ -56871,11 +55724,6 @@ export namespace Prisma {
     isNot?: ChemistWhereInput | null
   }
 
-  export type CustomersNullableScalarRelationFilter = {
-    is?: CustomersWhereInput | null
-    isNot?: CustomersWhereInput | null
-  }
-
   export type PartyNullableScalarRelationFilter = {
     is?: PartyWhereInput | null
     isNot?: PartyWhereInput | null
@@ -56893,7 +55741,6 @@ export namespace Prisma {
     voucherNo?: SortOrder
     invoiceNo?: SortOrder
     chemistId?: SortOrder
-    customerId?: SortOrder
     stakeholderId?: SortOrder
     employeeId?: SortOrder
     partyId?: SortOrder
@@ -56905,7 +55752,6 @@ export namespace Prisma {
 
   export type TransactionInfoAvgOrderByAggregateInput = {
     id?: SortOrder
-    customerId?: SortOrder
     partyId?: SortOrder
   }
 
@@ -56915,7 +55761,6 @@ export namespace Prisma {
     voucherNo?: SortOrder
     invoiceNo?: SortOrder
     chemistId?: SortOrder
-    customerId?: SortOrder
     stakeholderId?: SortOrder
     employeeId?: SortOrder
     partyId?: SortOrder
@@ -56931,7 +55776,6 @@ export namespace Prisma {
     voucherNo?: SortOrder
     invoiceNo?: SortOrder
     chemistId?: SortOrder
-    customerId?: SortOrder
     stakeholderId?: SortOrder
     employeeId?: SortOrder
     partyId?: SortOrder
@@ -56943,7 +55787,6 @@ export namespace Prisma {
 
   export type TransactionInfoSumOrderByAggregateInput = {
     id?: SortOrder
-    customerId?: SortOrder
     partyId?: SortOrder
   }
 
@@ -57045,8 +55888,10 @@ export namespace Prisma {
     id?: SortOrder
     date?: SortOrder
     providerdepoId?: SortOrder
-    receverdepoId?: SortOrder
+    receiverdepoId?: SortOrder
+    invoiceNo?: SortOrder
     voucherNo?: SortOrder
+    voucherType?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -57055,15 +55900,17 @@ export namespace Prisma {
   export type DepoTransactionAvgOrderByAggregateInput = {
     id?: SortOrder
     providerdepoId?: SortOrder
-    receverdepoId?: SortOrder
+    receiverdepoId?: SortOrder
   }
 
   export type DepoTransactionMaxOrderByAggregateInput = {
     id?: SortOrder
     date?: SortOrder
     providerdepoId?: SortOrder
-    receverdepoId?: SortOrder
+    receiverdepoId?: SortOrder
+    invoiceNo?: SortOrder
     voucherNo?: SortOrder
+    voucherType?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -57073,8 +55920,10 @@ export namespace Prisma {
     id?: SortOrder
     date?: SortOrder
     providerdepoId?: SortOrder
-    receverdepoId?: SortOrder
+    receiverdepoId?: SortOrder
+    invoiceNo?: SortOrder
     voucherNo?: SortOrder
+    voucherType?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -57083,7 +55932,7 @@ export namespace Prisma {
   export type DepoTransactionSumOrderByAggregateInput = {
     id?: SortOrder
     providerdepoId?: SortOrder
-    receverdepoId?: SortOrder
+    receiverdepoId?: SortOrder
   }
 
   export type EnumOrdStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -57096,6 +55945,11 @@ export namespace Prisma {
     _max?: NestedEnumOrdStatusFilter<$PrismaModel>
   }
 
+  export type DepoTransactionNullableScalarRelationFilter = {
+    is?: DepoTransactionWhereInput | null
+    isNot?: DepoTransactionWhereInput | null
+  }
+
   export type DepoJournalOrderByRelevanceInput = {
     fields: DepoJournalOrderByRelevanceFieldEnum | DepoJournalOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -57104,48 +55958,54 @@ export namespace Prisma {
 
   export type DepoJournalCountOrderByAggregateInput = {
     id?: SortOrder
+    depoTransactionId?: SortOrder
     date?: SortOrder
-    depoId?: SortOrder
     ledgerHeadId?: SortOrder
-    amount?: SortOrder
+    creditAmount?: SortOrder
+    debitAmount?: SortOrder
     narration?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type DepoJournalAvgOrderByAggregateInput = {
     id?: SortOrder
-    depoId?: SortOrder
+    depoTransactionId?: SortOrder
     ledgerHeadId?: SortOrder
-    amount?: SortOrder
+    creditAmount?: SortOrder
+    debitAmount?: SortOrder
   }
 
   export type DepoJournalMaxOrderByAggregateInput = {
     id?: SortOrder
+    depoTransactionId?: SortOrder
     date?: SortOrder
-    depoId?: SortOrder
     ledgerHeadId?: SortOrder
-    amount?: SortOrder
+    creditAmount?: SortOrder
+    debitAmount?: SortOrder
     narration?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type DepoJournalMinOrderByAggregateInput = {
     id?: SortOrder
+    depoTransactionId?: SortOrder
     date?: SortOrder
-    depoId?: SortOrder
     ledgerHeadId?: SortOrder
-    amount?: SortOrder
+    creditAmount?: SortOrder
+    debitAmount?: SortOrder
     narration?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type DepoJournalSumOrderByAggregateInput = {
     id?: SortOrder
-    depoId?: SortOrder
+    depoTransactionId?: SortOrder
     ledgerHeadId?: SortOrder
-    amount?: SortOrder
-  }
-
-  export type DepoTransactionNullableScalarRelationFilter = {
-    is?: DepoTransactionWhereInput | null
-    isNot?: DepoTransactionWhereInput | null
+    creditAmount?: SortOrder
+    debitAmount?: SortOrder
   }
 
   export type DepoInventoryCountOrderByAggregateInput = {
@@ -57766,10 +56626,11 @@ export namespace Prisma {
     connect?: LevesWhereUniqueInput | LevesWhereUniqueInput[]
   }
 
-  export type MpoTargetCreateNestedOneWithoutUserInput = {
-    create?: XOR<MpoTargetCreateWithoutUserInput, MpoTargetUncheckedCreateWithoutUserInput>
-    connectOrCreate?: MpoTargetCreateOrConnectWithoutUserInput
-    connect?: MpoTargetWhereUniqueInput
+  export type MpoTargetCreateNestedManyWithoutUserInput = {
+    create?: XOR<MpoTargetCreateWithoutUserInput, MpoTargetUncheckedCreateWithoutUserInput> | MpoTargetCreateWithoutUserInput[] | MpoTargetUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MpoTargetCreateOrConnectWithoutUserInput | MpoTargetCreateOrConnectWithoutUserInput[]
+    createMany?: MpoTargetCreateManyUserInputEnvelope
+    connect?: MpoTargetWhereUniqueInput | MpoTargetWhereUniqueInput[]
   }
 
   export type OrderCreateNestedManyWithoutUserInput = {
@@ -57846,10 +56707,11 @@ export namespace Prisma {
     connect?: LevesWhereUniqueInput | LevesWhereUniqueInput[]
   }
 
-  export type MpoTargetUncheckedCreateNestedOneWithoutUserInput = {
-    create?: XOR<MpoTargetCreateWithoutUserInput, MpoTargetUncheckedCreateWithoutUserInput>
-    connectOrCreate?: MpoTargetCreateOrConnectWithoutUserInput
-    connect?: MpoTargetWhereUniqueInput
+  export type MpoTargetUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<MpoTargetCreateWithoutUserInput, MpoTargetUncheckedCreateWithoutUserInput> | MpoTargetCreateWithoutUserInput[] | MpoTargetUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MpoTargetCreateOrConnectWithoutUserInput | MpoTargetCreateOrConnectWithoutUserInput[]
+    createMany?: MpoTargetCreateManyUserInputEnvelope
+    connect?: MpoTargetWhereUniqueInput | MpoTargetWhereUniqueInput[]
   }
 
   export type OrderUncheckedCreateNestedManyWithoutUserInput = {
@@ -57964,14 +56826,18 @@ export namespace Prisma {
     deleteMany?: LevesScalarWhereInput | LevesScalarWhereInput[]
   }
 
-  export type MpoTargetUpdateOneWithoutUserNestedInput = {
-    create?: XOR<MpoTargetCreateWithoutUserInput, MpoTargetUncheckedCreateWithoutUserInput>
-    connectOrCreate?: MpoTargetCreateOrConnectWithoutUserInput
-    upsert?: MpoTargetUpsertWithoutUserInput
-    disconnect?: MpoTargetWhereInput | boolean
-    delete?: MpoTargetWhereInput | boolean
-    connect?: MpoTargetWhereUniqueInput
-    update?: XOR<XOR<MpoTargetUpdateToOneWithWhereWithoutUserInput, MpoTargetUpdateWithoutUserInput>, MpoTargetUncheckedUpdateWithoutUserInput>
+  export type MpoTargetUpdateManyWithoutUserNestedInput = {
+    create?: XOR<MpoTargetCreateWithoutUserInput, MpoTargetUncheckedCreateWithoutUserInput> | MpoTargetCreateWithoutUserInput[] | MpoTargetUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MpoTargetCreateOrConnectWithoutUserInput | MpoTargetCreateOrConnectWithoutUserInput[]
+    upsert?: MpoTargetUpsertWithWhereUniqueWithoutUserInput | MpoTargetUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: MpoTargetCreateManyUserInputEnvelope
+    set?: MpoTargetWhereUniqueInput | MpoTargetWhereUniqueInput[]
+    disconnect?: MpoTargetWhereUniqueInput | MpoTargetWhereUniqueInput[]
+    delete?: MpoTargetWhereUniqueInput | MpoTargetWhereUniqueInput[]
+    connect?: MpoTargetWhereUniqueInput | MpoTargetWhereUniqueInput[]
+    update?: MpoTargetUpdateWithWhereUniqueWithoutUserInput | MpoTargetUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: MpoTargetUpdateManyWithWhereWithoutUserInput | MpoTargetUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: MpoTargetScalarWhereInput | MpoTargetScalarWhereInput[]
   }
 
   export type OrderUpdateManyWithoutUserNestedInput = {
@@ -58124,14 +56990,18 @@ export namespace Prisma {
     deleteMany?: LevesScalarWhereInput | LevesScalarWhereInput[]
   }
 
-  export type MpoTargetUncheckedUpdateOneWithoutUserNestedInput = {
-    create?: XOR<MpoTargetCreateWithoutUserInput, MpoTargetUncheckedCreateWithoutUserInput>
-    connectOrCreate?: MpoTargetCreateOrConnectWithoutUserInput
-    upsert?: MpoTargetUpsertWithoutUserInput
-    disconnect?: MpoTargetWhereInput | boolean
-    delete?: MpoTargetWhereInput | boolean
-    connect?: MpoTargetWhereUniqueInput
-    update?: XOR<XOR<MpoTargetUpdateToOneWithWhereWithoutUserInput, MpoTargetUpdateWithoutUserInput>, MpoTargetUncheckedUpdateWithoutUserInput>
+  export type MpoTargetUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<MpoTargetCreateWithoutUserInput, MpoTargetUncheckedCreateWithoutUserInput> | MpoTargetCreateWithoutUserInput[] | MpoTargetUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MpoTargetCreateOrConnectWithoutUserInput | MpoTargetCreateOrConnectWithoutUserInput[]
+    upsert?: MpoTargetUpsertWithWhereUniqueWithoutUserInput | MpoTargetUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: MpoTargetCreateManyUserInputEnvelope
+    set?: MpoTargetWhereUniqueInput | MpoTargetWhereUniqueInput[]
+    disconnect?: MpoTargetWhereUniqueInput | MpoTargetWhereUniqueInput[]
+    delete?: MpoTargetWhereUniqueInput | MpoTargetWhereUniqueInput[]
+    connect?: MpoTargetWhereUniqueInput | MpoTargetWhereUniqueInput[]
+    update?: MpoTargetUpdateWithWhereUniqueWithoutUserInput | MpoTargetUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: MpoTargetUpdateManyWithWhereWithoutUserInput | MpoTargetUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: MpoTargetScalarWhereInput | MpoTargetScalarWhereInput[]
   }
 
   export type OrderUncheckedUpdateManyWithoutUserNestedInput = {
@@ -58495,10 +57365,10 @@ export namespace Prisma {
     connect?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
   }
 
-  export type DepoTransactionCreateNestedManyWithoutReceverdepoInput = {
-    create?: XOR<DepoTransactionCreateWithoutReceverdepoInput, DepoTransactionUncheckedCreateWithoutReceverdepoInput> | DepoTransactionCreateWithoutReceverdepoInput[] | DepoTransactionUncheckedCreateWithoutReceverdepoInput[]
-    connectOrCreate?: DepoTransactionCreateOrConnectWithoutReceverdepoInput | DepoTransactionCreateOrConnectWithoutReceverdepoInput[]
-    createMany?: DepoTransactionCreateManyReceverdepoInputEnvelope
+  export type DepoTransactionCreateNestedManyWithoutReceiverdepoInput = {
+    create?: XOR<DepoTransactionCreateWithoutReceiverdepoInput, DepoTransactionUncheckedCreateWithoutReceiverdepoInput> | DepoTransactionCreateWithoutReceiverdepoInput[] | DepoTransactionUncheckedCreateWithoutReceiverdepoInput[]
+    connectOrCreate?: DepoTransactionCreateOrConnectWithoutReceiverdepoInput | DepoTransactionCreateOrConnectWithoutReceiverdepoInput[]
+    createMany?: DepoTransactionCreateManyReceiverdepoInputEnvelope
     connect?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
   }
 
@@ -58543,10 +57413,10 @@ export namespace Prisma {
     connect?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
   }
 
-  export type DepoTransactionUncheckedCreateNestedManyWithoutReceverdepoInput = {
-    create?: XOR<DepoTransactionCreateWithoutReceverdepoInput, DepoTransactionUncheckedCreateWithoutReceverdepoInput> | DepoTransactionCreateWithoutReceverdepoInput[] | DepoTransactionUncheckedCreateWithoutReceverdepoInput[]
-    connectOrCreate?: DepoTransactionCreateOrConnectWithoutReceverdepoInput | DepoTransactionCreateOrConnectWithoutReceverdepoInput[]
-    createMany?: DepoTransactionCreateManyReceverdepoInputEnvelope
+  export type DepoTransactionUncheckedCreateNestedManyWithoutReceiverdepoInput = {
+    create?: XOR<DepoTransactionCreateWithoutReceiverdepoInput, DepoTransactionUncheckedCreateWithoutReceiverdepoInput> | DepoTransactionCreateWithoutReceiverdepoInput[] | DepoTransactionUncheckedCreateWithoutReceiverdepoInput[]
+    connectOrCreate?: DepoTransactionCreateOrConnectWithoutReceiverdepoInput | DepoTransactionCreateOrConnectWithoutReceiverdepoInput[]
+    createMany?: DepoTransactionCreateManyReceiverdepoInputEnvelope
     connect?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
   }
 
@@ -58637,17 +57507,17 @@ export namespace Prisma {
     deleteMany?: DepoTransactionScalarWhereInput | DepoTransactionScalarWhereInput[]
   }
 
-  export type DepoTransactionUpdateManyWithoutReceverdepoNestedInput = {
-    create?: XOR<DepoTransactionCreateWithoutReceverdepoInput, DepoTransactionUncheckedCreateWithoutReceverdepoInput> | DepoTransactionCreateWithoutReceverdepoInput[] | DepoTransactionUncheckedCreateWithoutReceverdepoInput[]
-    connectOrCreate?: DepoTransactionCreateOrConnectWithoutReceverdepoInput | DepoTransactionCreateOrConnectWithoutReceverdepoInput[]
-    upsert?: DepoTransactionUpsertWithWhereUniqueWithoutReceverdepoInput | DepoTransactionUpsertWithWhereUniqueWithoutReceverdepoInput[]
-    createMany?: DepoTransactionCreateManyReceverdepoInputEnvelope
+  export type DepoTransactionUpdateManyWithoutReceiverdepoNestedInput = {
+    create?: XOR<DepoTransactionCreateWithoutReceiverdepoInput, DepoTransactionUncheckedCreateWithoutReceiverdepoInput> | DepoTransactionCreateWithoutReceiverdepoInput[] | DepoTransactionUncheckedCreateWithoutReceiverdepoInput[]
+    connectOrCreate?: DepoTransactionCreateOrConnectWithoutReceiverdepoInput | DepoTransactionCreateOrConnectWithoutReceiverdepoInput[]
+    upsert?: DepoTransactionUpsertWithWhereUniqueWithoutReceiverdepoInput | DepoTransactionUpsertWithWhereUniqueWithoutReceiverdepoInput[]
+    createMany?: DepoTransactionCreateManyReceiverdepoInputEnvelope
     set?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
     disconnect?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
     delete?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
     connect?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
-    update?: DepoTransactionUpdateWithWhereUniqueWithoutReceverdepoInput | DepoTransactionUpdateWithWhereUniqueWithoutReceverdepoInput[]
-    updateMany?: DepoTransactionUpdateManyWithWhereWithoutReceverdepoInput | DepoTransactionUpdateManyWithWhereWithoutReceverdepoInput[]
+    update?: DepoTransactionUpdateWithWhereUniqueWithoutReceiverdepoInput | DepoTransactionUpdateWithWhereUniqueWithoutReceiverdepoInput[]
+    updateMany?: DepoTransactionUpdateManyWithWhereWithoutReceiverdepoInput | DepoTransactionUpdateManyWithWhereWithoutReceiverdepoInput[]
     deleteMany?: DepoTransactionScalarWhereInput | DepoTransactionScalarWhereInput[]
   }
 
@@ -58734,17 +57604,17 @@ export namespace Prisma {
     deleteMany?: DepoTransactionScalarWhereInput | DepoTransactionScalarWhereInput[]
   }
 
-  export type DepoTransactionUncheckedUpdateManyWithoutReceverdepoNestedInput = {
-    create?: XOR<DepoTransactionCreateWithoutReceverdepoInput, DepoTransactionUncheckedCreateWithoutReceverdepoInput> | DepoTransactionCreateWithoutReceverdepoInput[] | DepoTransactionUncheckedCreateWithoutReceverdepoInput[]
-    connectOrCreate?: DepoTransactionCreateOrConnectWithoutReceverdepoInput | DepoTransactionCreateOrConnectWithoutReceverdepoInput[]
-    upsert?: DepoTransactionUpsertWithWhereUniqueWithoutReceverdepoInput | DepoTransactionUpsertWithWhereUniqueWithoutReceverdepoInput[]
-    createMany?: DepoTransactionCreateManyReceverdepoInputEnvelope
+  export type DepoTransactionUncheckedUpdateManyWithoutReceiverdepoNestedInput = {
+    create?: XOR<DepoTransactionCreateWithoutReceiverdepoInput, DepoTransactionUncheckedCreateWithoutReceiverdepoInput> | DepoTransactionCreateWithoutReceiverdepoInput[] | DepoTransactionUncheckedCreateWithoutReceiverdepoInput[]
+    connectOrCreate?: DepoTransactionCreateOrConnectWithoutReceiverdepoInput | DepoTransactionCreateOrConnectWithoutReceiverdepoInput[]
+    upsert?: DepoTransactionUpsertWithWhereUniqueWithoutReceiverdepoInput | DepoTransactionUpsertWithWhereUniqueWithoutReceiverdepoInput[]
+    createMany?: DepoTransactionCreateManyReceiverdepoInputEnvelope
     set?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
     disconnect?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
     delete?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
     connect?: DepoTransactionWhereUniqueInput | DepoTransactionWhereUniqueInput[]
-    update?: DepoTransactionUpdateWithWhereUniqueWithoutReceverdepoInput | DepoTransactionUpdateWithWhereUniqueWithoutReceverdepoInput[]
-    updateMany?: DepoTransactionUpdateManyWithWhereWithoutReceverdepoInput | DepoTransactionUpdateManyWithWhereWithoutReceverdepoInput[]
+    update?: DepoTransactionUpdateWithWhereUniqueWithoutReceiverdepoInput | DepoTransactionUpdateWithWhereUniqueWithoutReceiverdepoInput[]
+    updateMany?: DepoTransactionUpdateManyWithWhereWithoutReceiverdepoInput | DepoTransactionUpdateManyWithWhereWithoutReceiverdepoInput[]
     deleteMany?: DepoTransactionScalarWhereInput | DepoTransactionScalarWhereInput[]
   }
 
@@ -59144,48 +58014,6 @@ export namespace Prisma {
     upsert?: StakeholderUpsertWithoutStakeholderOcationInput
     connect?: StakeholderWhereUniqueInput
     update?: XOR<XOR<StakeholderUpdateToOneWithWhereWithoutStakeholderOcationInput, StakeholderUpdateWithoutStakeholderOcationInput>, StakeholderUncheckedUpdateWithoutStakeholderOcationInput>
-  }
-
-  export type TransactionInfoCreateNestedManyWithoutCustomersInput = {
-    create?: XOR<TransactionInfoCreateWithoutCustomersInput, TransactionInfoUncheckedCreateWithoutCustomersInput> | TransactionInfoCreateWithoutCustomersInput[] | TransactionInfoUncheckedCreateWithoutCustomersInput[]
-    connectOrCreate?: TransactionInfoCreateOrConnectWithoutCustomersInput | TransactionInfoCreateOrConnectWithoutCustomersInput[]
-    createMany?: TransactionInfoCreateManyCustomersInputEnvelope
-    connect?: TransactionInfoWhereUniqueInput | TransactionInfoWhereUniqueInput[]
-  }
-
-  export type TransactionInfoUncheckedCreateNestedManyWithoutCustomersInput = {
-    create?: XOR<TransactionInfoCreateWithoutCustomersInput, TransactionInfoUncheckedCreateWithoutCustomersInput> | TransactionInfoCreateWithoutCustomersInput[] | TransactionInfoUncheckedCreateWithoutCustomersInput[]
-    connectOrCreate?: TransactionInfoCreateOrConnectWithoutCustomersInput | TransactionInfoCreateOrConnectWithoutCustomersInput[]
-    createMany?: TransactionInfoCreateManyCustomersInputEnvelope
-    connect?: TransactionInfoWhereUniqueInput | TransactionInfoWhereUniqueInput[]
-  }
-
-  export type TransactionInfoUpdateManyWithoutCustomersNestedInput = {
-    create?: XOR<TransactionInfoCreateWithoutCustomersInput, TransactionInfoUncheckedCreateWithoutCustomersInput> | TransactionInfoCreateWithoutCustomersInput[] | TransactionInfoUncheckedCreateWithoutCustomersInput[]
-    connectOrCreate?: TransactionInfoCreateOrConnectWithoutCustomersInput | TransactionInfoCreateOrConnectWithoutCustomersInput[]
-    upsert?: TransactionInfoUpsertWithWhereUniqueWithoutCustomersInput | TransactionInfoUpsertWithWhereUniqueWithoutCustomersInput[]
-    createMany?: TransactionInfoCreateManyCustomersInputEnvelope
-    set?: TransactionInfoWhereUniqueInput | TransactionInfoWhereUniqueInput[]
-    disconnect?: TransactionInfoWhereUniqueInput | TransactionInfoWhereUniqueInput[]
-    delete?: TransactionInfoWhereUniqueInput | TransactionInfoWhereUniqueInput[]
-    connect?: TransactionInfoWhereUniqueInput | TransactionInfoWhereUniqueInput[]
-    update?: TransactionInfoUpdateWithWhereUniqueWithoutCustomersInput | TransactionInfoUpdateWithWhereUniqueWithoutCustomersInput[]
-    updateMany?: TransactionInfoUpdateManyWithWhereWithoutCustomersInput | TransactionInfoUpdateManyWithWhereWithoutCustomersInput[]
-    deleteMany?: TransactionInfoScalarWhereInput | TransactionInfoScalarWhereInput[]
-  }
-
-  export type TransactionInfoUncheckedUpdateManyWithoutCustomersNestedInput = {
-    create?: XOR<TransactionInfoCreateWithoutCustomersInput, TransactionInfoUncheckedCreateWithoutCustomersInput> | TransactionInfoCreateWithoutCustomersInput[] | TransactionInfoUncheckedCreateWithoutCustomersInput[]
-    connectOrCreate?: TransactionInfoCreateOrConnectWithoutCustomersInput | TransactionInfoCreateOrConnectWithoutCustomersInput[]
-    upsert?: TransactionInfoUpsertWithWhereUniqueWithoutCustomersInput | TransactionInfoUpsertWithWhereUniqueWithoutCustomersInput[]
-    createMany?: TransactionInfoCreateManyCustomersInputEnvelope
-    set?: TransactionInfoWhereUniqueInput | TransactionInfoWhereUniqueInput[]
-    disconnect?: TransactionInfoWhereUniqueInput | TransactionInfoWhereUniqueInput[]
-    delete?: TransactionInfoWhereUniqueInput | TransactionInfoWhereUniqueInput[]
-    connect?: TransactionInfoWhereUniqueInput | TransactionInfoWhereUniqueInput[]
-    update?: TransactionInfoUpdateWithWhereUniqueWithoutCustomersInput | TransactionInfoUpdateWithWhereUniqueWithoutCustomersInput[]
-    updateMany?: TransactionInfoUpdateManyWithWhereWithoutCustomersInput | TransactionInfoUpdateManyWithWhereWithoutCustomersInput[]
-    deleteMany?: TransactionInfoScalarWhereInput | TransactionInfoScalarWhereInput[]
   }
 
   export type ChemistCreateNestedManyWithoutScopesInput = {
@@ -60086,12 +58914,6 @@ export namespace Prisma {
     connect?: ChemistWhereUniqueInput
   }
 
-  export type CustomersCreateNestedOneWithoutTransactionInfoInput = {
-    create?: XOR<CustomersCreateWithoutTransactionInfoInput, CustomersUncheckedCreateWithoutTransactionInfoInput>
-    connectOrCreate?: CustomersCreateOrConnectWithoutTransactionInfoInput
-    connect?: CustomersWhereUniqueInput
-  }
-
   export type UserCreateNestedOneWithoutTransactionInfoInput = {
     create?: XOR<UserCreateWithoutTransactionInfoInput, UserUncheckedCreateWithoutTransactionInfoInput>
     connectOrCreate?: UserCreateOrConnectWithoutTransactionInfoInput
@@ -60164,16 +58986,6 @@ export namespace Prisma {
     delete?: ChemistWhereInput | boolean
     connect?: ChemistWhereUniqueInput
     update?: XOR<XOR<ChemistUpdateToOneWithWhereWithoutTransactionInfoInput, ChemistUpdateWithoutTransactionInfoInput>, ChemistUncheckedUpdateWithoutTransactionInfoInput>
-  }
-
-  export type CustomersUpdateOneWithoutTransactionInfoNestedInput = {
-    create?: XOR<CustomersCreateWithoutTransactionInfoInput, CustomersUncheckedCreateWithoutTransactionInfoInput>
-    connectOrCreate?: CustomersCreateOrConnectWithoutTransactionInfoInput
-    upsert?: CustomersUpsertWithoutTransactionInfoInput
-    disconnect?: CustomersWhereInput | boolean
-    delete?: CustomersWhereInput | boolean
-    connect?: CustomersWhereUniqueInput
-    update?: XOR<XOR<CustomersUpdateToOneWithWhereWithoutTransactionInfoInput, CustomersUpdateWithoutTransactionInfoInput>, CustomersUncheckedUpdateWithoutTransactionInfoInput>
   }
 
   export type UserUpdateOneWithoutTransactionInfoNestedInput = {
@@ -60343,11 +59155,25 @@ export namespace Prisma {
     connect?: DepoInventoryWhereUniqueInput | DepoInventoryWhereUniqueInput[]
   }
 
+  export type DepoJournalCreateNestedManyWithoutDepoTransactionInput = {
+    create?: XOR<DepoJournalCreateWithoutDepoTransactionInput, DepoJournalUncheckedCreateWithoutDepoTransactionInput> | DepoJournalCreateWithoutDepoTransactionInput[] | DepoJournalUncheckedCreateWithoutDepoTransactionInput[]
+    connectOrCreate?: DepoJournalCreateOrConnectWithoutDepoTransactionInput | DepoJournalCreateOrConnectWithoutDepoTransactionInput[]
+    createMany?: DepoJournalCreateManyDepoTransactionInputEnvelope
+    connect?: DepoJournalWhereUniqueInput | DepoJournalWhereUniqueInput[]
+  }
+
   export type DepoInventoryUncheckedCreateNestedManyWithoutDepoTransactionInput = {
     create?: XOR<DepoInventoryCreateWithoutDepoTransactionInput, DepoInventoryUncheckedCreateWithoutDepoTransactionInput> | DepoInventoryCreateWithoutDepoTransactionInput[] | DepoInventoryUncheckedCreateWithoutDepoTransactionInput[]
     connectOrCreate?: DepoInventoryCreateOrConnectWithoutDepoTransactionInput | DepoInventoryCreateOrConnectWithoutDepoTransactionInput[]
     createMany?: DepoInventoryCreateManyDepoTransactionInputEnvelope
     connect?: DepoInventoryWhereUniqueInput | DepoInventoryWhereUniqueInput[]
+  }
+
+  export type DepoJournalUncheckedCreateNestedManyWithoutDepoTransactionInput = {
+    create?: XOR<DepoJournalCreateWithoutDepoTransactionInput, DepoJournalUncheckedCreateWithoutDepoTransactionInput> | DepoJournalCreateWithoutDepoTransactionInput[] | DepoJournalUncheckedCreateWithoutDepoTransactionInput[]
+    connectOrCreate?: DepoJournalCreateOrConnectWithoutDepoTransactionInput | DepoJournalCreateOrConnectWithoutDepoTransactionInput[]
+    createMany?: DepoJournalCreateManyDepoTransactionInputEnvelope
+    connect?: DepoJournalWhereUniqueInput | DepoJournalWhereUniqueInput[]
   }
 
   export type EnumOrdStatusFieldUpdateOperationsInput = {
@@ -60384,6 +59210,20 @@ export namespace Prisma {
     deleteMany?: DepoInventoryScalarWhereInput | DepoInventoryScalarWhereInput[]
   }
 
+  export type DepoJournalUpdateManyWithoutDepoTransactionNestedInput = {
+    create?: XOR<DepoJournalCreateWithoutDepoTransactionInput, DepoJournalUncheckedCreateWithoutDepoTransactionInput> | DepoJournalCreateWithoutDepoTransactionInput[] | DepoJournalUncheckedCreateWithoutDepoTransactionInput[]
+    connectOrCreate?: DepoJournalCreateOrConnectWithoutDepoTransactionInput | DepoJournalCreateOrConnectWithoutDepoTransactionInput[]
+    upsert?: DepoJournalUpsertWithWhereUniqueWithoutDepoTransactionInput | DepoJournalUpsertWithWhereUniqueWithoutDepoTransactionInput[]
+    createMany?: DepoJournalCreateManyDepoTransactionInputEnvelope
+    set?: DepoJournalWhereUniqueInput | DepoJournalWhereUniqueInput[]
+    disconnect?: DepoJournalWhereUniqueInput | DepoJournalWhereUniqueInput[]
+    delete?: DepoJournalWhereUniqueInput | DepoJournalWhereUniqueInput[]
+    connect?: DepoJournalWhereUniqueInput | DepoJournalWhereUniqueInput[]
+    update?: DepoJournalUpdateWithWhereUniqueWithoutDepoTransactionInput | DepoJournalUpdateWithWhereUniqueWithoutDepoTransactionInput[]
+    updateMany?: DepoJournalUpdateManyWithWhereWithoutDepoTransactionInput | DepoJournalUpdateManyWithWhereWithoutDepoTransactionInput[]
+    deleteMany?: DepoJournalScalarWhereInput | DepoJournalScalarWhereInput[]
+  }
+
   export type DepoInventoryUncheckedUpdateManyWithoutDepoTransactionNestedInput = {
     create?: XOR<DepoInventoryCreateWithoutDepoTransactionInput, DepoInventoryUncheckedCreateWithoutDepoTransactionInput> | DepoInventoryCreateWithoutDepoTransactionInput[] | DepoInventoryUncheckedCreateWithoutDepoTransactionInput[]
     connectOrCreate?: DepoInventoryCreateOrConnectWithoutDepoTransactionInput | DepoInventoryCreateOrConnectWithoutDepoTransactionInput[]
@@ -60398,10 +59238,40 @@ export namespace Prisma {
     deleteMany?: DepoInventoryScalarWhereInput | DepoInventoryScalarWhereInput[]
   }
 
+  export type DepoJournalUncheckedUpdateManyWithoutDepoTransactionNestedInput = {
+    create?: XOR<DepoJournalCreateWithoutDepoTransactionInput, DepoJournalUncheckedCreateWithoutDepoTransactionInput> | DepoJournalCreateWithoutDepoTransactionInput[] | DepoJournalUncheckedCreateWithoutDepoTransactionInput[]
+    connectOrCreate?: DepoJournalCreateOrConnectWithoutDepoTransactionInput | DepoJournalCreateOrConnectWithoutDepoTransactionInput[]
+    upsert?: DepoJournalUpsertWithWhereUniqueWithoutDepoTransactionInput | DepoJournalUpsertWithWhereUniqueWithoutDepoTransactionInput[]
+    createMany?: DepoJournalCreateManyDepoTransactionInputEnvelope
+    set?: DepoJournalWhereUniqueInput | DepoJournalWhereUniqueInput[]
+    disconnect?: DepoJournalWhereUniqueInput | DepoJournalWhereUniqueInput[]
+    delete?: DepoJournalWhereUniqueInput | DepoJournalWhereUniqueInput[]
+    connect?: DepoJournalWhereUniqueInput | DepoJournalWhereUniqueInput[]
+    update?: DepoJournalUpdateWithWhereUniqueWithoutDepoTransactionInput | DepoJournalUpdateWithWhereUniqueWithoutDepoTransactionInput[]
+    updateMany?: DepoJournalUpdateManyWithWhereWithoutDepoTransactionInput | DepoJournalUpdateManyWithWhereWithoutDepoTransactionInput[]
+    deleteMany?: DepoJournalScalarWhereInput | DepoJournalScalarWhereInput[]
+  }
+
+  export type DepoTransactionCreateNestedOneWithoutDepoJournalsInput = {
+    create?: XOR<DepoTransactionCreateWithoutDepoJournalsInput, DepoTransactionUncheckedCreateWithoutDepoJournalsInput>
+    connectOrCreate?: DepoTransactionCreateOrConnectWithoutDepoJournalsInput
+    connect?: DepoTransactionWhereUniqueInput
+  }
+
   export type LedgerHeadCreateNestedOneWithoutDepoJournalsInput = {
     create?: XOR<LedgerHeadCreateWithoutDepoJournalsInput, LedgerHeadUncheckedCreateWithoutDepoJournalsInput>
     connectOrCreate?: LedgerHeadCreateOrConnectWithoutDepoJournalsInput
     connect?: LedgerHeadWhereUniqueInput
+  }
+
+  export type DepoTransactionUpdateOneWithoutDepoJournalsNestedInput = {
+    create?: XOR<DepoTransactionCreateWithoutDepoJournalsInput, DepoTransactionUncheckedCreateWithoutDepoJournalsInput>
+    connectOrCreate?: DepoTransactionCreateOrConnectWithoutDepoJournalsInput
+    upsert?: DepoTransactionUpsertWithoutDepoJournalsInput
+    disconnect?: DepoTransactionWhereInput | boolean
+    delete?: DepoTransactionWhereInput | boolean
+    connect?: DepoTransactionWhereUniqueInput
+    update?: XOR<XOR<DepoTransactionUpdateToOneWithWhereWithoutDepoJournalsInput, DepoTransactionUpdateWithoutDepoJournalsInput>, DepoTransactionUncheckedUpdateWithoutDepoJournalsInput>
   }
 
   export type LedgerHeadUpdateOneWithoutDepoJournalsNestedInput = {
@@ -61224,6 +60094,11 @@ export namespace Prisma {
     create: XOR<MpoTargetCreateWithoutUserInput, MpoTargetUncheckedCreateWithoutUserInput>
   }
 
+  export type MpoTargetCreateManyUserInputEnvelope = {
+    data: MpoTargetCreateManyUserInput | MpoTargetCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrderCreateWithoutUserInput = {
     orderNo: string
     date?: Date | string
@@ -61397,7 +60272,6 @@ export namespace Prisma {
     inventory?: InventoryCreateNestedManyWithoutTransactionInfoInput
     journal?: JournalCreateNestedManyWithoutTransactionInfoInput
     chemist?: ChemistCreateNestedOneWithoutTransactionInfoInput
-    customers?: CustomersCreateNestedOneWithoutTransactionInfoInput
     party?: PartyCreateNestedOneWithoutTransactionInfoInput
     stakeholder?: StakeholderCreateNestedOneWithoutTransactionInfoInput
   }
@@ -61408,7 +60282,6 @@ export namespace Prisma {
     voucherNo: string
     invoiceNo?: string | null
     chemistId?: string | null
-    customerId?: number | null
     stakeholderId?: string | null
     partyId?: number | null
     voucherType: $Enums.VoucherType
@@ -61600,30 +60473,32 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Leves"> | Date | string
   }
 
-  export type MpoTargetUpsertWithoutUserInput = {
+  export type MpoTargetUpsertWithWhereUniqueWithoutUserInput = {
+    where: MpoTargetWhereUniqueInput
     update: XOR<MpoTargetUpdateWithoutUserInput, MpoTargetUncheckedUpdateWithoutUserInput>
     create: XOR<MpoTargetCreateWithoutUserInput, MpoTargetUncheckedCreateWithoutUserInput>
-    where?: MpoTargetWhereInput
   }
 
-  export type MpoTargetUpdateToOneWithWhereWithoutUserInput = {
-    where?: MpoTargetWhereInput
+  export type MpoTargetUpdateWithWhereUniqueWithoutUserInput = {
+    where: MpoTargetWhereUniqueInput
     data: XOR<MpoTargetUpdateWithoutUserInput, MpoTargetUncheckedUpdateWithoutUserInput>
   }
 
-  export type MpoTargetUpdateWithoutUserInput = {
-    month?: StringFieldUpdateOperationsInput | string
-    targetAmount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type MpoTargetUpdateManyWithWhereWithoutUserInput = {
+    where: MpoTargetScalarWhereInput
+    data: XOR<MpoTargetUpdateManyMutationInput, MpoTargetUncheckedUpdateManyWithoutUserInput>
   }
 
-  export type MpoTargetUncheckedUpdateWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    month?: StringFieldUpdateOperationsInput | string
-    targetAmount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type MpoTargetScalarWhereInput = {
+    AND?: MpoTargetScalarWhereInput | MpoTargetScalarWhereInput[]
+    OR?: MpoTargetScalarWhereInput[]
+    NOT?: MpoTargetScalarWhereInput | MpoTargetScalarWhereInput[]
+    id?: IntFilter<"MpoTarget"> | number
+    employeeId?: StringFilter<"MpoTarget"> | string
+    month?: StringFilter<"MpoTarget"> | string
+    targetAmount?: IntFilter<"MpoTarget"> | number
+    createdAt?: DateTimeFilter<"MpoTarget"> | Date | string
+    updatedAt?: DateTimeFilter<"MpoTarget"> | Date | string
   }
 
   export type OrderUpsertWithWhereUniqueWithoutUserInput = {
@@ -61810,7 +60685,6 @@ export namespace Prisma {
     voucherNo?: StringFilter<"TransactionInfo"> | string
     invoiceNo?: StringNullableFilter<"TransactionInfo"> | string | null
     chemistId?: StringNullableFilter<"TransactionInfo"> | string | null
-    customerId?: IntNullableFilter<"TransactionInfo"> | number | null
     stakeholderId?: StringNullableFilter<"TransactionInfo"> | string | null
     employeeId?: StringNullableFilter<"TransactionInfo"> | string | null
     partyId?: IntNullableFilter<"TransactionInfo"> | number | null
@@ -61869,7 +60743,7 @@ export namespace Prisma {
     productWiseTarget?: ProductWiseTargetCreateNestedOneWithoutUserInput
     attendance?: AttendanceCreateNestedManyWithoutUserInput
     leves?: LevesCreateNestedManyWithoutUserInput
-    mpoTarget?: MpoTargetCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetCreateNestedManyWithoutUserInput
     order?: OrderCreateNestedManyWithoutUserInput
     overtime?: OvertimeCreateNestedManyWithoutUserInput
     payroll?: PayrollCreateNestedManyWithoutUserInput
@@ -61893,7 +60767,7 @@ export namespace Prisma {
     productWiseTarget?: ProductWiseTargetUncheckedCreateNestedOneWithoutUserInput
     attendance?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     leves?: LevesUncheckedCreateNestedManyWithoutUserInput
-    mpoTarget?: MpoTargetUncheckedCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetUncheckedCreateNestedManyWithoutUserInput
     order?: OrderUncheckedCreateNestedManyWithoutUserInput
     overtime?: OvertimeUncheckedCreateNestedManyWithoutUserInput
     payroll?: PayrollUncheckedCreateNestedManyWithoutUserInput
@@ -61932,7 +60806,7 @@ export namespace Prisma {
     productWiseTarget?: ProductWiseTargetUpdateOneWithoutUserNestedInput
     attendance?: AttendanceUpdateManyWithoutUserNestedInput
     leves?: LevesUpdateManyWithoutUserNestedInput
-    mpoTarget?: MpoTargetUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUpdateManyWithoutUserNestedInput
     order?: OrderUpdateManyWithoutUserNestedInput
     overtime?: OvertimeUpdateManyWithoutUserNestedInput
     payroll?: PayrollUpdateManyWithoutUserNestedInput
@@ -61956,7 +60830,7 @@ export namespace Prisma {
     productWiseTarget?: ProductWiseTargetUncheckedUpdateOneWithoutUserNestedInput
     attendance?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     leves?: LevesUncheckedUpdateManyWithoutUserNestedInput
-    mpoTarget?: MpoTargetUncheckedUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUncheckedUpdateManyWithoutUserNestedInput
     order?: OrderUncheckedUpdateManyWithoutUserNestedInput
     overtime?: OvertimeUncheckedUpdateManyWithoutUserNestedInput
     payroll?: PayrollUncheckedUpdateManyWithoutUserNestedInput
@@ -61978,7 +60852,7 @@ export namespace Prisma {
     journal?: JournalCreateNestedManyWithoutDepoInput
     scopes?: ScopeCreateNestedManyWithoutDepoInput
     providerTransactions?: DepoTransactionCreateNestedManyWithoutProviderdepoInput
-    receiverTransactions?: DepoTransactionCreateNestedManyWithoutReceverdepoInput
+    receiverTransactions?: DepoTransactionCreateNestedManyWithoutReceiverdepoInput
   }
 
   export type DepoUncheckedCreateWithoutJobPostInput = {
@@ -61994,7 +60868,7 @@ export namespace Prisma {
     journal?: JournalUncheckedCreateNestedManyWithoutDepoInput
     scopes?: ScopeUncheckedCreateNestedManyWithoutDepoInput
     providerTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutProviderdepoInput
-    receiverTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutReceverdepoInput
+    receiverTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutReceiverdepoInput
   }
 
   export type DepoCreateOrConnectWithoutJobPostInput = {
@@ -62054,7 +60928,7 @@ export namespace Prisma {
     journal?: JournalUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUpdateManyWithoutDepoNestedInput
     providerTransactions?: DepoTransactionUpdateManyWithoutProviderdepoNestedInput
-    receiverTransactions?: DepoTransactionUpdateManyWithoutReceverdepoNestedInput
+    receiverTransactions?: DepoTransactionUpdateManyWithoutReceiverdepoNestedInput
   }
 
   export type DepoUncheckedUpdateWithoutJobPostInput = {
@@ -62070,7 +60944,7 @@ export namespace Prisma {
     journal?: JournalUncheckedUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUncheckedUpdateManyWithoutDepoNestedInput
     providerTransactions?: DepoTransactionUncheckedUpdateManyWithoutProviderdepoNestedInput
-    receiverTransactions?: DepoTransactionUncheckedUpdateManyWithoutReceverdepoNestedInput
+    receiverTransactions?: DepoTransactionUncheckedUpdateManyWithoutReceiverdepoNestedInput
   }
 
   export type ScopeUpsertWithWhereUniqueWithoutJobPostInput = {
@@ -62112,7 +60986,7 @@ export namespace Prisma {
     journal?: JournalCreateNestedManyWithoutDepoInput
     scopes?: ScopeCreateNestedManyWithoutDepoInput
     providerTransactions?: DepoTransactionCreateNestedManyWithoutProviderdepoInput
-    receiverTransactions?: DepoTransactionCreateNestedManyWithoutReceverdepoInput
+    receiverTransactions?: DepoTransactionCreateNestedManyWithoutReceiverdepoInput
   }
 
   export type DepoUncheckedCreateWithoutChemistInput = {
@@ -62128,7 +61002,7 @@ export namespace Prisma {
     journal?: JournalUncheckedCreateNestedManyWithoutDepoInput
     scopes?: ScopeUncheckedCreateNestedManyWithoutDepoInput
     providerTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutProviderdepoInput
-    receiverTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutReceverdepoInput
+    receiverTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutReceiverdepoInput
   }
 
   export type DepoCreateOrConnectWithoutChemistInput = {
@@ -62203,7 +61077,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     inventory?: InventoryCreateNestedManyWithoutTransactionInfoInput
     journal?: JournalCreateNestedManyWithoutTransactionInfoInput
-    customers?: CustomersCreateNestedOneWithoutTransactionInfoInput
     user?: UserCreateNestedOneWithoutTransactionInfoInput
     party?: PartyCreateNestedOneWithoutTransactionInfoInput
     stakeholder?: StakeholderCreateNestedOneWithoutTransactionInfoInput
@@ -62214,7 +61087,6 @@ export namespace Prisma {
     date: Date | string
     voucherNo: string
     invoiceNo?: string | null
-    customerId?: number | null
     stakeholderId?: string | null
     employeeId?: string | null
     partyId?: number | null
@@ -62259,7 +61131,7 @@ export namespace Prisma {
     journal?: JournalUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUpdateManyWithoutDepoNestedInput
     providerTransactions?: DepoTransactionUpdateManyWithoutProviderdepoNestedInput
-    receiverTransactions?: DepoTransactionUpdateManyWithoutReceverdepoNestedInput
+    receiverTransactions?: DepoTransactionUpdateManyWithoutReceiverdepoNestedInput
   }
 
   export type DepoUncheckedUpdateWithoutChemistInput = {
@@ -62275,7 +61147,7 @@ export namespace Prisma {
     journal?: JournalUncheckedUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUncheckedUpdateManyWithoutDepoNestedInput
     providerTransactions?: DepoTransactionUncheckedUpdateManyWithoutProviderdepoNestedInput
-    receiverTransactions?: DepoTransactionUncheckedUpdateManyWithoutReceverdepoNestedInput
+    receiverTransactions?: DepoTransactionUncheckedUpdateManyWithoutReceiverdepoNestedInput
   }
 
   export type ScopeUpsertWithWhereUniqueWithoutChemistInput = {
@@ -62508,23 +61380,29 @@ export namespace Prisma {
 
   export type DepoTransactionCreateWithoutProviderdepoInput = {
     date: Date | string
+    invoiceNo?: string | null
     voucherNo: string
+    voucherType?: $Enums.VoucherType
     status?: $Enums.OrdStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    receverdepo: DepoCreateNestedOneWithoutReceiverTransactionsInput
+    receiverdepo: DepoCreateNestedOneWithoutReceiverTransactionsInput
     depoInventories?: DepoInventoryCreateNestedManyWithoutDepoTransactionInput
+    depoJournals?: DepoJournalCreateNestedManyWithoutDepoTransactionInput
   }
 
   export type DepoTransactionUncheckedCreateWithoutProviderdepoInput = {
     id?: number
     date: Date | string
-    receverdepoId: number
+    receiverdepoId: number
+    invoiceNo?: string | null
     voucherNo: string
+    voucherType?: $Enums.VoucherType
     status?: $Enums.OrdStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     depoInventories?: DepoInventoryUncheckedCreateNestedManyWithoutDepoTransactionInput
+    depoJournals?: DepoJournalUncheckedCreateNestedManyWithoutDepoTransactionInput
   }
 
   export type DepoTransactionCreateOrConnectWithoutProviderdepoInput = {
@@ -62537,34 +61415,40 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type DepoTransactionCreateWithoutReceverdepoInput = {
+  export type DepoTransactionCreateWithoutReceiverdepoInput = {
     date: Date | string
+    invoiceNo?: string | null
     voucherNo: string
+    voucherType?: $Enums.VoucherType
     status?: $Enums.OrdStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     providerdepo: DepoCreateNestedOneWithoutProviderTransactionsInput
     depoInventories?: DepoInventoryCreateNestedManyWithoutDepoTransactionInput
+    depoJournals?: DepoJournalCreateNestedManyWithoutDepoTransactionInput
   }
 
-  export type DepoTransactionUncheckedCreateWithoutReceverdepoInput = {
+  export type DepoTransactionUncheckedCreateWithoutReceiverdepoInput = {
     id?: number
     date: Date | string
     providerdepoId: number
+    invoiceNo?: string | null
     voucherNo: string
+    voucherType?: $Enums.VoucherType
     status?: $Enums.OrdStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     depoInventories?: DepoInventoryUncheckedCreateNestedManyWithoutDepoTransactionInput
+    depoJournals?: DepoJournalUncheckedCreateNestedManyWithoutDepoTransactionInput
   }
 
-  export type DepoTransactionCreateOrConnectWithoutReceverdepoInput = {
+  export type DepoTransactionCreateOrConnectWithoutReceiverdepoInput = {
     where: DepoTransactionWhereUniqueInput
-    create: XOR<DepoTransactionCreateWithoutReceverdepoInput, DepoTransactionUncheckedCreateWithoutReceverdepoInput>
+    create: XOR<DepoTransactionCreateWithoutReceiverdepoInput, DepoTransactionUncheckedCreateWithoutReceiverdepoInput>
   }
 
-  export type DepoTransactionCreateManyReceverdepoInputEnvelope = {
-    data: DepoTransactionCreateManyReceverdepoInput | DepoTransactionCreateManyReceverdepoInput[]
+  export type DepoTransactionCreateManyReceiverdepoInputEnvelope = {
+    data: DepoTransactionCreateManyReceiverdepoInput | DepoTransactionCreateManyReceiverdepoInput[]
     skipDuplicates?: boolean
   }
 
@@ -62722,27 +61606,29 @@ export namespace Prisma {
     id?: IntFilter<"DepoTransaction"> | number
     date?: DateTimeFilter<"DepoTransaction"> | Date | string
     providerdepoId?: IntFilter<"DepoTransaction"> | number
-    receverdepoId?: IntFilter<"DepoTransaction"> | number
+    receiverdepoId?: IntFilter<"DepoTransaction"> | number
+    invoiceNo?: StringNullableFilter<"DepoTransaction"> | string | null
     voucherNo?: StringFilter<"DepoTransaction"> | string
+    voucherType?: EnumVoucherTypeFilter<"DepoTransaction"> | $Enums.VoucherType
     status?: EnumOrdStatusFilter<"DepoTransaction"> | $Enums.OrdStatus
     createdAt?: DateTimeFilter<"DepoTransaction"> | Date | string
     updatedAt?: DateTimeFilter<"DepoTransaction"> | Date | string
   }
 
-  export type DepoTransactionUpsertWithWhereUniqueWithoutReceverdepoInput = {
+  export type DepoTransactionUpsertWithWhereUniqueWithoutReceiverdepoInput = {
     where: DepoTransactionWhereUniqueInput
-    update: XOR<DepoTransactionUpdateWithoutReceverdepoInput, DepoTransactionUncheckedUpdateWithoutReceverdepoInput>
-    create: XOR<DepoTransactionCreateWithoutReceverdepoInput, DepoTransactionUncheckedCreateWithoutReceverdepoInput>
+    update: XOR<DepoTransactionUpdateWithoutReceiverdepoInput, DepoTransactionUncheckedUpdateWithoutReceiverdepoInput>
+    create: XOR<DepoTransactionCreateWithoutReceiverdepoInput, DepoTransactionUncheckedCreateWithoutReceiverdepoInput>
   }
 
-  export type DepoTransactionUpdateWithWhereUniqueWithoutReceverdepoInput = {
+  export type DepoTransactionUpdateWithWhereUniqueWithoutReceiverdepoInput = {
     where: DepoTransactionWhereUniqueInput
-    data: XOR<DepoTransactionUpdateWithoutReceverdepoInput, DepoTransactionUncheckedUpdateWithoutReceverdepoInput>
+    data: XOR<DepoTransactionUpdateWithoutReceiverdepoInput, DepoTransactionUncheckedUpdateWithoutReceiverdepoInput>
   }
 
-  export type DepoTransactionUpdateManyWithWhereWithoutReceverdepoInput = {
+  export type DepoTransactionUpdateManyWithWhereWithoutReceiverdepoInput = {
     where: DepoTransactionScalarWhereInput
-    data: XOR<DepoTransactionUpdateManyMutationInput, DepoTransactionUncheckedUpdateManyWithoutReceverdepoInput>
+    data: XOR<DepoTransactionUpdateManyMutationInput, DepoTransactionUncheckedUpdateManyWithoutReceiverdepoInput>
   }
 
   export type TransactionInfoCreateWithoutPartyInput = {
@@ -62756,7 +61642,6 @@ export namespace Prisma {
     inventory?: InventoryCreateNestedManyWithoutTransactionInfoInput
     journal?: JournalCreateNestedManyWithoutTransactionInfoInput
     chemist?: ChemistCreateNestedOneWithoutTransactionInfoInput
-    customers?: CustomersCreateNestedOneWithoutTransactionInfoInput
     user?: UserCreateNestedOneWithoutTransactionInfoInput
     stakeholder?: StakeholderCreateNestedOneWithoutTransactionInfoInput
   }
@@ -62767,7 +61652,6 @@ export namespace Prisma {
     voucherNo: string
     invoiceNo?: string | null
     chemistId?: string | null
-    customerId?: number | null
     stakeholderId?: string | null
     employeeId?: string | null
     voucherType: $Enums.VoucherType
@@ -62994,7 +61878,6 @@ export namespace Prisma {
     inventory?: InventoryCreateNestedManyWithoutTransactionInfoInput
     journal?: JournalCreateNestedManyWithoutTransactionInfoInput
     chemist?: ChemistCreateNestedOneWithoutTransactionInfoInput
-    customers?: CustomersCreateNestedOneWithoutTransactionInfoInput
     user?: UserCreateNestedOneWithoutTransactionInfoInput
     party?: PartyCreateNestedOneWithoutTransactionInfoInput
   }
@@ -63005,7 +61888,6 @@ export namespace Prisma {
     voucherNo: string
     invoiceNo?: string | null
     chemistId?: string | null
-    customerId?: number | null
     employeeId?: string | null
     partyId?: number | null
     voucherType: $Enums.VoucherType
@@ -63562,65 +62444,6 @@ export namespace Prisma {
     transactionInfo?: TransactionInfoUncheckedUpdateManyWithoutStakeholderNestedInput
   }
 
-  export type TransactionInfoCreateWithoutCustomersInput = {
-    date: Date | string
-    voucherNo: string
-    invoiceNo?: string | null
-    voucherType: $Enums.VoucherType
-    status?: $Enums.Status
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    inventory?: InventoryCreateNestedManyWithoutTransactionInfoInput
-    journal?: JournalCreateNestedManyWithoutTransactionInfoInput
-    chemist?: ChemistCreateNestedOneWithoutTransactionInfoInput
-    user?: UserCreateNestedOneWithoutTransactionInfoInput
-    party?: PartyCreateNestedOneWithoutTransactionInfoInput
-    stakeholder?: StakeholderCreateNestedOneWithoutTransactionInfoInput
-  }
-
-  export type TransactionInfoUncheckedCreateWithoutCustomersInput = {
-    id?: number
-    date: Date | string
-    voucherNo: string
-    invoiceNo?: string | null
-    chemistId?: string | null
-    stakeholderId?: string | null
-    employeeId?: string | null
-    partyId?: number | null
-    voucherType: $Enums.VoucherType
-    status?: $Enums.Status
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    inventory?: InventoryUncheckedCreateNestedManyWithoutTransactionInfoInput
-    journal?: JournalUncheckedCreateNestedManyWithoutTransactionInfoInput
-  }
-
-  export type TransactionInfoCreateOrConnectWithoutCustomersInput = {
-    where: TransactionInfoWhereUniqueInput
-    create: XOR<TransactionInfoCreateWithoutCustomersInput, TransactionInfoUncheckedCreateWithoutCustomersInput>
-  }
-
-  export type TransactionInfoCreateManyCustomersInputEnvelope = {
-    data: TransactionInfoCreateManyCustomersInput | TransactionInfoCreateManyCustomersInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type TransactionInfoUpsertWithWhereUniqueWithoutCustomersInput = {
-    where: TransactionInfoWhereUniqueInput
-    update: XOR<TransactionInfoUpdateWithoutCustomersInput, TransactionInfoUncheckedUpdateWithoutCustomersInput>
-    create: XOR<TransactionInfoCreateWithoutCustomersInput, TransactionInfoUncheckedCreateWithoutCustomersInput>
-  }
-
-  export type TransactionInfoUpdateWithWhereUniqueWithoutCustomersInput = {
-    where: TransactionInfoWhereUniqueInput
-    data: XOR<TransactionInfoUpdateWithoutCustomersInput, TransactionInfoUncheckedUpdateWithoutCustomersInput>
-  }
-
-  export type TransactionInfoUpdateManyWithWhereWithoutCustomersInput = {
-    where: TransactionInfoScalarWhereInput
-    data: XOR<TransactionInfoUpdateManyMutationInput, TransactionInfoUncheckedUpdateManyWithoutCustomersInput>
-  }
-
   export type ChemistCreateWithoutScopesInput = {
     chemistId: string
     pharmacyName: string
@@ -63675,7 +62498,7 @@ export namespace Prisma {
     jobPost?: JobPostCreateNestedManyWithoutDepoInput
     journal?: JournalCreateNestedManyWithoutDepoInput
     providerTransactions?: DepoTransactionCreateNestedManyWithoutProviderdepoInput
-    receiverTransactions?: DepoTransactionCreateNestedManyWithoutReceverdepoInput
+    receiverTransactions?: DepoTransactionCreateNestedManyWithoutReceiverdepoInput
   }
 
   export type DepoUncheckedCreateWithoutScopesInput = {
@@ -63691,7 +62514,7 @@ export namespace Prisma {
     jobPost?: JobPostUncheckedCreateNestedManyWithoutDepoInput
     journal?: JournalUncheckedCreateNestedManyWithoutDepoInput
     providerTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutProviderdepoInput
-    receiverTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutReceverdepoInput
+    receiverTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutReceiverdepoInput
   }
 
   export type DepoCreateOrConnectWithoutScopesInput = {
@@ -63759,7 +62582,7 @@ export namespace Prisma {
     attendance?: AttendanceCreateNestedManyWithoutUserInput
     employeeProfile?: EmployeeProfileCreateNestedOneWithoutUserInput
     leves?: LevesCreateNestedManyWithoutUserInput
-    mpoTarget?: MpoTargetCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetCreateNestedManyWithoutUserInput
     order?: OrderCreateNestedManyWithoutUserInput
     overtime?: OvertimeCreateNestedManyWithoutUserInput
     payroll?: PayrollCreateNestedManyWithoutUserInput
@@ -63783,7 +62606,7 @@ export namespace Prisma {
     attendance?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     employeeProfile?: EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
     leves?: LevesUncheckedCreateNestedManyWithoutUserInput
-    mpoTarget?: MpoTargetUncheckedCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetUncheckedCreateNestedManyWithoutUserInput
     order?: OrderUncheckedCreateNestedManyWithoutUserInput
     overtime?: OvertimeUncheckedCreateNestedManyWithoutUserInput
     payroll?: PayrollUncheckedCreateNestedManyWithoutUserInput
@@ -63909,7 +62732,7 @@ export namespace Prisma {
     attendance?: AttendanceUpdateManyWithoutUserNestedInput
     employeeProfile?: EmployeeProfileUpdateOneWithoutUserNestedInput
     leves?: LevesUpdateManyWithoutUserNestedInput
-    mpoTarget?: MpoTargetUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUpdateManyWithoutUserNestedInput
     order?: OrderUpdateManyWithoutUserNestedInput
     overtime?: OvertimeUpdateManyWithoutUserNestedInput
     payroll?: PayrollUpdateManyWithoutUserNestedInput
@@ -63933,7 +62756,7 @@ export namespace Prisma {
     attendance?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     employeeProfile?: EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
     leves?: LevesUncheckedUpdateManyWithoutUserNestedInput
-    mpoTarget?: MpoTargetUncheckedUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUncheckedUpdateManyWithoutUserNestedInput
     order?: OrderUncheckedUpdateManyWithoutUserNestedInput
     overtime?: OvertimeUncheckedUpdateManyWithoutUserNestedInput
     payroll?: PayrollUncheckedUpdateManyWithoutUserNestedInput
@@ -64097,7 +62920,7 @@ export namespace Prisma {
     attendance?: AttendanceCreateNestedManyWithoutUserInput
     employeeProfile?: EmployeeProfileCreateNestedOneWithoutUserInput
     leves?: LevesCreateNestedManyWithoutUserInput
-    mpoTarget?: MpoTargetCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetCreateNestedManyWithoutUserInput
     order?: OrderCreateNestedManyWithoutUserInput
     overtime?: OvertimeCreateNestedManyWithoutUserInput
     payroll?: PayrollCreateNestedManyWithoutUserInput
@@ -64121,7 +62944,7 @@ export namespace Prisma {
     attendance?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     employeeProfile?: EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
     leves?: LevesUncheckedCreateNestedManyWithoutUserInput
-    mpoTarget?: MpoTargetUncheckedCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetUncheckedCreateNestedManyWithoutUserInput
     order?: OrderUncheckedCreateNestedManyWithoutUserInput
     overtime?: OvertimeUncheckedCreateNestedManyWithoutUserInput
     payroll?: PayrollUncheckedCreateNestedManyWithoutUserInput
@@ -64187,7 +63010,7 @@ export namespace Prisma {
     attendance?: AttendanceUpdateManyWithoutUserNestedInput
     employeeProfile?: EmployeeProfileUpdateOneWithoutUserNestedInput
     leves?: LevesUpdateManyWithoutUserNestedInput
-    mpoTarget?: MpoTargetUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUpdateManyWithoutUserNestedInput
     order?: OrderUpdateManyWithoutUserNestedInput
     overtime?: OvertimeUpdateManyWithoutUserNestedInput
     payroll?: PayrollUpdateManyWithoutUserNestedInput
@@ -64211,7 +63034,7 @@ export namespace Prisma {
     attendance?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     employeeProfile?: EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
     leves?: LevesUncheckedUpdateManyWithoutUserNestedInput
-    mpoTarget?: MpoTargetUncheckedUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUncheckedUpdateManyWithoutUserNestedInput
     order?: OrderUncheckedUpdateManyWithoutUserNestedInput
     overtime?: OvertimeUncheckedUpdateManyWithoutUserNestedInput
     payroll?: PayrollUncheckedUpdateManyWithoutUserNestedInput
@@ -64754,17 +63577,23 @@ export namespace Prisma {
 
   export type DepoJournalCreateWithoutLedgerHeadInput = {
     date: Date | string
-    depoId: number
-    amount?: number | null
+    creditAmount?: number | null
+    debitAmount?: number | null
     narration?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    depoTransaction?: DepoTransactionCreateNestedOneWithoutDepoJournalsInput
   }
 
   export type DepoJournalUncheckedCreateWithoutLedgerHeadInput = {
     id?: number
+    depoTransactionId?: number | null
     date: Date | string
-    depoId: number
-    amount?: number | null
+    creditAmount?: number | null
+    debitAmount?: number | null
     narration?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type DepoJournalCreateOrConnectWithoutLedgerHeadInput = {
@@ -64840,11 +63669,14 @@ export namespace Prisma {
     OR?: DepoJournalScalarWhereInput[]
     NOT?: DepoJournalScalarWhereInput | DepoJournalScalarWhereInput[]
     id?: IntFilter<"DepoJournal"> | number
+    depoTransactionId?: IntNullableFilter<"DepoJournal"> | number | null
     date?: DateTimeFilter<"DepoJournal"> | Date | string
-    depoId?: IntFilter<"DepoJournal"> | number
-    ledgerHeadId?: IntNullableFilter<"DepoJournal"> | number | null
-    amount?: FloatNullableFilter<"DepoJournal"> | number | null
+    ledgerHeadId?: IntFilter<"DepoJournal"> | number
+    creditAmount?: FloatNullableFilter<"DepoJournal"> | number | null
+    debitAmount?: FloatNullableFilter<"DepoJournal"> | number | null
     narration?: StringNullableFilter<"DepoJournal"> | string | null
+    createdAt?: DateTimeFilter<"DepoJournal"> | Date | string
+    updatedAt?: DateTimeFilter<"DepoJournal"> | Date | string
   }
 
   export type TargetProductBatchCreateWithoutProductInput = {
@@ -65449,7 +64281,7 @@ export namespace Prisma {
     journal?: JournalCreateNestedManyWithoutDepoInput
     scopes?: ScopeCreateNestedManyWithoutDepoInput
     providerTransactions?: DepoTransactionCreateNestedManyWithoutProviderdepoInput
-    receiverTransactions?: DepoTransactionCreateNestedManyWithoutReceverdepoInput
+    receiverTransactions?: DepoTransactionCreateNestedManyWithoutReceiverdepoInput
   }
 
   export type DepoUncheckedCreateWithoutInventoryInput = {
@@ -65465,7 +64297,7 @@ export namespace Prisma {
     journal?: JournalUncheckedCreateNestedManyWithoutDepoInput
     scopes?: ScopeUncheckedCreateNestedManyWithoutDepoInput
     providerTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutProviderdepoInput
-    receiverTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutReceverdepoInput
+    receiverTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutReceiverdepoInput
   }
 
   export type DepoCreateOrConnectWithoutInventoryInput = {
@@ -65531,7 +64363,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     journal?: JournalCreateNestedManyWithoutTransactionInfoInput
     chemist?: ChemistCreateNestedOneWithoutTransactionInfoInput
-    customers?: CustomersCreateNestedOneWithoutTransactionInfoInput
     user?: UserCreateNestedOneWithoutTransactionInfoInput
     party?: PartyCreateNestedOneWithoutTransactionInfoInput
     stakeholder?: StakeholderCreateNestedOneWithoutTransactionInfoInput
@@ -65543,7 +64374,6 @@ export namespace Prisma {
     voucherNo: string
     invoiceNo?: string | null
     chemistId?: string | null
-    customerId?: number | null
     stakeholderId?: string | null
     employeeId?: string | null
     partyId?: number | null
@@ -65573,7 +64403,7 @@ export namespace Prisma {
     attendance?: AttendanceCreateNestedManyWithoutUserInput
     employeeProfile?: EmployeeProfileCreateNestedOneWithoutUserInput
     leves?: LevesCreateNestedManyWithoutUserInput
-    mpoTarget?: MpoTargetCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetCreateNestedManyWithoutUserInput
     order?: OrderCreateNestedManyWithoutUserInput
     overtime?: OvertimeCreateNestedManyWithoutUserInput
     payroll?: PayrollCreateNestedManyWithoutUserInput
@@ -65597,7 +64427,7 @@ export namespace Prisma {
     attendance?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     employeeProfile?: EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
     leves?: LevesUncheckedCreateNestedManyWithoutUserInput
-    mpoTarget?: MpoTargetUncheckedCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetUncheckedCreateNestedManyWithoutUserInput
     order?: OrderUncheckedCreateNestedManyWithoutUserInput
     overtime?: OvertimeUncheckedCreateNestedManyWithoutUserInput
     payroll?: PayrollUncheckedCreateNestedManyWithoutUserInput
@@ -65634,7 +64464,7 @@ export namespace Prisma {
     journal?: JournalUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUpdateManyWithoutDepoNestedInput
     providerTransactions?: DepoTransactionUpdateManyWithoutProviderdepoNestedInput
-    receiverTransactions?: DepoTransactionUpdateManyWithoutReceverdepoNestedInput
+    receiverTransactions?: DepoTransactionUpdateManyWithoutReceiverdepoNestedInput
   }
 
   export type DepoUncheckedUpdateWithoutInventoryInput = {
@@ -65650,7 +64480,7 @@ export namespace Prisma {
     journal?: JournalUncheckedUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUncheckedUpdateManyWithoutDepoNestedInput
     providerTransactions?: DepoTransactionUncheckedUpdateManyWithoutProviderdepoNestedInput
-    receiverTransactions?: DepoTransactionUncheckedUpdateManyWithoutReceverdepoNestedInput
+    receiverTransactions?: DepoTransactionUncheckedUpdateManyWithoutReceiverdepoNestedInput
   }
 
   export type ProductUpsertWithoutInventoryInput = {
@@ -65728,7 +64558,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     journal?: JournalUpdateManyWithoutTransactionInfoNestedInput
     chemist?: ChemistUpdateOneWithoutTransactionInfoNestedInput
-    customers?: CustomersUpdateOneWithoutTransactionInfoNestedInput
     user?: UserUpdateOneWithoutTransactionInfoNestedInput
     party?: PartyUpdateOneWithoutTransactionInfoNestedInput
     stakeholder?: StakeholderUpdateOneWithoutTransactionInfoNestedInput
@@ -65740,7 +64569,6 @@ export namespace Prisma {
     voucherNo?: StringFieldUpdateOperationsInput | string
     invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     chemistId?: NullableStringFieldUpdateOperationsInput | string | null
-    customerId?: NullableIntFieldUpdateOperationsInput | number | null
     stakeholderId?: NullableStringFieldUpdateOperationsInput | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     partyId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -65776,7 +64604,7 @@ export namespace Prisma {
     attendance?: AttendanceUpdateManyWithoutUserNestedInput
     employeeProfile?: EmployeeProfileUpdateOneWithoutUserNestedInput
     leves?: LevesUpdateManyWithoutUserNestedInput
-    mpoTarget?: MpoTargetUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUpdateManyWithoutUserNestedInput
     order?: OrderUpdateManyWithoutUserNestedInput
     overtime?: OvertimeUpdateManyWithoutUserNestedInput
     payroll?: PayrollUpdateManyWithoutUserNestedInput
@@ -65800,7 +64628,7 @@ export namespace Prisma {
     attendance?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     employeeProfile?: EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
     leves?: LevesUncheckedUpdateManyWithoutUserNestedInput
-    mpoTarget?: MpoTargetUncheckedUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUncheckedUpdateManyWithoutUserNestedInput
     order?: OrderUncheckedUpdateManyWithoutUserNestedInput
     overtime?: OvertimeUncheckedUpdateManyWithoutUserNestedInput
     payroll?: PayrollUncheckedUpdateManyWithoutUserNestedInput
@@ -65929,28 +64757,6 @@ export namespace Prisma {
     create: XOR<ChemistCreateWithoutTransactionInfoInput, ChemistUncheckedCreateWithoutTransactionInfoInput>
   }
 
-  export type CustomersCreateWithoutTransactionInfoInput = {
-    name?: string | null
-    contactNo: string
-    address?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type CustomersUncheckedCreateWithoutTransactionInfoInput = {
-    id?: number
-    name?: string | null
-    contactNo: string
-    address?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type CustomersCreateOrConnectWithoutTransactionInfoInput = {
-    where: CustomersWhereUniqueInput
-    create: XOR<CustomersCreateWithoutTransactionInfoInput, CustomersUncheckedCreateWithoutTransactionInfoInput>
-  }
-
   export type UserCreateWithoutTransactionInfoInput = {
     employeeId: string
     name: string
@@ -65965,7 +64771,7 @@ export namespace Prisma {
     attendance?: AttendanceCreateNestedManyWithoutUserInput
     employeeProfile?: EmployeeProfileCreateNestedOneWithoutUserInput
     leves?: LevesCreateNestedManyWithoutUserInput
-    mpoTarget?: MpoTargetCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetCreateNestedManyWithoutUserInput
     order?: OrderCreateNestedManyWithoutUserInput
     overtime?: OvertimeCreateNestedManyWithoutUserInput
     payroll?: PayrollCreateNestedManyWithoutUserInput
@@ -65989,7 +64795,7 @@ export namespace Prisma {
     attendance?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     employeeProfile?: EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
     leves?: LevesUncheckedCreateNestedManyWithoutUserInput
-    mpoTarget?: MpoTargetUncheckedCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetUncheckedCreateNestedManyWithoutUserInput
     order?: OrderUncheckedCreateNestedManyWithoutUserInput
     overtime?: OvertimeUncheckedCreateNestedManyWithoutUserInput
     payroll?: PayrollUncheckedCreateNestedManyWithoutUserInput
@@ -66159,34 +64965,6 @@ export namespace Prisma {
     order?: OrderUncheckedUpdateManyWithoutChemistNestedInput
   }
 
-  export type CustomersUpsertWithoutTransactionInfoInput = {
-    update: XOR<CustomersUpdateWithoutTransactionInfoInput, CustomersUncheckedUpdateWithoutTransactionInfoInput>
-    create: XOR<CustomersCreateWithoutTransactionInfoInput, CustomersUncheckedCreateWithoutTransactionInfoInput>
-    where?: CustomersWhereInput
-  }
-
-  export type CustomersUpdateToOneWithWhereWithoutTransactionInfoInput = {
-    where?: CustomersWhereInput
-    data: XOR<CustomersUpdateWithoutTransactionInfoInput, CustomersUncheckedUpdateWithoutTransactionInfoInput>
-  }
-
-  export type CustomersUpdateWithoutTransactionInfoInput = {
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    contactNo?: StringFieldUpdateOperationsInput | string
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type CustomersUncheckedUpdateWithoutTransactionInfoInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    contactNo?: StringFieldUpdateOperationsInput | string
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type UserUpsertWithoutTransactionInfoInput = {
     update: XOR<UserUpdateWithoutTransactionInfoInput, UserUncheckedUpdateWithoutTransactionInfoInput>
     create: XOR<UserCreateWithoutTransactionInfoInput, UserUncheckedCreateWithoutTransactionInfoInput>
@@ -66212,7 +64990,7 @@ export namespace Prisma {
     attendance?: AttendanceUpdateManyWithoutUserNestedInput
     employeeProfile?: EmployeeProfileUpdateOneWithoutUserNestedInput
     leves?: LevesUpdateManyWithoutUserNestedInput
-    mpoTarget?: MpoTargetUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUpdateManyWithoutUserNestedInput
     order?: OrderUpdateManyWithoutUserNestedInput
     overtime?: OvertimeUpdateManyWithoutUserNestedInput
     payroll?: PayrollUpdateManyWithoutUserNestedInput
@@ -66236,7 +65014,7 @@ export namespace Prisma {
     attendance?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     employeeProfile?: EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
     leves?: LevesUncheckedUpdateManyWithoutUserNestedInput
-    mpoTarget?: MpoTargetUncheckedUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUncheckedUpdateManyWithoutUserNestedInput
     order?: OrderUncheckedUpdateManyWithoutUserNestedInput
     overtime?: OvertimeUncheckedUpdateManyWithoutUserNestedInput
     payroll?: PayrollUncheckedUpdateManyWithoutUserNestedInput
@@ -66345,7 +65123,7 @@ export namespace Prisma {
     jobPost?: JobPostCreateNestedManyWithoutDepoInput
     scopes?: ScopeCreateNestedManyWithoutDepoInput
     providerTransactions?: DepoTransactionCreateNestedManyWithoutProviderdepoInput
-    receiverTransactions?: DepoTransactionCreateNestedManyWithoutReceverdepoInput
+    receiverTransactions?: DepoTransactionCreateNestedManyWithoutReceiverdepoInput
   }
 
   export type DepoUncheckedCreateWithoutJournalInput = {
@@ -66361,7 +65139,7 @@ export namespace Prisma {
     jobPost?: JobPostUncheckedCreateNestedManyWithoutDepoInput
     scopes?: ScopeUncheckedCreateNestedManyWithoutDepoInput
     providerTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutProviderdepoInput
-    receiverTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutReceverdepoInput
+    receiverTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutReceiverdepoInput
   }
 
   export type DepoCreateOrConnectWithoutJournalInput = {
@@ -66403,7 +65181,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     inventory?: InventoryCreateNestedManyWithoutTransactionInfoInput
     chemist?: ChemistCreateNestedOneWithoutTransactionInfoInput
-    customers?: CustomersCreateNestedOneWithoutTransactionInfoInput
     user?: UserCreateNestedOneWithoutTransactionInfoInput
     party?: PartyCreateNestedOneWithoutTransactionInfoInput
     stakeholder?: StakeholderCreateNestedOneWithoutTransactionInfoInput
@@ -66415,7 +65192,6 @@ export namespace Prisma {
     voucherNo: string
     invoiceNo?: string | null
     chemistId?: string | null
-    customerId?: number | null
     stakeholderId?: string | null
     employeeId?: string | null
     partyId?: number | null
@@ -66485,7 +65261,7 @@ export namespace Prisma {
     jobPost?: JobPostUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUpdateManyWithoutDepoNestedInput
     providerTransactions?: DepoTransactionUpdateManyWithoutProviderdepoNestedInput
-    receiverTransactions?: DepoTransactionUpdateManyWithoutReceverdepoNestedInput
+    receiverTransactions?: DepoTransactionUpdateManyWithoutReceiverdepoNestedInput
   }
 
   export type DepoUncheckedUpdateWithoutJournalInput = {
@@ -66501,7 +65277,7 @@ export namespace Prisma {
     jobPost?: JobPostUncheckedUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUncheckedUpdateManyWithoutDepoNestedInput
     providerTransactions?: DepoTransactionUncheckedUpdateManyWithoutProviderdepoNestedInput
-    receiverTransactions?: DepoTransactionUncheckedUpdateManyWithoutReceverdepoNestedInput
+    receiverTransactions?: DepoTransactionUncheckedUpdateManyWithoutReceiverdepoNestedInput
   }
 
   export type LedgerHeadUpsertWithoutJournalInput = {
@@ -66555,7 +65331,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     inventory?: InventoryUpdateManyWithoutTransactionInfoNestedInput
     chemist?: ChemistUpdateOneWithoutTransactionInfoNestedInput
-    customers?: CustomersUpdateOneWithoutTransactionInfoNestedInput
     user?: UserUpdateOneWithoutTransactionInfoNestedInput
     party?: PartyUpdateOneWithoutTransactionInfoNestedInput
     stakeholder?: StakeholderUpdateOneWithoutTransactionInfoNestedInput
@@ -66567,7 +65342,6 @@ export namespace Prisma {
     voucherNo?: StringFieldUpdateOperationsInput | string
     invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     chemistId?: NullableStringFieldUpdateOperationsInput | string | null
-    customerId?: NullableIntFieldUpdateOperationsInput | number | null
     stakeholderId?: NullableStringFieldUpdateOperationsInput | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     partyId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -66606,7 +65380,7 @@ export namespace Prisma {
     jobPost?: JobPostCreateNestedManyWithoutDepoInput
     journal?: JournalCreateNestedManyWithoutDepoInput
     scopes?: ScopeCreateNestedManyWithoutDepoInput
-    receiverTransactions?: DepoTransactionCreateNestedManyWithoutReceverdepoInput
+    receiverTransactions?: DepoTransactionCreateNestedManyWithoutReceiverdepoInput
   }
 
   export type DepoUncheckedCreateWithoutProviderTransactionsInput = {
@@ -66622,7 +65396,7 @@ export namespace Prisma {
     jobPost?: JobPostUncheckedCreateNestedManyWithoutDepoInput
     journal?: JournalUncheckedCreateNestedManyWithoutDepoInput
     scopes?: ScopeUncheckedCreateNestedManyWithoutDepoInput
-    receiverTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutReceverdepoInput
+    receiverTransactions?: DepoTransactionUncheckedCreateNestedManyWithoutReceiverdepoInput
   }
 
   export type DepoCreateOrConnectWithoutProviderTransactionsInput = {
@@ -66699,6 +65473,37 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type DepoJournalCreateWithoutDepoTransactionInput = {
+    date: Date | string
+    creditAmount?: number | null
+    debitAmount?: number | null
+    narration?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ledgerHead?: LedgerHeadCreateNestedOneWithoutDepoJournalsInput
+  }
+
+  export type DepoJournalUncheckedCreateWithoutDepoTransactionInput = {
+    id?: number
+    date: Date | string
+    ledgerHeadId: number
+    creditAmount?: number | null
+    debitAmount?: number | null
+    narration?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DepoJournalCreateOrConnectWithoutDepoTransactionInput = {
+    where: DepoJournalWhereUniqueInput
+    create: XOR<DepoJournalCreateWithoutDepoTransactionInput, DepoJournalUncheckedCreateWithoutDepoTransactionInput>
+  }
+
+  export type DepoJournalCreateManyDepoTransactionInputEnvelope = {
+    data: DepoJournalCreateManyDepoTransactionInput | DepoJournalCreateManyDepoTransactionInput[]
+    skipDuplicates?: boolean
+  }
+
   export type DepoUpsertWithoutProviderTransactionsInput = {
     update: XOR<DepoUpdateWithoutProviderTransactionsInput, DepoUncheckedUpdateWithoutProviderTransactionsInput>
     create: XOR<DepoCreateWithoutProviderTransactionsInput, DepoUncheckedCreateWithoutProviderTransactionsInput>
@@ -66722,7 +65527,7 @@ export namespace Prisma {
     jobPost?: JobPostUpdateManyWithoutDepoNestedInput
     journal?: JournalUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUpdateManyWithoutDepoNestedInput
-    receiverTransactions?: DepoTransactionUpdateManyWithoutReceverdepoNestedInput
+    receiverTransactions?: DepoTransactionUpdateManyWithoutReceiverdepoNestedInput
   }
 
   export type DepoUncheckedUpdateWithoutProviderTransactionsInput = {
@@ -66738,7 +65543,7 @@ export namespace Prisma {
     jobPost?: JobPostUncheckedUpdateManyWithoutDepoNestedInput
     journal?: JournalUncheckedUpdateManyWithoutDepoNestedInput
     scopes?: ScopeUncheckedUpdateManyWithoutDepoNestedInput
-    receiverTransactions?: DepoTransactionUncheckedUpdateManyWithoutReceverdepoNestedInput
+    receiverTransactions?: DepoTransactionUncheckedUpdateManyWithoutReceiverdepoNestedInput
   }
 
   export type DepoUpsertWithoutReceiverTransactionsInput = {
@@ -66799,6 +65604,54 @@ export namespace Prisma {
     data: XOR<DepoInventoryUpdateManyMutationInput, DepoInventoryUncheckedUpdateManyWithoutDepoTransactionInput>
   }
 
+  export type DepoJournalUpsertWithWhereUniqueWithoutDepoTransactionInput = {
+    where: DepoJournalWhereUniqueInput
+    update: XOR<DepoJournalUpdateWithoutDepoTransactionInput, DepoJournalUncheckedUpdateWithoutDepoTransactionInput>
+    create: XOR<DepoJournalCreateWithoutDepoTransactionInput, DepoJournalUncheckedCreateWithoutDepoTransactionInput>
+  }
+
+  export type DepoJournalUpdateWithWhereUniqueWithoutDepoTransactionInput = {
+    where: DepoJournalWhereUniqueInput
+    data: XOR<DepoJournalUpdateWithoutDepoTransactionInput, DepoJournalUncheckedUpdateWithoutDepoTransactionInput>
+  }
+
+  export type DepoJournalUpdateManyWithWhereWithoutDepoTransactionInput = {
+    where: DepoJournalScalarWhereInput
+    data: XOR<DepoJournalUpdateManyMutationInput, DepoJournalUncheckedUpdateManyWithoutDepoTransactionInput>
+  }
+
+  export type DepoTransactionCreateWithoutDepoJournalsInput = {
+    date: Date | string
+    invoiceNo?: string | null
+    voucherNo: string
+    voucherType?: $Enums.VoucherType
+    status?: $Enums.OrdStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    providerdepo: DepoCreateNestedOneWithoutProviderTransactionsInput
+    receiverdepo: DepoCreateNestedOneWithoutReceiverTransactionsInput
+    depoInventories?: DepoInventoryCreateNestedManyWithoutDepoTransactionInput
+  }
+
+  export type DepoTransactionUncheckedCreateWithoutDepoJournalsInput = {
+    id?: number
+    date: Date | string
+    providerdepoId: number
+    receiverdepoId: number
+    invoiceNo?: string | null
+    voucherNo: string
+    voucherType?: $Enums.VoucherType
+    status?: $Enums.OrdStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    depoInventories?: DepoInventoryUncheckedCreateNestedManyWithoutDepoTransactionInput
+  }
+
+  export type DepoTransactionCreateOrConnectWithoutDepoJournalsInput = {
+    where: DepoTransactionWhereUniqueInput
+    create: XOR<DepoTransactionCreateWithoutDepoJournalsInput, DepoTransactionUncheckedCreateWithoutDepoJournalsInput>
+  }
+
   export type LedgerHeadCreateWithoutDepoJournalsInput = {
     ledgerName: string
     ledgerCode: string
@@ -66821,6 +65674,44 @@ export namespace Prisma {
   export type LedgerHeadCreateOrConnectWithoutDepoJournalsInput = {
     where: LedgerHeadWhereUniqueInput
     create: XOR<LedgerHeadCreateWithoutDepoJournalsInput, LedgerHeadUncheckedCreateWithoutDepoJournalsInput>
+  }
+
+  export type DepoTransactionUpsertWithoutDepoJournalsInput = {
+    update: XOR<DepoTransactionUpdateWithoutDepoJournalsInput, DepoTransactionUncheckedUpdateWithoutDepoJournalsInput>
+    create: XOR<DepoTransactionCreateWithoutDepoJournalsInput, DepoTransactionUncheckedCreateWithoutDepoJournalsInput>
+    where?: DepoTransactionWhereInput
+  }
+
+  export type DepoTransactionUpdateToOneWithWhereWithoutDepoJournalsInput = {
+    where?: DepoTransactionWhereInput
+    data: XOR<DepoTransactionUpdateWithoutDepoJournalsInput, DepoTransactionUncheckedUpdateWithoutDepoJournalsInput>
+  }
+
+  export type DepoTransactionUpdateWithoutDepoJournalsInput = {
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    voucherNo?: StringFieldUpdateOperationsInput | string
+    voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
+    status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    providerdepo?: DepoUpdateOneRequiredWithoutProviderTransactionsNestedInput
+    receiverdepo?: DepoUpdateOneRequiredWithoutReceiverTransactionsNestedInput
+    depoInventories?: DepoInventoryUpdateManyWithoutDepoTransactionNestedInput
+  }
+
+  export type DepoTransactionUncheckedUpdateWithoutDepoJournalsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    providerdepoId?: IntFieldUpdateOperationsInput | number
+    receiverdepoId?: IntFieldUpdateOperationsInput | number
+    invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
+    voucherNo?: StringFieldUpdateOperationsInput | string
+    voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
+    status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    depoInventories?: DepoInventoryUncheckedUpdateManyWithoutDepoTransactionNestedInput
   }
 
   export type LedgerHeadUpsertWithoutDepoJournalsInput = {
@@ -66903,23 +65794,29 @@ export namespace Prisma {
 
   export type DepoTransactionCreateWithoutDepoInventoriesInput = {
     date: Date | string
+    invoiceNo?: string | null
     voucherNo: string
+    voucherType?: $Enums.VoucherType
     status?: $Enums.OrdStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     providerdepo: DepoCreateNestedOneWithoutProviderTransactionsInput
-    receverdepo: DepoCreateNestedOneWithoutReceiverTransactionsInput
+    receiverdepo: DepoCreateNestedOneWithoutReceiverTransactionsInput
+    depoJournals?: DepoJournalCreateNestedManyWithoutDepoTransactionInput
   }
 
   export type DepoTransactionUncheckedCreateWithoutDepoInventoriesInput = {
     id?: number
     date: Date | string
     providerdepoId: number
-    receverdepoId: number
+    receiverdepoId: number
+    invoiceNo?: string | null
     voucherNo: string
+    voucherType?: $Enums.VoucherType
     status?: $Enums.OrdStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    depoJournals?: DepoJournalUncheckedCreateNestedManyWithoutDepoTransactionInput
   }
 
   export type DepoTransactionCreateOrConnectWithoutDepoInventoriesInput = {
@@ -66994,23 +65891,29 @@ export namespace Prisma {
 
   export type DepoTransactionUpdateWithoutDepoInventoriesInput = {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucherNo?: StringFieldUpdateOperationsInput | string
+    voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
     status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     providerdepo?: DepoUpdateOneRequiredWithoutProviderTransactionsNestedInput
-    receverdepo?: DepoUpdateOneRequiredWithoutReceiverTransactionsNestedInput
+    receiverdepo?: DepoUpdateOneRequiredWithoutReceiverTransactionsNestedInput
+    depoJournals?: DepoJournalUpdateManyWithoutDepoTransactionNestedInput
   }
 
   export type DepoTransactionUncheckedUpdateWithoutDepoInventoriesInput = {
     id?: IntFieldUpdateOperationsInput | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     providerdepoId?: IntFieldUpdateOperationsInput | number
-    receverdepoId?: IntFieldUpdateOperationsInput | number
+    receiverdepoId?: IntFieldUpdateOperationsInput | number
+    invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucherNo?: StringFieldUpdateOperationsInput | string
+    voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
     status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    depoJournals?: DepoJournalUncheckedUpdateManyWithoutDepoTransactionNestedInput
   }
 
   export type OrderItemCreateWithoutOrderInput = {
@@ -67121,7 +66024,7 @@ export namespace Prisma {
     attendance?: AttendanceCreateNestedManyWithoutUserInput
     employeeProfile?: EmployeeProfileCreateNestedOneWithoutUserInput
     leves?: LevesCreateNestedManyWithoutUserInput
-    mpoTarget?: MpoTargetCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetCreateNestedManyWithoutUserInput
     overtime?: OvertimeCreateNestedManyWithoutUserInput
     payroll?: PayrollCreateNestedManyWithoutUserInput
     salaryInfo?: SalaryInfoCreateNestedManyWithoutUserInput
@@ -67145,7 +66048,7 @@ export namespace Prisma {
     attendance?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     employeeProfile?: EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
     leves?: LevesUncheckedCreateNestedManyWithoutUserInput
-    mpoTarget?: MpoTargetUncheckedCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetUncheckedCreateNestedManyWithoutUserInput
     overtime?: OvertimeUncheckedCreateNestedManyWithoutUserInput
     payroll?: PayrollUncheckedCreateNestedManyWithoutUserInput
     salaryInfo?: SalaryInfoUncheckedCreateNestedManyWithoutUserInput
@@ -67277,7 +66180,7 @@ export namespace Prisma {
     attendance?: AttendanceUpdateManyWithoutUserNestedInput
     employeeProfile?: EmployeeProfileUpdateOneWithoutUserNestedInput
     leves?: LevesUpdateManyWithoutUserNestedInput
-    mpoTarget?: MpoTargetUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUpdateManyWithoutUserNestedInput
     overtime?: OvertimeUpdateManyWithoutUserNestedInput
     payroll?: PayrollUpdateManyWithoutUserNestedInput
     salaryInfo?: SalaryInfoUpdateManyWithoutUserNestedInput
@@ -67301,7 +66204,7 @@ export namespace Prisma {
     attendance?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     employeeProfile?: EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
     leves?: LevesUncheckedUpdateManyWithoutUserNestedInput
-    mpoTarget?: MpoTargetUncheckedUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUncheckedUpdateManyWithoutUserNestedInput
     overtime?: OvertimeUncheckedUpdateManyWithoutUserNestedInput
     payroll?: PayrollUncheckedUpdateManyWithoutUserNestedInput
     salaryInfo?: SalaryInfoUncheckedUpdateManyWithoutUserNestedInput
@@ -67549,7 +66452,7 @@ export namespace Prisma {
     productWiseTarget?: ProductWiseTargetCreateNestedOneWithoutUserInput
     employeeProfile?: EmployeeProfileCreateNestedOneWithoutUserInput
     leves?: LevesCreateNestedManyWithoutUserInput
-    mpoTarget?: MpoTargetCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetCreateNestedManyWithoutUserInput
     order?: OrderCreateNestedManyWithoutUserInput
     overtime?: OvertimeCreateNestedManyWithoutUserInput
     payroll?: PayrollCreateNestedManyWithoutUserInput
@@ -67573,7 +66476,7 @@ export namespace Prisma {
     productWiseTarget?: ProductWiseTargetUncheckedCreateNestedOneWithoutUserInput
     employeeProfile?: EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
     leves?: LevesUncheckedCreateNestedManyWithoutUserInput
-    mpoTarget?: MpoTargetUncheckedCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetUncheckedCreateNestedManyWithoutUserInput
     order?: OrderUncheckedCreateNestedManyWithoutUserInput
     overtime?: OvertimeUncheckedCreateNestedManyWithoutUserInput
     payroll?: PayrollUncheckedCreateNestedManyWithoutUserInput
@@ -67612,7 +66515,7 @@ export namespace Prisma {
     productWiseTarget?: ProductWiseTargetUpdateOneWithoutUserNestedInput
     employeeProfile?: EmployeeProfileUpdateOneWithoutUserNestedInput
     leves?: LevesUpdateManyWithoutUserNestedInput
-    mpoTarget?: MpoTargetUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUpdateManyWithoutUserNestedInput
     order?: OrderUpdateManyWithoutUserNestedInput
     overtime?: OvertimeUpdateManyWithoutUserNestedInput
     payroll?: PayrollUpdateManyWithoutUserNestedInput
@@ -67636,7 +66539,7 @@ export namespace Prisma {
     productWiseTarget?: ProductWiseTargetUncheckedUpdateOneWithoutUserNestedInput
     employeeProfile?: EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
     leves?: LevesUncheckedUpdateManyWithoutUserNestedInput
-    mpoTarget?: MpoTargetUncheckedUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUncheckedUpdateManyWithoutUserNestedInput
     order?: OrderUncheckedUpdateManyWithoutUserNestedInput
     overtime?: OvertimeUncheckedUpdateManyWithoutUserNestedInput
     payroll?: PayrollUncheckedUpdateManyWithoutUserNestedInput
@@ -67660,7 +66563,7 @@ export namespace Prisma {
     attendance?: AttendanceCreateNestedManyWithoutUserInput
     employeeProfile?: EmployeeProfileCreateNestedOneWithoutUserInput
     leves?: LevesCreateNestedManyWithoutUserInput
-    mpoTarget?: MpoTargetCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetCreateNestedManyWithoutUserInput
     order?: OrderCreateNestedManyWithoutUserInput
     payroll?: PayrollCreateNestedManyWithoutUserInput
     salaryInfo?: SalaryInfoCreateNestedManyWithoutUserInput
@@ -67684,7 +66587,7 @@ export namespace Prisma {
     attendance?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     employeeProfile?: EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
     leves?: LevesUncheckedCreateNestedManyWithoutUserInput
-    mpoTarget?: MpoTargetUncheckedCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetUncheckedCreateNestedManyWithoutUserInput
     order?: OrderUncheckedCreateNestedManyWithoutUserInput
     payroll?: PayrollUncheckedCreateNestedManyWithoutUserInput
     salaryInfo?: SalaryInfoUncheckedCreateNestedManyWithoutUserInput
@@ -67723,7 +66626,7 @@ export namespace Prisma {
     attendance?: AttendanceUpdateManyWithoutUserNestedInput
     employeeProfile?: EmployeeProfileUpdateOneWithoutUserNestedInput
     leves?: LevesUpdateManyWithoutUserNestedInput
-    mpoTarget?: MpoTargetUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUpdateManyWithoutUserNestedInput
     order?: OrderUpdateManyWithoutUserNestedInput
     payroll?: PayrollUpdateManyWithoutUserNestedInput
     salaryInfo?: SalaryInfoUpdateManyWithoutUserNestedInput
@@ -67747,7 +66650,7 @@ export namespace Prisma {
     attendance?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     employeeProfile?: EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
     leves?: LevesUncheckedUpdateManyWithoutUserNestedInput
-    mpoTarget?: MpoTargetUncheckedUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUncheckedUpdateManyWithoutUserNestedInput
     order?: OrderUncheckedUpdateManyWithoutUserNestedInput
     payroll?: PayrollUncheckedUpdateManyWithoutUserNestedInput
     salaryInfo?: SalaryInfoUncheckedUpdateManyWithoutUserNestedInput
@@ -67814,7 +66717,7 @@ export namespace Prisma {
     productWiseTarget?: ProductWiseTargetCreateNestedOneWithoutUserInput
     attendance?: AttendanceCreateNestedManyWithoutUserInput
     employeeProfile?: EmployeeProfileCreateNestedOneWithoutUserInput
-    mpoTarget?: MpoTargetCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetCreateNestedManyWithoutUserInput
     order?: OrderCreateNestedManyWithoutUserInput
     overtime?: OvertimeCreateNestedManyWithoutUserInput
     payroll?: PayrollCreateNestedManyWithoutUserInput
@@ -67838,7 +66741,7 @@ export namespace Prisma {
     productWiseTarget?: ProductWiseTargetUncheckedCreateNestedOneWithoutUserInput
     attendance?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     employeeProfile?: EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
-    mpoTarget?: MpoTargetUncheckedCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetUncheckedCreateNestedManyWithoutUserInput
     order?: OrderUncheckedCreateNestedManyWithoutUserInput
     overtime?: OvertimeUncheckedCreateNestedManyWithoutUserInput
     payroll?: PayrollUncheckedCreateNestedManyWithoutUserInput
@@ -67891,7 +66794,7 @@ export namespace Prisma {
     productWiseTarget?: ProductWiseTargetUpdateOneWithoutUserNestedInput
     attendance?: AttendanceUpdateManyWithoutUserNestedInput
     employeeProfile?: EmployeeProfileUpdateOneWithoutUserNestedInput
-    mpoTarget?: MpoTargetUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUpdateManyWithoutUserNestedInput
     order?: OrderUpdateManyWithoutUserNestedInput
     overtime?: OvertimeUpdateManyWithoutUserNestedInput
     payroll?: PayrollUpdateManyWithoutUserNestedInput
@@ -67915,7 +66818,7 @@ export namespace Prisma {
     productWiseTarget?: ProductWiseTargetUncheckedUpdateOneWithoutUserNestedInput
     attendance?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     employeeProfile?: EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
-    mpoTarget?: MpoTargetUncheckedUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUncheckedUpdateManyWithoutUserNestedInput
     order?: OrderUncheckedUpdateManyWithoutUserNestedInput
     overtime?: OvertimeUncheckedUpdateManyWithoutUserNestedInput
     payroll?: PayrollUncheckedUpdateManyWithoutUserNestedInput
@@ -67959,7 +66862,7 @@ export namespace Prisma {
     attendance?: AttendanceCreateNestedManyWithoutUserInput
     employeeProfile?: EmployeeProfileCreateNestedOneWithoutUserInput
     leves?: LevesCreateNestedManyWithoutUserInput
-    mpoTarget?: MpoTargetCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetCreateNestedManyWithoutUserInput
     order?: OrderCreateNestedManyWithoutUserInput
     overtime?: OvertimeCreateNestedManyWithoutUserInput
     payroll?: PayrollCreateNestedManyWithoutUserInput
@@ -67983,7 +66886,7 @@ export namespace Prisma {
     attendance?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     employeeProfile?: EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
     leves?: LevesUncheckedCreateNestedManyWithoutUserInput
-    mpoTarget?: MpoTargetUncheckedCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetUncheckedCreateNestedManyWithoutUserInput
     order?: OrderUncheckedCreateNestedManyWithoutUserInput
     overtime?: OvertimeUncheckedCreateNestedManyWithoutUserInput
     payroll?: PayrollUncheckedCreateNestedManyWithoutUserInput
@@ -68022,7 +66925,7 @@ export namespace Prisma {
     attendance?: AttendanceUpdateManyWithoutUserNestedInput
     employeeProfile?: EmployeeProfileUpdateOneWithoutUserNestedInput
     leves?: LevesUpdateManyWithoutUserNestedInput
-    mpoTarget?: MpoTargetUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUpdateManyWithoutUserNestedInput
     order?: OrderUpdateManyWithoutUserNestedInput
     overtime?: OvertimeUpdateManyWithoutUserNestedInput
     payroll?: PayrollUpdateManyWithoutUserNestedInput
@@ -68046,7 +66949,7 @@ export namespace Prisma {
     attendance?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     employeeProfile?: EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
     leves?: LevesUncheckedUpdateManyWithoutUserNestedInput
-    mpoTarget?: MpoTargetUncheckedUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUncheckedUpdateManyWithoutUserNestedInput
     order?: OrderUncheckedUpdateManyWithoutUserNestedInput
     overtime?: OvertimeUncheckedUpdateManyWithoutUserNestedInput
     payroll?: PayrollUncheckedUpdateManyWithoutUserNestedInput
@@ -68069,7 +66972,7 @@ export namespace Prisma {
     attendance?: AttendanceCreateNestedManyWithoutUserInput
     employeeProfile?: EmployeeProfileCreateNestedOneWithoutUserInput
     leves?: LevesCreateNestedManyWithoutUserInput
-    mpoTarget?: MpoTargetCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetCreateNestedManyWithoutUserInput
     order?: OrderCreateNestedManyWithoutUserInput
     overtime?: OvertimeCreateNestedManyWithoutUserInput
     salaryInfo?: SalaryInfoCreateNestedManyWithoutUserInput
@@ -68093,7 +66996,7 @@ export namespace Prisma {
     attendance?: AttendanceUncheckedCreateNestedManyWithoutUserInput
     employeeProfile?: EmployeeProfileUncheckedCreateNestedOneWithoutUserInput
     leves?: LevesUncheckedCreateNestedManyWithoutUserInput
-    mpoTarget?: MpoTargetUncheckedCreateNestedOneWithoutUserInput
+    mpoTarget?: MpoTargetUncheckedCreateNestedManyWithoutUserInput
     order?: OrderUncheckedCreateNestedManyWithoutUserInput
     overtime?: OvertimeUncheckedCreateNestedManyWithoutUserInput
     salaryInfo?: SalaryInfoUncheckedCreateNestedManyWithoutUserInput
@@ -68132,7 +67035,7 @@ export namespace Prisma {
     attendance?: AttendanceUpdateManyWithoutUserNestedInput
     employeeProfile?: EmployeeProfileUpdateOneWithoutUserNestedInput
     leves?: LevesUpdateManyWithoutUserNestedInput
-    mpoTarget?: MpoTargetUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUpdateManyWithoutUserNestedInput
     order?: OrderUpdateManyWithoutUserNestedInput
     overtime?: OvertimeUpdateManyWithoutUserNestedInput
     salaryInfo?: SalaryInfoUpdateManyWithoutUserNestedInput
@@ -68156,7 +67059,7 @@ export namespace Prisma {
     attendance?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     employeeProfile?: EmployeeProfileUncheckedUpdateOneWithoutUserNestedInput
     leves?: LevesUncheckedUpdateManyWithoutUserNestedInput
-    mpoTarget?: MpoTargetUncheckedUpdateOneWithoutUserNestedInput
+    mpoTarget?: MpoTargetUncheckedUpdateManyWithoutUserNestedInput
     order?: OrderUncheckedUpdateManyWithoutUserNestedInput
     overtime?: OvertimeUncheckedUpdateManyWithoutUserNestedInput
     salaryInfo?: SalaryInfoUncheckedUpdateManyWithoutUserNestedInput
@@ -68181,6 +67084,14 @@ export namespace Prisma {
     startDate: Date | string
     endDate: Date | string
     leaveReason: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MpoTargetCreateManyUserInput = {
+    id?: number
+    month: string
+    targetAmount: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -68240,7 +67151,6 @@ export namespace Prisma {
     voucherNo: string
     invoiceNo?: string | null
     chemistId?: string | null
-    customerId?: number | null
     stakeholderId?: string | null
     partyId?: number | null
     voucherType: $Enums.VoucherType
@@ -68319,6 +67229,29 @@ export namespace Prisma {
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     leaveReason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MpoTargetUpdateWithoutUserInput = {
+    month?: StringFieldUpdateOperationsInput | string
+    targetAmount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MpoTargetUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    month?: StringFieldUpdateOperationsInput | string
+    targetAmount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MpoTargetUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    month?: StringFieldUpdateOperationsInput | string
+    targetAmount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -68481,7 +67414,6 @@ export namespace Prisma {
     inventory?: InventoryUpdateManyWithoutTransactionInfoNestedInput
     journal?: JournalUpdateManyWithoutTransactionInfoNestedInput
     chemist?: ChemistUpdateOneWithoutTransactionInfoNestedInput
-    customers?: CustomersUpdateOneWithoutTransactionInfoNestedInput
     party?: PartyUpdateOneWithoutTransactionInfoNestedInput
     stakeholder?: StakeholderUpdateOneWithoutTransactionInfoNestedInput
   }
@@ -68492,7 +67424,6 @@ export namespace Prisma {
     voucherNo?: StringFieldUpdateOperationsInput | string
     invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     chemistId?: NullableStringFieldUpdateOperationsInput | string | null
-    customerId?: NullableIntFieldUpdateOperationsInput | number | null
     stakeholderId?: NullableStringFieldUpdateOperationsInput | string | null
     partyId?: NullableIntFieldUpdateOperationsInput | number | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
@@ -68509,7 +67440,6 @@ export namespace Prisma {
     voucherNo?: StringFieldUpdateOperationsInput | string
     invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     chemistId?: NullableStringFieldUpdateOperationsInput | string | null
-    customerId?: NullableIntFieldUpdateOperationsInput | number | null
     stakeholderId?: NullableStringFieldUpdateOperationsInput | string | null
     partyId?: NullableIntFieldUpdateOperationsInput | number | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
@@ -68613,7 +67543,6 @@ export namespace Prisma {
     date: Date | string
     voucherNo: string
     invoiceNo?: string | null
-    customerId?: number | null
     stakeholderId?: string | null
     employeeId?: string | null
     partyId?: number | null
@@ -68693,7 +67622,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     inventory?: InventoryUpdateManyWithoutTransactionInfoNestedInput
     journal?: JournalUpdateManyWithoutTransactionInfoNestedInput
-    customers?: CustomersUpdateOneWithoutTransactionInfoNestedInput
     user?: UserUpdateOneWithoutTransactionInfoNestedInput
     party?: PartyUpdateOneWithoutTransactionInfoNestedInput
     stakeholder?: StakeholderUpdateOneWithoutTransactionInfoNestedInput
@@ -68704,7 +67632,6 @@ export namespace Prisma {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     voucherNo?: StringFieldUpdateOperationsInput | string
     invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
-    customerId?: NullableIntFieldUpdateOperationsInput | number | null
     stakeholderId?: NullableStringFieldUpdateOperationsInput | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     partyId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -68721,7 +67648,6 @@ export namespace Prisma {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     voucherNo?: StringFieldUpdateOperationsInput | string
     invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
-    customerId?: NullableIntFieldUpdateOperationsInput | number | null
     stakeholderId?: NullableStringFieldUpdateOperationsInput | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     partyId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -68789,18 +67715,22 @@ export namespace Prisma {
   export type DepoTransactionCreateManyProviderdepoInput = {
     id?: number
     date: Date | string
-    receverdepoId: number
+    receiverdepoId: number
+    invoiceNo?: string | null
     voucherNo: string
+    voucherType?: $Enums.VoucherType
     status?: $Enums.OrdStatus
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type DepoTransactionCreateManyReceverdepoInput = {
+  export type DepoTransactionCreateManyReceiverdepoInput = {
     id?: number
     date: Date | string
     providerdepoId: number
+    invoiceNo?: string | null
     voucherNo: string
+    voucherType?: $Enums.VoucherType
     status?: $Enums.OrdStatus
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -69006,61 +67936,77 @@ export namespace Prisma {
 
   export type DepoTransactionUpdateWithoutProviderdepoInput = {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucherNo?: StringFieldUpdateOperationsInput | string
+    voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
     status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    receverdepo?: DepoUpdateOneRequiredWithoutReceiverTransactionsNestedInput
+    receiverdepo?: DepoUpdateOneRequiredWithoutReceiverTransactionsNestedInput
     depoInventories?: DepoInventoryUpdateManyWithoutDepoTransactionNestedInput
+    depoJournals?: DepoJournalUpdateManyWithoutDepoTransactionNestedInput
   }
 
   export type DepoTransactionUncheckedUpdateWithoutProviderdepoInput = {
     id?: IntFieldUpdateOperationsInput | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    receverdepoId?: IntFieldUpdateOperationsInput | number
+    receiverdepoId?: IntFieldUpdateOperationsInput | number
+    invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucherNo?: StringFieldUpdateOperationsInput | string
+    voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
     status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     depoInventories?: DepoInventoryUncheckedUpdateManyWithoutDepoTransactionNestedInput
+    depoJournals?: DepoJournalUncheckedUpdateManyWithoutDepoTransactionNestedInput
   }
 
   export type DepoTransactionUncheckedUpdateManyWithoutProviderdepoInput = {
     id?: IntFieldUpdateOperationsInput | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    receverdepoId?: IntFieldUpdateOperationsInput | number
+    receiverdepoId?: IntFieldUpdateOperationsInput | number
+    invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucherNo?: StringFieldUpdateOperationsInput | string
+    voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
     status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type DepoTransactionUpdateWithoutReceverdepoInput = {
+  export type DepoTransactionUpdateWithoutReceiverdepoInput = {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
+    invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucherNo?: StringFieldUpdateOperationsInput | string
+    voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
     status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     providerdepo?: DepoUpdateOneRequiredWithoutProviderTransactionsNestedInput
     depoInventories?: DepoInventoryUpdateManyWithoutDepoTransactionNestedInput
+    depoJournals?: DepoJournalUpdateManyWithoutDepoTransactionNestedInput
   }
 
-  export type DepoTransactionUncheckedUpdateWithoutReceverdepoInput = {
+  export type DepoTransactionUncheckedUpdateWithoutReceiverdepoInput = {
     id?: IntFieldUpdateOperationsInput | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     providerdepoId?: IntFieldUpdateOperationsInput | number
+    invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucherNo?: StringFieldUpdateOperationsInput | string
+    voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
     status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     depoInventories?: DepoInventoryUncheckedUpdateManyWithoutDepoTransactionNestedInput
+    depoJournals?: DepoJournalUncheckedUpdateManyWithoutDepoTransactionNestedInput
   }
 
-  export type DepoTransactionUncheckedUpdateManyWithoutReceverdepoInput = {
+  export type DepoTransactionUncheckedUpdateManyWithoutReceiverdepoInput = {
     id?: IntFieldUpdateOperationsInput | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     providerdepoId?: IntFieldUpdateOperationsInput | number
+    invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucherNo?: StringFieldUpdateOperationsInput | string
+    voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
     status?: EnumOrdStatusFieldUpdateOperationsInput | $Enums.OrdStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -69072,7 +68018,6 @@ export namespace Prisma {
     voucherNo: string
     invoiceNo?: string | null
     chemistId?: string | null
-    customerId?: number | null
     stakeholderId?: string | null
     employeeId?: string | null
     voucherType: $Enums.VoucherType
@@ -69092,7 +68037,6 @@ export namespace Prisma {
     inventory?: InventoryUpdateManyWithoutTransactionInfoNestedInput
     journal?: JournalUpdateManyWithoutTransactionInfoNestedInput
     chemist?: ChemistUpdateOneWithoutTransactionInfoNestedInput
-    customers?: CustomersUpdateOneWithoutTransactionInfoNestedInput
     user?: UserUpdateOneWithoutTransactionInfoNestedInput
     stakeholder?: StakeholderUpdateOneWithoutTransactionInfoNestedInput
   }
@@ -69103,7 +68047,6 @@ export namespace Prisma {
     voucherNo?: StringFieldUpdateOperationsInput | string
     invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     chemistId?: NullableStringFieldUpdateOperationsInput | string | null
-    customerId?: NullableIntFieldUpdateOperationsInput | number | null
     stakeholderId?: NullableStringFieldUpdateOperationsInput | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
@@ -69120,7 +68063,6 @@ export namespace Prisma {
     voucherNo?: StringFieldUpdateOperationsInput | string
     invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     chemistId?: NullableStringFieldUpdateOperationsInput | string | null
-    customerId?: NullableIntFieldUpdateOperationsInput | number | null
     stakeholderId?: NullableStringFieldUpdateOperationsInput | string | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
@@ -69173,7 +68115,6 @@ export namespace Prisma {
     voucherNo: string
     invoiceNo?: string | null
     chemistId?: string | null
-    customerId?: number | null
     employeeId?: string | null
     partyId?: number | null
     voucherType: $Enums.VoucherType
@@ -69339,7 +68280,6 @@ export namespace Prisma {
     inventory?: InventoryUpdateManyWithoutTransactionInfoNestedInput
     journal?: JournalUpdateManyWithoutTransactionInfoNestedInput
     chemist?: ChemistUpdateOneWithoutTransactionInfoNestedInput
-    customers?: CustomersUpdateOneWithoutTransactionInfoNestedInput
     user?: UserUpdateOneWithoutTransactionInfoNestedInput
     party?: PartyUpdateOneWithoutTransactionInfoNestedInput
   }
@@ -69350,7 +68290,6 @@ export namespace Prisma {
     voucherNo?: StringFieldUpdateOperationsInput | string
     invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     chemistId?: NullableStringFieldUpdateOperationsInput | string | null
-    customerId?: NullableIntFieldUpdateOperationsInput | number | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     partyId?: NullableIntFieldUpdateOperationsInput | number | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
@@ -69367,7 +68306,6 @@ export namespace Prisma {
     voucherNo?: StringFieldUpdateOperationsInput | string
     invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
     chemistId?: NullableStringFieldUpdateOperationsInput | string | null
-    customerId?: NullableIntFieldUpdateOperationsInput | number | null
     employeeId?: NullableStringFieldUpdateOperationsInput | string | null
     partyId?: NullableIntFieldUpdateOperationsInput | number | null
     voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
@@ -69522,69 +68460,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type TransactionInfoCreateManyCustomersInput = {
-    id?: number
-    date: Date | string
-    voucherNo: string
-    invoiceNo?: string | null
-    chemistId?: string | null
-    stakeholderId?: string | null
-    employeeId?: string | null
-    partyId?: number | null
-    voucherType: $Enums.VoucherType
-    status?: $Enums.Status
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type TransactionInfoUpdateWithoutCustomersInput = {
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    voucherNo?: StringFieldUpdateOperationsInput | string
-    invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
-    voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    inventory?: InventoryUpdateManyWithoutTransactionInfoNestedInput
-    journal?: JournalUpdateManyWithoutTransactionInfoNestedInput
-    chemist?: ChemistUpdateOneWithoutTransactionInfoNestedInput
-    user?: UserUpdateOneWithoutTransactionInfoNestedInput
-    party?: PartyUpdateOneWithoutTransactionInfoNestedInput
-    stakeholder?: StakeholderUpdateOneWithoutTransactionInfoNestedInput
-  }
-
-  export type TransactionInfoUncheckedUpdateWithoutCustomersInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    voucherNo?: StringFieldUpdateOperationsInput | string
-    invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
-    chemistId?: NullableStringFieldUpdateOperationsInput | string | null
-    stakeholderId?: NullableStringFieldUpdateOperationsInput | string | null
-    employeeId?: NullableStringFieldUpdateOperationsInput | string | null
-    partyId?: NullableIntFieldUpdateOperationsInput | number | null
-    voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    inventory?: InventoryUncheckedUpdateManyWithoutTransactionInfoNestedInput
-    journal?: JournalUncheckedUpdateManyWithoutTransactionInfoNestedInput
-  }
-
-  export type TransactionInfoUncheckedUpdateManyWithoutCustomersInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    voucherNo?: StringFieldUpdateOperationsInput | string
-    invoiceNo?: NullableStringFieldUpdateOperationsInput | string | null
-    chemistId?: NullableStringFieldUpdateOperationsInput | string | null
-    stakeholderId?: NullableStringFieldUpdateOperationsInput | string | null
-    employeeId?: NullableStringFieldUpdateOperationsInput | string | null
-    partyId?: NullableIntFieldUpdateOperationsInput | number | null
-    voucherType?: EnumVoucherTypeFieldUpdateOperationsInput | $Enums.VoucherType
-    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type ChemistUpdateWithoutScopesInput = {
     chemistId?: StringFieldUpdateOperationsInput | string
     pharmacyName?: StringFieldUpdateOperationsInput | string
@@ -69651,7 +68526,7 @@ export namespace Prisma {
     jobPost?: JobPostUpdateManyWithoutDepoNestedInput
     journal?: JournalUpdateManyWithoutDepoNestedInput
     providerTransactions?: DepoTransactionUpdateManyWithoutProviderdepoNestedInput
-    receiverTransactions?: DepoTransactionUpdateManyWithoutReceverdepoNestedInput
+    receiverTransactions?: DepoTransactionUpdateManyWithoutReceiverdepoNestedInput
   }
 
   export type DepoUncheckedUpdateWithoutScopesInput = {
@@ -69667,7 +68542,7 @@ export namespace Prisma {
     jobPost?: JobPostUncheckedUpdateManyWithoutDepoNestedInput
     journal?: JournalUncheckedUpdateManyWithoutDepoNestedInput
     providerTransactions?: DepoTransactionUncheckedUpdateManyWithoutProviderdepoNestedInput
-    receiverTransactions?: DepoTransactionUncheckedUpdateManyWithoutReceverdepoNestedInput
+    receiverTransactions?: DepoTransactionUncheckedUpdateManyWithoutReceiverdepoNestedInput
   }
 
   export type DepoUncheckedUpdateManyWithoutScopesInput = {
@@ -70010,10 +68885,13 @@ export namespace Prisma {
 
   export type DepoJournalCreateManyLedgerHeadInput = {
     id?: number
+    depoTransactionId?: number | null
     date: Date | string
-    depoId: number
-    amount?: number | null
+    creditAmount?: number | null
+    debitAmount?: number | null
     narration?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type JournalUpdateWithoutLedgerHeadInput = {
@@ -70058,25 +68936,34 @@ export namespace Prisma {
 
   export type DepoJournalUpdateWithoutLedgerHeadInput = {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    depoId?: IntFieldUpdateOperationsInput | number
-    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     narration?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    depoTransaction?: DepoTransactionUpdateOneWithoutDepoJournalsNestedInput
   }
 
   export type DepoJournalUncheckedUpdateWithoutLedgerHeadInput = {
     id?: IntFieldUpdateOperationsInput | number
+    depoTransactionId?: NullableIntFieldUpdateOperationsInput | number | null
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    depoId?: IntFieldUpdateOperationsInput | number
-    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     narration?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DepoJournalUncheckedUpdateManyWithoutLedgerHeadInput = {
     id?: IntFieldUpdateOperationsInput | number
+    depoTransactionId?: NullableIntFieldUpdateOperationsInput | number | null
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    depoId?: IntFieldUpdateOperationsInput | number
-    amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
     narration?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TargetProductBatchCreateManyProductInput = {
@@ -70469,6 +69356,17 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type DepoJournalCreateManyDepoTransactionInput = {
+    id?: number
+    date: Date | string
+    ledgerHeadId: number
+    creditAmount?: number | null
+    debitAmount?: number | null
+    narration?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type DepoInventoryUpdateWithoutDepoTransactionInput = {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     reqQuantity?: NullableIntFieldUpdateOperationsInput | number | null
@@ -70500,6 +69398,38 @@ export namespace Prisma {
     acceptedQuantity?: NullableIntFieldUpdateOperationsInput | number | null
     unitePrice?: NullableFloatFieldUpdateOperationsInput | number | null
     amount?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepoJournalUpdateWithoutDepoTransactionInput = {
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    narration?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ledgerHead?: LedgerHeadUpdateOneWithoutDepoJournalsNestedInput
+  }
+
+  export type DepoJournalUncheckedUpdateWithoutDepoTransactionInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    ledgerHeadId?: IntFieldUpdateOperationsInput | number
+    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    narration?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DepoJournalUncheckedUpdateManyWithoutDepoTransactionInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    ledgerHeadId?: IntFieldUpdateOperationsInput | number
+    creditAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    debitAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    narration?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

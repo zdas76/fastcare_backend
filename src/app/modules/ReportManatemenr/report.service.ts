@@ -174,7 +174,6 @@ const getMpoReportByEmployeeId = async (
             gte: fromDate,
             lte: toDate,
           },
-
         },
       });
 
@@ -192,7 +191,10 @@ const getMpoReportByEmployeeId = async (
       }
 
       const dueStart = chemist?.openingDate;
-      const dueEnd = new Date(fromDate.getTime() - 24 * 60 * 60 * 1000); // Subtract one day
+      // const dueEndDate = new Date(fromDate.getTime() - 24 * 60 * 60 * 1000); // Subtract one day
+
+      const dueEnd = new Date(fromDate);
+      dueEnd.setHours(23, 59, 59, 999);
 
       const prev_due = await prisma.journal.aggregate({
         _sum: {
@@ -243,7 +245,7 @@ const getMpoReportByEmployeeId = async (
         chemist,
         debit,
         credit,
-        balance: debit - credit,
+        balance: (debit - credit) - salesReturn,
         salesReturn,
         prev_due: prev_debit - prev_credit,
       };

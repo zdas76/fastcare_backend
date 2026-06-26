@@ -52,10 +52,11 @@ const getAllMpoProgressReport = catchAsync(async (req, res) => {
     const startDate = req.query.startDate as string | undefined;
     const endDate = req.query.endDate as string | undefined;
     const depoId = req.query.depoId ? Number(req.query.depoId) : undefined;
+    const month = req.query.month as string | undefined;
 
     const result = await MpoTargetService.getAllMpoProgressReport(
 
-        { startDate, endDate, depoId },
+        { startDate, endDate, depoId, month },
     );
 
     sendResponse(res, {
@@ -70,10 +71,11 @@ const getAllMpoProgressReportById = catchAsync(async (req, res) => {
     const employeeId = req.params.employeeId as string;
     const startDate = req.query.startDate as string | undefined;
     const endDate = req.query.endDate as string | undefined;
+    const month = req.query.month as string
 
     const result = await MpoTargetService.getAllMpoProgressReportById(
         employeeId,
-        { startDate, endDate },
+        { startDate, endDate, month },
     );
 
     sendResponse(res, {

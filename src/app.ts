@@ -1,6 +1,7 @@
 import cors from "cors";
 import { StatusCodes } from "http-status-codes";
-import express, { Application, NextFunction, Request, Response } from "express";
+import express from "express";
+import type { Application, NextFunction, Request, Response } from "express";
 import cookieParser from "cookie-parser";
 
 import path from "path";
