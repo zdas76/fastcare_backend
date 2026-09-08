@@ -75,13 +75,19 @@ const deleteInventory = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getInventoryTotal = catchAsync(async (req: Request, res: Response) => {
-  const result: any = await InventoryService.getInventoryTotalById(req.query);
+  const productId = Number(req.query.productId);
+  const depoId = Number(req.query.depoId);
+
+  const result: any = await InventoryService.getInventoryTotalById({
+    productId,
+    depoId,
+  });
 
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
     message: "Inventory retrived Successfully",
-    data: result[0],
+    data: result,
   });
 });
 
@@ -99,9 +105,6 @@ const getInventoryByVoucherNo = catchAsync(
   },
 );
 
-
-
-
 export const InventoryControllers = {
   getInventory,
   getInventoryById,
@@ -109,5 +112,4 @@ export const InventoryControllers = {
   deleteInventory,
   getInventoryTotal,
   getInventoryByVoucherNo,
-
 };

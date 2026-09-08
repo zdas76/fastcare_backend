@@ -1,15 +1,16 @@
 import { string } from "zod";
-import { VoucherType } from "../../../../generated/prisma";
+import { Product, VoucherType } from "../../../../generated/prisma";
 import prisma from "../../shared/prisma";
 import { DateRangeFilter } from "./report.controllers";
 import { getDatesInRange } from "../../shared/DateRangeArray";
+import AppError from "../../errors/AppError";
+import { TProduct } from "./report.interface";
 
 const getAllMpoTransection = async (payload: {
   startDate: string;
   endDate: string;
   depoId?: number;
 }) => {
-
   if (payload.endDate) {
     payload.endDate = new Date(
       new Date(payload.endDate).setHours(23, 59, 59, 999),
@@ -19,7 +20,9 @@ const getAllMpoTransection = async (payload: {
     where: {
       roles: { array_contains: "MPO" },
       status: "ACTIVE",
-      ...(payload.depoId && payload.depoId > 0 ? { scope: { depo: { some: { id: payload.depoId } } } } : {}),
+      ...(payload.depoId && payload.depoId > 0
+        ? { scope: { depo: { some: { id: payload.depoId } } } }
+        : {}),
     },
     select: {
       id: true,
@@ -37,7 +40,9 @@ const getAllMpoTransection = async (payload: {
     const scop = await prisma.scope.findFirst({
       where: {
         employeeId: mpo.employeeId,
-        ...(payload.depoId && payload.depoId > 0 ? { depo: { some: { id: payload.depoId } } } : {}),
+        ...(payload.depoId && payload.depoId > 0
+          ? { depo: { some: { id: payload.depoId } } }
+          : {}),
       },
       include: {
         chemist: { select: { chemistId: true } },
@@ -79,7 +84,6 @@ const getAllMpoTransection = async (payload: {
           lte: payload.endDate ? new Date(payload.endDate) : new Date(),
         },
       },
-
     });
 
     mpoTransectionData.push({
@@ -238,14 +242,14 @@ const getMpoReportByEmployeeId = async (
 
       const salesReturn =
         (salseReturn?._sum?.creditAmount ?? 0) -
-        (salseReturn?._sum?.debitAmount ?? 0) || 0;
+          (salseReturn?._sum?.debitAmount ?? 0) || 0;
 
       return {
         chemistId,
         chemist,
         debit,
         credit,
-        balance: (debit - credit) - salesReturn,
+        balance: debit - credit - salesReturn,
         salesReturn,
         prev_due: prev_debit - prev_credit,
       };
@@ -257,7 +261,6 @@ const getMpoReportByEmployeeId = async (
     transactions,
   };
 };
-
 
 const getGiftVoucherReport = async ({
   startDate,
@@ -317,7 +320,7 @@ const getGiftVoucherReport = async ({
           product: {
             select: {
               name: true,
-            }
+            },
           },
           quantityLess: true,
           creditAmount: true,
@@ -329,9 +332,7 @@ const getGiftVoucherReport = async ({
       voucherNo: true,
       id: true,
       date: true,
-
     },
-
   });
 
   return getGiftVoucher;
@@ -340,13 +341,12 @@ const getGiftVoucherReport = async ({
 const getDipoMpoReport = async ({
   startDate,
   endDate,
-  depoId
+  depoId,
 }: {
   startDate?: string;
   endDate?: string;
   depoId?: number;
 }) => {
-
   const today = new Date();
   const firstDayOfMonth = new Date(
     Date.UTC(today.getFullYear(), today.getMonth(), 1),
@@ -361,7 +361,9 @@ const getDipoMpoReport = async ({
     where: {
       roles: { array_contains: "SR" },
       status: "ACTIVE",
-      ...(depoId && depoId > 0 ? { scope: { depo: { some: { id: depoId } } } } : {}),
+      ...(depoId && depoId > 0
+        ? { scope: { depo: { some: { id: depoId } } } }
+        : {}),
     },
     select: {
       id: true,
@@ -406,7 +408,7 @@ const getDipoMpoReport = async ({
       const officePaybleId = await prisma.ledgerHead.findFirst({
         where: {
           ledgerName: {
-            in: ["office payable", "Office Payable",],
+            in: ["office payable", "Office Payable"],
           },
         },
       });
@@ -424,7 +426,6 @@ const getDipoMpoReport = async ({
           date: { gte: fromDate, lte: toDate },
         },
       });
-
 
       // Sales Return
       const returnTotals = await prisma.journal.aggregate({
@@ -445,7 +446,7 @@ const getDipoMpoReport = async ({
         (returnTotals._sum.debitAmount ?? 0);
       const dispatched = totals._sum.debitAmount ?? 0;
 
-      const totalDue = (dispatched + salesReturn) - collection;
+      const totalDue = dispatched + salesReturn - collection;
 
       return {
         id: mpo.id,
@@ -472,7 +473,6 @@ const getDipoMpoReportById = async (
     endDate?: string;
   },
 ) => {
-
   const today = new Date();
   const firstDayOfMonth = new Date(
     Date.UTC(today.getFullYear(), today.getMonth(), 1),
@@ -507,7 +507,7 @@ const getDipoMpoReportById = async (
   const officePayableHead = await prisma.ledgerHead.findFirst({
     where: {
       ledgerName: {
-        in: ["office payable", "Office Payable",],
+        in: ["office payable", "Office Payable"],
       },
     },
   });
@@ -538,7 +538,9 @@ const getDipoMpoReportById = async (
     },
   });
 
-  prevDue = (prevDueResult._sum.debitAmount ?? 0) - (prevDueResult._sum.creditAmount ?? 0);
+  prevDue =
+    (prevDueResult._sum.debitAmount ?? 0) -
+    (prevDueResult._sum.creditAmount ?? 0);
 
   const result = await Promise.all(
     Dates.map(async (date) => {
@@ -555,7 +557,10 @@ const getDipoMpoReportById = async (
         _sum: { debitAmount: true, creditAmount: true },
         where: {
           ledgerHeadId: officePayableHead.id,
-          transactionInfo: { employeeId: mpo.employeeId, voucherType: { not: VoucherType.SALES_RETURN } },
+          transactionInfo: {
+            employeeId: mpo.employeeId,
+            voucherType: { not: VoucherType.SALES_RETURN },
+          },
           date: new Date(date),
         },
       });
@@ -572,8 +577,11 @@ const getDipoMpoReportById = async (
         },
       });
 
-      const dailyTotalDue = (dailyDespatched._sum.debitAmount ?? 0) - (dailyCollection._sum.creditAmount ?? 0) + ((dailySalesReturn._sum.creditAmount ?? 0) - (dailySalesReturn._sum.debitAmount ?? 0));
-
+      const dailyTotalDue =
+        (dailyDespatched._sum.debitAmount ?? 0) -
+        (dailyCollection._sum.creditAmount ?? 0) +
+        ((dailySalesReturn._sum.creditAmount ?? 0) -
+          (dailySalesReturn._sum.debitAmount ?? 0));
 
       return {
         dailyDespatched: dailyDespatched._sum.debitAmount ?? 0,
@@ -581,16 +589,153 @@ const getDipoMpoReportById = async (
         dailySalesReturn: dailySalesReturn._sum.creditAmount ?? 0,
         dailyTotalDue,
         date,
-
       };
-    })
-  )
+    }),
+  );
 
   return {
     mpo,
     prevDue,
-    result
+    result,
   };
+};
+
+const getProductSalesReport = async (
+  employeeId: string | undefined,
+  startDate: string | undefined,
+  endDate: string | undefined,
+  depoId: number | undefined,
+) => {
+  const products = await prisma.product.findMany({
+    where: {
+      status: "ACTIVE",
+    },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      size: true,
+      unitPrice: true,
+      unit: { select: { name: true } },
+      date: true,
+    },
+  });
+
+  if (!products || products.length === 0) {
+    throw new Error("Product not found");
+  }
+
+  let employee: Record<string, any> | null = null;
+
+  if (employeeId) {
+    employee = await prisma.user.findUnique({
+      where: { employeeId },
+      select: {
+        name: true,
+        employeeId: true,
+      },
+    });
+  }
+
+  const result = await Promise.all(
+    products.map(async (product) => {
+      const StartDate = startDate ? new Date(startDate) : product.date;
+      StartDate.setHours(0, 0, 0, 0);
+      const EndDate = endDate ? new Date(endDate) : new Date();
+      EndDate.setHours(23, 59, 59, 999);
+
+      const StockData = await prisma.inventory.aggregate({
+        _sum: {
+          quantityAdd: true,
+          quantityLess: true,
+        },
+        where: {
+          productId: product.id,
+          depoId: depoId,
+          date: {
+            gte: product.date,
+            lte: EndDate,
+          },
+        },
+      });
+
+      // console.log(StartDate, EndDate);
+
+      const salesData = await prisma.inventory.aggregate({
+        _sum: {
+          quantityLess: true,
+        },
+        where: {
+          productId: product.id,
+          depoId: depoId,
+          date: {
+            gte: StartDate,
+            lte: EndDate,
+          },
+          ...(employeeId ? { employeeId: employeeId } : {}),
+          transactionInfo: {
+            voucherType: "SALES",
+          },
+        },
+      });
+
+      const salseReturnData = await prisma.inventory.aggregate({
+        _sum: {
+          quantityLess: true,
+        },
+        where: {
+          productId: product.id,
+          depoId: depoId,
+          date: {
+            gte: StartDate,
+            lte: EndDate,
+          },
+          employeeId: employeeId,
+          transactionInfo: {
+            voucherType: "SALES_RETURN",
+          },
+        },
+      });
+
+      const giftPrductData = await prisma.inventory.aggregate({
+        _sum: {
+          quantityLess: true,
+        },
+        where: {
+          productId: product.id,
+          depoId: depoId,
+          date: {
+            gte: StartDate,
+            lte: EndDate,
+          },
+          transactionInfo: {
+            voucherType: "GIFT",
+          },
+        },
+      });
+
+      const totalStock = StockData._sum.quantityAdd ?? 0;
+      const totalSold = salesData._sum.quantityLess ?? 0;
+      const totalSalesReturn = salseReturnData?._sum?.quantityLess ?? 0;
+      const totalGift = giftPrductData?._sum?.quantityLess ?? 0;
+      const availableStock = totalStock - totalSold;
+
+      return {
+        productId: product.id,
+        productName: product.name,
+        description: product.description,
+        size: product.size,
+        unit: product.unit.name,
+        totalStock,
+        totalSold,
+        totalSalesReturn,
+        totalGift,
+        availableStock,
+        employeeInfo: employee || "N/A",
+      };
+    }),
+  );
+  return result;
 };
 
 export const ReportManagementService = {
@@ -599,4 +744,5 @@ export const ReportManagementService = {
   getGiftVoucherReport,
   getDipoMpoReport,
   getDipoMpoReportById,
+  getProductSalesReport,
 };

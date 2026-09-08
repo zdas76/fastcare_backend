@@ -101,38 +101,55 @@ const getInventoryById = async (
   return { product, result };
 };
 
-const getInventoryTotalById = async (query: any) => {
+const getInventoryTotalById = async (query: {
+  productId: number;
+  depoId: number;
+}) => {
   const productId = Number(query.productId);
   const depoId = Number(query.depoId);
 
-  let product: Product | null = null;
+  const product = await prisma.product.findUnique({
+    where: {
+      id: productId,
+    },
+  });
 
-  if (productId && depoId) {
-    product = await prisma.product.findFirst({
-      where: {
-        id: productId,
-      },
-    });
-
-    if (!product) {
-      throw new AppError(StatusCodes.BAD_REQUEST, "Product not found");
-    }
-
-    const result = await prisma.$queryRaw`
-    SELECT 
-      i.productId,
-      SUM(IFNULL(i.quantityAdd, 0) - IFNULL(i.quantityLess, 0)) AS netQuantity,
-      SUM(IFNULL(i.debitAmount, 0)- IFNULL(i.creditAmount, 0)) AS netAmount
-    FROM inventories i
-    WHERE i.productId = ${productId} 
-      AND i.depoId = ${depoId}
-      AND i.date >= ${product.date}
-    GROUP BY i.productId
-  `;
-
-    return result;
+  if (!product) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "Product not found");
   }
-  return product;
+
+  const depo = await prisma.depo.findUnique({
+    where: {
+      id: depoId,
+    },
+  });
+
+  if (!depo) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "Depo not found");
+  }
+
+  const InvenotyTotal = await prisma.inventory.aggregate({
+    _sum: {
+      quantityAdd: true,
+      quantityLess: true,
+      debitAmount: true,
+      creditAmount: true,
+    },
+    where: {
+      productId: productId,
+      depoId: depoId,
+    },
+  });
+
+  console.log("InvenotyTotal", InvenotyTotal);
+  const netQuantity =
+    (InvenotyTotal._sum.quantityAdd || 0) -
+    (InvenotyTotal._sum.quantityLess || 0);
+  const netAmount =
+    (InvenotyTotal._sum.debitAmount || 0) -
+    (InvenotyTotal._sum.creditAmount || 0);
+
+  return { netQuantity, netAmount };
 };
 
 const getDepoInventoryTotalById = async (query: any) => {
@@ -144,14 +161,14 @@ const getDepoInventoryTotalById = async (query: any) => {
   const result = await prisma.$queryRaw`
   SELECT 
     i.productId,
-    
+    i.depoId,
     SUM(IFNULL(i.quantityAdd, 0) - IFNULL(i.quantityLess, 0)) AS netQuantity,
     SUM(IFNULL(j.debitAmount, 0)- IFNULL(j.creditAmount, 0)) AS netAmount
     
   FROM inventories i
   LEFT JOIN journals j ON j.inventoryItemId = i.id
   WHERE i.productId = ${query.productId} AND i.date=${product?.date}
-  GROUP BY i.productId`;
+  GROUP BY i.productId, i.depoId`;
 
   return result;
 };
@@ -187,14 +204,13 @@ const inventoryProduct = async (employeeId: string, depoId: number) => {
       inventory: {
         some: {
           employeeId: employeeId || undefined,
-          depoId: depoId || undefined
-        }
-      }
+          depoId: depoId || undefined,
+        },
+      },
     },
-
-  })
-  return result
-}
+  });
+  return result;
+};
 
 export const InventoryService = {
   getInventory,
@@ -204,7 +220,7 @@ export const InventoryService = {
   getInventoryByVoucherNo,
   updateInventory,
   deleteInventory,
-  inventoryProduct
+  inventoryProduct,
 };
 
 async function productIsExist(data: object) {

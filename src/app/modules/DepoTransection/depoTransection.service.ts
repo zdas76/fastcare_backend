@@ -1,4 +1,4 @@
-import { OrdStatus, VoucherType } from "../../../../generated/prisma";
+import { DepoJournal, OrdStatus, VoucherType } from "../../../../generated/prisma";
 import { generateVoucherNumber } from "../../helpers/createVoucherNo";
 import prisma from "../../shared/prisma";
 import { TCretidItem, TDepoTransection } from "./depoTransection.interface";
@@ -497,6 +497,7 @@ const createDepoPayment = async (payload: any) => {
 }
 
 const updateDepoPayment = async (id: number, payload: any) => {
+
     const depoPaymentExist = await prisma.depoTransaction.findUnique({
         where: { id: id, voucherType: VoucherType.PAYMENT }
     })
@@ -553,6 +554,101 @@ const updateDepoPayment = async (id: number, payload: any) => {
                 date: new Date(payload?.date),
             }
         })
+
+        return depoTransection
+    })
+    return result
+}
+
+const confirmDepoPayment = async (id: number, payload: any) => {
+
+    console.log(payload);
+
+    const depoPaymentExist = await prisma.depoTransaction.findUnique({
+        where: { id: id, voucherType: VoucherType.PAYMENT },
+        include: {
+            depoJournals: {
+                include: {
+                    ledgerHead: true,
+                }
+            },
+        }
+    })
+
+    console.log(depoPaymentExist);
+
+    if (!depoPaymentExist) {
+        throw new Error("Depo payment not found");
+    }
+
+    const creditItems = depoPaymentExist?.depoJournals?.filter((j: DepoJournal) => j.creditAmount && j.creditAmount > 0).map((j: DepoJournal) => ({
+        itemId: j.ledgerHeadId,
+
+        amount: j.creditAmount,
+        narration: j.narration || "",
+    })) || [];
+
+    const debitItems = depoPaymentExist?.depoJournals?.filter((j: DepoJournal) => j.debitAmount && j.debitAmount > 0).map((j: DepoJournal) => ({
+        itemId: j.ledgerHeadId,
+        amount: j.debitAmount,
+        narration: j.narration || "",
+    })) || [];
+
+    console.log("creditItems", creditItems)
+    console.log("debitItems", debitItems)
+
+    if (depoPaymentExist.status !== "PENDING") {
+        throw new Error("Depo payment is already confirmed");
+    }
+
+    const result = await prisma.$transaction(async (tx) => {
+
+        const depoTransection = await tx.depoTransaction.update({
+            where: { id: id },
+            data: {
+                date: new Date(payload?.date),
+                status: OrdStatus.CONFIRMED,
+            }
+        })
+
+        const voucherNo = await generateVoucherNo("PV")
+
+        const transactionInfo = await tx.transactionInfo.create({
+            data: {
+                date: new Date(payload?.date),
+                voucherNo: voucherNo,
+                voucherType: VoucherType.PAYMENT,
+                invoiceNo: depoPaymentExist.voucherNo,
+            }
+        })
+
+        await Promise.all(creditItems.map(async (item: any) => {
+            await tx.journal.create({
+                data: {
+                    transactionId: transactionInfo?.id,
+                    date: new Date(payload?.date),
+                    ledgerHeadId: item.itemId,
+                    depoId: payload.providerdepoId,
+                    debitAmount: item.amount,
+                    narration: item.narration,
+                }
+            })
+
+        }));
+
+        await Promise.all(payload.debitItems.map(async (item: any) => {
+            await tx.journal.create({
+                data: {
+                    transactionId: transactionInfo?.id,
+                    date: new Date(payload?.date),
+                    ledgerHeadId: item.itemId,
+                    depoId: payload.providerdepoId,
+                    creditAmount: item.amount,
+                    narration: item.narration,
+                }
+            })
+
+        }));
 
         return depoTransection
     })
@@ -668,14 +764,17 @@ const createDepoReceive = async (payload: any) => {
 
 export const DepoTransectionService = {
     createDepoAllocation,
-    getAllDepoVouchers,
     editDepoAllocation,
     approveDepoAllocation,
     confirmDepoAllocation,
-    createDepoPayment,
-    getDepoVoucherById,
     deleteDepoAllocation,
-    updateDepoPayment,
-    createDepoReceive,
 
+    getAllDepoVouchers,
+    getDepoVoucherById,
+
+    createDepoPayment,
+    confirmDepoPayment,
+    updateDepoPayment,
+
+    createDepoReceive,
 }

@@ -1,8 +1,10 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "new-backend",
   "version": "1.0.0",
   "main": "dist/server.js",
   "type": "commonjs",
+  "module": "commonjs",
   "scripts": {
     "dev": "nodemon --exec ts-node src/server.ts",
     "build": "tsc",

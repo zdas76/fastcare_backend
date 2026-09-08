@@ -63,8 +63,6 @@ const getGiftVoucherReport = catchAsync(async (req, res) => {
   });
 });
 
-
-
 const getDipoMpoReport = catchAsync(async (req, res) => {
   const startDate = req.query.startDate as string | undefined;
   const endDate = req.query.endDate as string | undefined;
@@ -73,7 +71,7 @@ const getDipoMpoReport = catchAsync(async (req, res) => {
   const result = await ReportManagementService.getDipoMpoReport({
     startDate,
     endDate,
-    depoId
+    depoId,
   });
 
   sendResponse(res, {
@@ -103,10 +101,32 @@ const getDipoMpoReportById = catchAsync(async (req, res) => {
   });
 });
 
+const getProductSalesReport = catchAsync(async (req, res) => {
+  const employeeId = req.query.employeeId as string | undefined;
+  const startDate = req.query.startDate as string | undefined;
+  const endDate = req.query.endDate as string | undefined;
+  const depoId = req.query.depoId ? Number(req.query.depoId) : undefined;
+
+  const result = await ReportManagementService.getProductSalesReport(
+    employeeId,
+    startDate,
+    endDate,
+    depoId,
+  );
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Product sales report retrieved successfully",
+    data: result,
+  });
+});
+
 export const ReportManagementControllers = {
   geMpoTransectionReport,
   getMpoReportById,
   getGiftVoucherReport,
   getDipoMpoReport,
   getDipoMpoReportById,
+  getProductSalesReport,
 };

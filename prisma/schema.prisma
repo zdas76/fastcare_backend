@@ -169,6 +169,8 @@ model StakeholderDeisgnation {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   stakeholder Stakeholder[]
+
+  @@map("stakeholder_designation")
 }
 
 model StakeholderDegree {
@@ -179,6 +181,8 @@ model StakeholderDegree {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   stakeholder Stakeholder[]
+
+  @@map("stakeholder_degree")
 }
 
 model stakeholderChember {

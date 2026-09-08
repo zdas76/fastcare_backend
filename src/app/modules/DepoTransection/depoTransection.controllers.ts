@@ -111,6 +111,17 @@ const updateDepoPayment = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const confirmDepoPayment = catchAsync(async (req: Request, res: Response) => {
+    const result = await DepoTransectionService.confirmDepoPayment(Number(req.params.id), req.body);
+
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: "Depo Payment confirmed successfully",
+        data: result,
+    });
+});
+
 const createDepoReceive = catchAsync(async (req: Request, res: Response) => {
     const result = await DepoTransectionService.createDepoReceive(req.body);
 
@@ -126,14 +137,17 @@ const createDepoReceive = catchAsync(async (req: Request, res: Response) => {
 
 export const DepoTransectionController = {
     createDepoAllocation,
-    getAllDepoAllocation,
     editDepoAllocation,
+    deleteDepoAllocation,
     approveDepoAllocation,
     confirmDepoAllocation,
-    createDepoPayment,
-    getDepoVoucherById,
-    deleteDepoAllocation,
-    updateDepoPayment,
-    createDepoReceive,
 
+    getAllDepoAllocation,
+    getDepoVoucherById,
+
+    createDepoPayment,
+    updateDepoPayment,
+    confirmDepoPayment,
+
+    createDepoReceive,
 }

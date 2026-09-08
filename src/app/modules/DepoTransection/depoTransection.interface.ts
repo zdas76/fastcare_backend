@@ -48,3 +48,37 @@ export type TDebitItem = {
     debitAmount: number;
     narration: string;
 }
+
+
+export interface LedgerHead {
+    id: number;
+    name: string;
+    [key: string]: any; // Allows for any other dynamic fields hidden inside [Object]
+}
+
+export interface DepoJournal {
+    id: number;
+    depoTransactionId: number;
+    date: Date | string;
+    ledgerHeadId: number;
+    creditAmount: number;
+    debitAmount: number;
+    narration: string;
+    createdAt: Date | string;
+    updatedAt: Date | string;
+    ledgerHead: LedgerHead;
+}
+
+export interface TDepoPaymentTransaction {
+    id: number;
+    date: Date | string;
+    providerdepoId: number;
+    receiverdepoId: number;
+    invoiceNo: string | null;
+    voucherNo: string;
+    voucherType: 'PAYMENT' | 'RECEIPT' | string; // Use union types for known statuses
+    status: 'PENDING' | 'APPROVED' | string;   // Use union types for known statuses
+    createdAt: Date | string;
+    updatedAt: Date | string;
+    depoJournals: DepoJournal[];
+}
